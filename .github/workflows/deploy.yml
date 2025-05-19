@@ -40,4 +40,3 @@ jobs:
           action: "upload"
           app_location: ${{ env.APP_LOCATION }}
           output_location: ${{ env.OUTPUT_LOCATION }}
-          skip_app_build: true
