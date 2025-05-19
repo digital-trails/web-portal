@@ -3,7 +3,7 @@
 # You can also reference a tag or branch, but the action may change without warning.
 name: Build and Deploy Angular App to Azure Static Web Apps
 env:
-  APP_LOCATION: "/src" # location of your Angular app source
+  APP_LOCATION: "/" # location of your Angular app source
   OUTPUT_LOCATION: "dist/web-portal" # Angular build output location (update with your app name)
 on:
   # Automatically run this workflow when pushing to main
