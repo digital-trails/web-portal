@@ -8,35 +8,6 @@
             "rewrite": "/.auth/login/b2c"
         },
         {
-            "route": "/logout",
-            "allowedRoles": [
-                "authenticated"
-            ],
-            "rewrite": "/.auth/logout"
-        },
-        {
-            "route": "/.auth/login/aad",
-            "allowedRoles": [
-                "anonymous",
-                "authenticated"
-            ],
-            "statusCode": 404
-        },
-        {
-            "route": "/.auth/login/b2c",
-            "allowedRoles": [
-                "anonymous"
-            ]
-        },
-        {
-            "route": "/.auth/login/google",
-            "allowedRoles": [
-                "anonyous",
-                "authenticated"
-            ],
-            "statusCode": 404
-        },
-        {
             "route": "/dashboard",
             "allowedRoles": [
                 "authenticated"
