@@ -1,4 +1,12 @@
 {
+    "navigationFallback": {
+        "rewrite": "/index.html",
+        "exclude": [
+            "/images/*.{png,jpg,gif}",
+            "/css/*",
+            "/js/*"
+        ]
+    },
     "routes": [
         {
             "route": "/login",
@@ -30,7 +38,11 @@
                     },
                     "login": {
                         "nameClaimType": "emails",
-                        "scopes": [ "openid", "profile", "https://digitaltrailsuva.onmicrosoft.com/api/read"],
+                        "scopes": [
+                            "openid",
+                            "profile",
+                            "https://digitaltrailsuva.onmicrosoft.com/api/read"
+                        ],
                         "loginParameterNames": []
                     }
                 }
