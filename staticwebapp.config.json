@@ -24,7 +24,7 @@
     "responseOverrides": {
         "401": {
             "statusCode": 302,
-            "redirect": "/login"
+            "redirect": "/login?post_login_redirect_uri=.referrer"
         }
     },
     "auth": {
