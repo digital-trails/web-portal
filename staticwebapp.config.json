@@ -34,8 +34,8 @@
                         }
                     },
                     "login": {
-                        "nameClaimType": "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name",
-                        "scopes": ["https://digitaltrailsuva.onmicrosoft.com/api/read"],
+                        "nameClaimType": "email",
+                        "scopes": [ "openid", "profile", "https://digitaltrailsuva.onmicrosoft.com/api/read"],
                         "loginParameterNames": []
                     }
                 }
