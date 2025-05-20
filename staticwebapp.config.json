@@ -1,9 +1,41 @@
 {
-    "mimeTypes": {
-        ".html": "text/html",
-        ".json": "application/json"
-    },
     "routes": [
+        {
+            "route": "/login",
+            "allowedRoles": [
+                "anonymous"
+            ],
+            "rewrite": "/.auth/login/b2c"
+        },
+        {
+            "route": "/logout",
+            "allowedRoles": [
+                "authenticated"
+            ],
+            "rewrite": "/.auth/logout"
+        },
+        {
+            "route": "/.auth/login/aad",
+            "allowedRoles": [
+                "anonymous",
+                "authenticated"
+            ],
+            "statusCode": 404
+        },
+        {
+            "route": "/.auth/login/b2c",
+            "allowedRoles": [
+                "anonymous"
+            ]
+        },
+        {
+            "route": "/.auth/login/google",
+            "allowedRoles": [
+                "anonyous",
+                "authenticated"
+            ],
+            "statusCode": 404
+        },
         {
             "route": "/dashboard",
             "allowedRoles": [
@@ -11,10 +43,18 @@
             ]
         }
     ],
+    "navigationFallback": {
+        "rewrite": "/index.html",
+        "exclude": [
+            "/css/*",
+            "/img/*",
+            "/js/*"
+        ]
+    },
     "responseOverrides": {
         "401": {
             "statusCode": 302,
-            "redirect": "/.auth/login/b2c"
+            "redirect": "/login"
         }
     },
     "auth": {
