@@ -16,5 +16,27 @@
             "statusCode": 302,
             "redirect": ".auth/login/aadb2c"
         }
+    },
+    "auth": {
+        "identityProviders": {
+            "customOpenIdConnectProviders": {
+                "aadb2c": {
+                    "registration": {
+                        "clientIdSettingName": "B2C_CLIENT_ID",
+                        "clientCredential": {
+                            "clientSecretSettingName": "B2C_CLIENT_SECRET"
+                        },
+                        "openIdConnectConfiguration": {
+                            "wellKnownOpenIdConfiguration": "https://digitaltrailsuva.b2clogin.com/digitaltrailsuva.onmicrosoft.com/B2C_1_SignUpSignIn/v2.0/.well-known/openid-configuration"
+                        }
+                    },
+                    "login": {
+                        "nameClaimType": "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier",
+                        "scopes": ["openid", "profile", "https://digitaltrailsuva.onmicrosoft.com/api/read"],
+                        "loginParameterNames": []
+                    }
+                }
+            }
+        }
     }
 }
