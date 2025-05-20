@@ -2,16 +2,11 @@
     "routes": [
         {
             "route": "/login",
-            "allowedRoles": [
-                "anonymous"
-            ],
             "rewrite": "/.auth/login/b2c"
         },
         {
-            "route": "/dashboard",
-            "allowedRoles": [
-                "authenticated"
-            ]
+            "route": "/logout",
+            "redirect": "/.auth/logout"
         }
     ],
     "responseOverrides": {
