@@ -1,6 +1,5 @@
 {
   "name": "web-portal",
-  "homepage": "/portal",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
