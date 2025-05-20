@@ -1,6 +1,7 @@
 {
     "mimeTypes": {
-        ".json": "text/json"
+        ".html": "text/html",
+        ".json": "application/json"
     },
     "navigationFallback": {
         "rewrite": "/index.html"
