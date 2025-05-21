@@ -11,8 +11,8 @@ import { UserFacade } from '../store/user/user.facade';
   imports: [
     DashboardRoutingModule,
     DashboardComponent,
-    CommonModule,
+    CommonModule
   ],
-  providers: []
+  providers: [UserFacade]
 })
 export class DashboardModule { }

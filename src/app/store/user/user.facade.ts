@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { catchError, EMPTY, filter, map, Observable, of, switchMap, take, tap } from 'rxjs';
+import { EMPTY, map, Observable, switchMap, take, tap } from 'rxjs';
+import { AppState } from '../../app.config';
 import { HttpFacade } from '../../http.facade';
 import { ClientPrincipal } from '../../models/user';
-import { UserState } from './user.reducer';
-import { UserSelectors } from './user.selectors';
 import { UserActions } from './user.actions';
-import { AppState } from '../../app.config';
+import { UserSelectors } from './user.selectors';
 
 
 @Injectable({
@@ -34,18 +33,12 @@ export class UserFacade {
                             clientPrincipal: data.clientPrincipal
                         }));
                     }));
-            }),
-            catchError(error => {
-                return of();
-            }),
-        ).subscribe(temp1 => {
-            var temp3 = temp1;
-            this.store.select(UserSelectors.selectClientPrincipal).pipe(
-            ).subscribe(clientPrincipal => {
-                var temp = clientPrincipal;
-            });
-        }
-        )
+            })
+        ).subscribe()
+    }
+
+    dashboardUrl$() : Observable<any> {
+        return this.httpFacade.get(`api/sign-jwt`).pipe(map(data => data.url));
     }
 
     clearClaims(): void {

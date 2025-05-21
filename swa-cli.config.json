@@ -3,6 +3,7 @@
   "configurations": {
     "web-portal": {
       "appLocation": ".",
+      "apiLocation": "api",
       "outputLocation": "dist/web-portal",
       "apiLanguage": "node",
       "apiVersion": "18",

@@ -21,6 +21,18 @@
             "allowedRoles": [
                 "authenticated"
             ]
+        },
+        {
+            "route": "/api/*",
+            "methods": [
+                "GET",
+                "POST",
+                "PUT",
+                "DELETE"
+            ],
+            "allowedRoles": [
+                "authenticated"
+            ]
         }
     ],
     "responseOverrides": {
