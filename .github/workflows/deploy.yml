@@ -5,6 +5,8 @@ name: Build and Deploy Angular App to Azure Static Web Apps
 env:
   APP_LOCATION: "/" # location of your Angular app source
   OUTPUT_LOCATION: "dist/web-portal/browser" # Angular build output location (update with your app name)
+  API_LOCATION: "api"
+
 on:
   # Automatically run this workflow when pushing to main
   push:
@@ -40,4 +42,5 @@ jobs:
           action: "upload"
           app_location: ${{ env.APP_LOCATION }}
           output_location: ${{ env.OUTPUT_LOCATION }}
+          api_location: ${{ env.API_LOCATION }}
           app_build_command: "npm run build"
