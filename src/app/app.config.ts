@@ -3,8 +3,18 @@ import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
 import { provideStore } from '@ngrx/store';
-import { UserReducer } from './store/user/user.reducer';
+import { UserReducer, UserState } from './store/user/user.reducer';
 import { provideHttpClient } from '@angular/common/http';
+
+export const appState = (state: AppState) => state;
+
+export interface AppState {
+  userState?: UserState;
+}
+
+export const initialState: AppState = {
+  userState: undefined,
+};
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -12,7 +22,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes), 
     provideHttpClient(),
     provideStore({
-      user: UserReducer
+      userState: UserReducer
     })
   ]
 };

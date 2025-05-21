@@ -1,40 +1,56 @@
-import { catchError, map, Observable, of, switchMap, take } from 'rxjs';
-import { setUserClaims } from './user.actions';
-import { Injectable, isDevMode } from '@angular/core';
-import { Router } from '@angular/router';
-import { HttpFacade } from '../../http.facade';
-import { UserActions } from './user.selectors';
+import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
+import { catchError, EMPTY, filter, map, Observable, of, switchMap, take, tap } from 'rxjs';
+import { HttpFacade } from '../../http.facade';
+import { ClientPrincipal } from '../../models/user';
 import { UserState } from './user.reducer';
+import { UserSelectors } from './user.selectors';
+import { UserActions } from './user.actions';
+import { AppState } from '../../app.config';
 
 
 @Injectable({
     providedIn: 'root'
-  })
+})
 export class UserFacade {
 
-    constructor(private httpFacade: HttpFacade, private store: Store<UserState>) {}
+    constructor(private httpFacade: HttpFacade, private store: Store<AppState>) { }
 
-     getClaims() : Observable<any> {
+    get getClientPrinciple$(): Observable<ClientPrincipal | undefined> {
+        return this.store.select(UserSelectors.selectClientPrincipal);
+    }
 
-        var temp = this.store.select(UserActions.selectIsLoaded).pipe(map(data => {
-            return !data;
-        })).subscribe(data => {
-
-        });
-        
-        return this.store.select(UserActions.selectIsLoaded).pipe(
+    loadClientPrinciple(): void {
+        this.store.select(UserSelectors.selectIsLoaded).pipe(
+            take(1),
             switchMap(isLoaded => {
-                if(isLoaded) {
-                    return  this.store.select(UserActions.selectClaims);
+                if (isLoaded) {
+                    return EMPTY;
                 }
-                return this.httpFacade.get(`.auth/me`).pipe(map(c => {
-                    var temp = c;
-                }))
+                return this.httpFacade.get(`.auth/me`).pipe(
+                    take(1),
+                    tap(data => {
+                        this.store.dispatch(UserActions.setClientPrincipal({
+                            clientPrincipal: data.clientPrincipal
+                        }));
+                    }));
             }),
             catchError(error => {
-                return  of();
-            })
-        );
+                return of();
+            }),
+        ).subscribe(temp1 => {
+            var temp3 = temp1;
+            this.store.select(UserSelectors.selectClientPrincipal).pipe(
+            ).subscribe(clientPrincipal => {
+                var temp = clientPrincipal;
+            });
+        }
+        )
+    }
+
+    clearClaims(): void {
+        this.store.dispatch(UserActions.setClientPrincipal({
+            clientPrincipal: undefined
+        }));
     }
 }

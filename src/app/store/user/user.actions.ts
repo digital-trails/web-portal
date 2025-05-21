@@ -1,4 +1,7 @@
 import { createAction, props } from "@ngrx/store";
+import { ClientPrincipal } from "../../models/user";
 
-export const setUserClaims = createAction('[User] Set Claims',props<{ claims: any }>());
-export const setIsLoaded = createAction('[User] Set is loaded',props<{ isloaded: boolean }>());
+export namespace UserActions  {
+    export const setClientPrincipal = createAction('[User] Set ClientPrincipal', props<{ clientPrincipal?: ClientPrincipal }>());
+    export const setIsLoaded = createAction('[User] Set is loaded',props<{ isloaded: boolean }>());
+}

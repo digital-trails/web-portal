@@ -1,0 +1,6 @@
+* {
+    padding: 2rem;
+    min-height: 85vh;    
+    display: flex;
+    flex-direction: column;
+}

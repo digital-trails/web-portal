@@ -1,16 +1,15 @@
 import { createSelector } from "@ngrx/store";
 import { UserState } from "./user.reducer";
+import { appState, AppState } from "../../app.config";
 
-export namespace UserActions {
-    export const selectUser = (state: UserState) => state;
-
-    export const selectClaims = createSelector(
-        selectUser,
-        (state: UserState) => state.claims
+export namespace UserSelectors {
+    export const selectClientPrincipal = createSelector(
+        appState,
+        (state: AppState) => state.userState?.clientPrincipal
     );
 
     export const selectIsLoaded = createSelector(
-        selectClaims,
-        (claims) => claims !== undefined && claims !== null
-      );
+        selectClientPrincipal,
+        (clientPrincipal) => clientPrincipal !== undefined && clientPrincipal?.userId !== null
+    );
 }

@@ -1,0 +1,26 @@
+
+.header {
+  background-color: #343A40;
+  color: white;
+}
+
+.main {
+  background-color: white;
+}
+
+.hero {
+  background-image: repeating-linear-gradient(-45deg, #5555, #5555 1px, transparent 1px, transparent 6px);
+  background-size: 4px 4px;
+  background-color: whitesmoke;
+  padding: 2rem;
+  min-height: 85vh;    
+  display: flex;
+  flex-direction: column;
+}
+
+.footer {
+  margin-top: auto;
+  background-color: #343A40;
+  color: white;
+  padding: 1rem;
+}
