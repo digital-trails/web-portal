@@ -1,17 +1,4 @@
-<header class="header">
-  <nav class="navbar navbar-expand-lg">
-    <div class="container py-3">
-      <!-- Left side - Brand -->
-      <h3>Digital Trails</h3>
-      <div class="ms-auto d-flex align-items-center" *ngIf="user && user.userDetails">
-        <span class="user-id me-3">{{ user.userDetails }}</span>
-        <button (click)="logout()" class="btn btn-secondary">Sign Out</button>
-      </div>
-    </div>
-  </nav>
-</header>
-
-<main class="main">
+<main class="main container my-5">
   <div class="hero" *ngIf="!user?.userDetails">
     <div class="sign-in">
       <div class="row align-items-center ">
@@ -24,7 +11,7 @@
           <a href="/login?post_login_redirect_uri=dashboard" class="btn btn-primary btn-lg mt-3">Sign In</a>
         </div>
 
-        <div class="col-md-6 text-center">
+        <div class="col-md-6 text-center d-none d-md-block">
           <img src="logo.svg" alt="Digital Trails Logo" height="300">
         </div>
       </div>
@@ -33,9 +20,3 @@
 </main>
 
 <router-outlet></router-outlet>
-
-<footer class="footer">
-  <div>
-    <p>&copy; 2024 By The Rector And Visitors Of The University Of Virginia</p>
-  </div>
-</footer>
