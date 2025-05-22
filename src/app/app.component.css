@@ -7,13 +7,6 @@
   flex-direction: column;
 }
 
-.footer {
-    display: block;
-    unicode-bidi: isolate;
-}
-
-html {
-	/* force the scroll bar to show so that
-	 * content doesn't shift between pages */
-	overflow-y: scroll;
+.r-6 {
+    border-radius: 6px
 }

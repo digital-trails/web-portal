@@ -1,4 +1,10 @@
-* {
-    /* background-color: #343A40;
-    color: whitesmoke; */
+.footer {
+    display: block;
+    unicode-bidi: isolate;
+}
+
+html {
+	/* force the scroll bar to show so that
+	 * content doesn't shift between pages */
+	overflow-y: scroll;
 }
