@@ -4,13 +4,16 @@ import { Observable } from "rxjs";
 
 @Injectable({
     providedIn: 'root'
-  })
+})
 export class HttpFacade {
-    constructor(private httpClient: HttpClient) {}
+    constructor(private httpClient: HttpClient) { }
 
-    get(path:string) : Observable<any> {
+    get(path: string): Observable<any> {
+        return this.httpClient.get(path);
+    }
 
-        var baseUrl = isDevMode() ? "http://localhost:4280" : "https://portal.digital-trails.org";
-        return this.httpClient.get(`${baseUrl}/${path}`);
+    getAuth(): Observable<any> {
+        var url = isDevMode() ? "http://localhost:4280/.auth/me" : "https://portal.digital-trails.org/.auth/me";
+        return this.httpClient.get(url);
     }
 }
