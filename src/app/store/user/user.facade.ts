@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { EMPTY, map, Observable, switchMap, take, tap } from 'rxjs';
+import { catchError, EMPTY, Observable, of, switchMap, take, tap } from 'rxjs';
 import { AppState } from '../../app.config';
 import { HttpFacade } from '../../http.facade';
 import { ClientPrincipal } from '../../models/user';
@@ -26,7 +26,7 @@ export class UserFacade {
                 if (isLoaded) {
                     return EMPTY;
                 }
-                return this.httpFacade.get(`.auth/me`).pipe(
+                return this.httpFacade.getAuth().pipe(
                     take(1),
                     tap(data => {
                         this.store.dispatch(UserActions.setClientPrincipal({
@@ -38,7 +38,7 @@ export class UserFacade {
     }
 
     dashboardUrl$() : Observable<any> {
-        return this.httpFacade.get(`api/sign-jwt`).pipe(map(data => data.url));
+        return this.httpFacade.get("SignJwt");
     }
 
     clearClaims(): void {
