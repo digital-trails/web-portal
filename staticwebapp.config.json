@@ -5,7 +5,7 @@
             "/images/*.{png,jpg,gif}",
             "/css/*",
             "/ts/*",
-            "/.auth/login"
+            "/.auth/login/*"
         ]
     },
     "routes": [
