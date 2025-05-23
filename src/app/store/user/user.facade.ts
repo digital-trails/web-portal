@@ -38,7 +38,7 @@ export class UserFacade {
     }
 
     dashboardUrl$(): Observable<any> {
-        return this.httpFacade.get("https://digital-trails.org/api/v2/SignJwt");
+        return this.httpFacade.get("https://portal.digital-trails.org/api/v2/SignJwt");
     }
 
     clearClaims(): void {
