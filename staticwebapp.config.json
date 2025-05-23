@@ -23,7 +23,7 @@
             ]
         },
         {
-            "route": "/api/v2/*",
+            "route": "/api/v1/health-check",
             "methods": [
                 "GET",
                 "POST",
