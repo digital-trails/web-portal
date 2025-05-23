@@ -10,21 +10,10 @@ import { AppState } from "./app.config";
 export class HttpFacade {
     constructor(private httpClient: HttpClient, private store: Store<AppState>) { }
 
-    get(path: string, v2: boolean = true): Observable<any> {
-        if (v2) {
-            const authCookie = document.cookie
-            .split('; ')
-            .find(row => row.startsWith('StaticWebAppsAuthCookie='))
-            ?.split('=')[1];
-
-            const headers = new HttpHeaders({
-                'Authorization': `Bearer ${authCookie}`
-            });
-
-            return this.httpClient.get(path, { headers });
-        }
-
-        return this.httpClient.get(path);
+    get(path: string): Observable<any> {
+        return this.httpClient.get(path, {
+            withCredentials: true
+        });
     }
 
 
