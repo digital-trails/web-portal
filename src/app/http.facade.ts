@@ -11,9 +11,7 @@ export class HttpFacade {
     constructor(private httpClient: HttpClient, private store: Store<AppState>) { }
 
     get(path: string): Observable<any> {
-        return this.httpClient.get(path, {
-            withCredentials: true
-        });
+        return this.httpClient.get(path);
     }
 
 
