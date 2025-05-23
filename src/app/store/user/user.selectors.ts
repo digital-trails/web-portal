@@ -1,5 +1,4 @@
 import { createSelector } from "@ngrx/store";
-import { UserState } from "./user.reducer";
 import { appState, AppState } from "../../app.config";
 
 export namespace UserSelectors {

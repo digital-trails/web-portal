@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { catchError, EMPTY, Observable, of, switchMap, take, tap } from 'rxjs';
+import { catchError, EMPTY, map, Observable, of, switchMap, take, tap } from 'rxjs';
 import { AppState } from '../../app.config';
 import { HttpFacade } from '../../http.facade';
 import { ClientPrincipal } from '../../models/user';
@@ -37,7 +37,7 @@ export class UserFacade {
         ).subscribe()
     }
 
-    dashboardUrl$() : Observable<any> {
+    dashboardUrl$(): Observable<any> {
         return this.httpFacade.get("SignJwt");
     }
 

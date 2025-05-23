@@ -7,7 +7,7 @@ export interface UserState {
 }
 
 export const initialState: UserState = {
-  clientPrincipal: undefined,
+  clientPrincipal: undefined
 };
 
 export const UserReducer = createReducer(
