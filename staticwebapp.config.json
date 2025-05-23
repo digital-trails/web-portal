@@ -4,7 +4,8 @@
         "exclude": [
             "/images/*.{png,jpg,gif}",
             "/css/*",
-            "/ts/*"
+            "/ts/*",
+            "/.auth/login"
         ]
     },
     "routes": [
