@@ -59,8 +59,7 @@
                         "scopes": [
                             "openid",
                             "profile",
-                            "https://digitaltrailsuva.onmicrosoft.com/api/read",
-                            "User.ReadWrite.All"
+                            "https://graph.microsoft.com/User.ReadWrite.All"
                         ],
                         "loginParameterNames": []
                     }
