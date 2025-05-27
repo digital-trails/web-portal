@@ -58,7 +58,8 @@
                         "nameClaimType": "emails",
                         "scopes": [
                             "openid",
-                            "profile"
+                            "profile",
+                            "https://digitaltrailsuva.onmicrosoft.com/api/read"
                         ],
                         "loginParameterNames": []
                     }
