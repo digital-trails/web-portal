@@ -58,8 +58,7 @@
                         "nameClaimType": "emails",
                         "scopes": [
                             "openid",
-                            "profile",
-                            "https://graph.microsoft.com/User.ReadWrite.All"
+                            "profile"
                         ],
                         "loginParameterNames": []
                     }
