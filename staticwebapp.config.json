@@ -60,7 +60,7 @@
                             "openid",
                             "profile",
                             "https://digitaltrailsuva.onmicrosoft.com/api/read",
-                            "https://graph.microsoft.com/User.Read"
+                            "https://graph.microsoft.com/User.ReadWrite.All"
                         ],
                         "loginParameterNames": []
                     }
