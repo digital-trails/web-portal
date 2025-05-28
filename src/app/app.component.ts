@@ -1,16 +1,12 @@
-import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { Subject, takeUntil } from 'rxjs';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { MSAL_GUARD_CONFIG, MsalGuardConfiguration, MsalService } from '@azure/msal-angular';
+import { RedirectRequest } from '@azure/msal-browser';
+import { Subject } from 'rxjs';
 import { ClientPrincipal } from './models/user';
-import { UserFacade } from './store/user/user.facade';
-import { UserState } from './store/user/user.reducer';
-import { Store } from '@ngrx/store';
-import { UserSelectors } from './store/user/user.selectors';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, CommonModule],
+  standalone: false,
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
@@ -18,16 +14,19 @@ export class AppComponent implements OnInit, OnDestroy {
   title = 'web-portal';
   user?: ClientPrincipal = {};
   destroy$ = new Subject<void>();
+  isLoggedIn = false;
 
-  constructor(public userfacade: UserFacade) { }
+  constructor(
+    private authService: MsalService
+  ) { }
 
   ngOnInit(): void {
-
-    this.userfacade.loadClientPrinciple();
-    this.userfacade.getClientPrinciple$.pipe(
-      takeUntil(this.destroy$)
-    ).subscribe((clientPrinciple: ClientPrincipal | undefined) => {
-      this.user = clientPrinciple;
+    this.isLoggedIn = this.authService.instance.getAllAccounts().length > 0;
+    this.authService.loginPopup().subscribe({
+      next: (result) => {
+        this.isLoggedIn = true;
+      },
+      error: (error) => console.log(error)
     });
   }
 
@@ -37,7 +36,6 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   logout(): void {
-    this.userfacade.clearClaims();
     window.location.href = "/logout";
   }
 }

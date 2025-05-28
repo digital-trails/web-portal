@@ -1,23 +1,51 @@
-import { NgModule } from '@angular/core';
-import { AppRoutingModule } from './app.routing.module';
-import { UserState } from './store/user/user.reducer';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { MSAL_INSTANCE, MsalGuard, MsalModule, MsalService } from '@azure/msal-angular';
+import { IPublicClientApplication, PublicClientApplication } from '@azure/msal-browser';
 
+import { RouterModule } from '@angular/router';
+import { AppComponent } from './app.component';
 
-export const appState = (state: AppState) => state;
-
-export interface AppState {
-  userState?: UserState;
+export function MSALInstanceFactory(): IPublicClientApplication {
+    return new PublicClientApplication({
+        auth: {
+            clientId: '9a71ebd4-a3d4-4cfb-a5ac-c288332bafe4',
+            authority: 'https://login.microsoftonline.com/c9e9898a-d915-4e67-be43-e989732b39f5',
+            redirectUri: '/'
+        },
+        cache: {
+            cacheLocation: 'localStorage'
+        }
+    });
 }
 
-export const initialState: AppState = {
-  userState: undefined,
-};
+export function initializeMSAL(msalInstance: IPublicClientApplication) {
+    return () => msalInstance.initialize();
+}
 
 @NgModule({
-  declarations: [],
-  imports: [
-    AppRoutingModule,
-  ],
-  providers: []
+    declarations: [
+        AppComponent
+    ],
+    imports: [
+        BrowserModule,
+        MsalModule,
+        RouterModule
+    ],
+    providers: [
+        {
+            provide: MSAL_INSTANCE,
+            useFactory: MSALInstanceFactory
+        },
+        {
+            provide: APP_INITIALIZER,
+            useFactory: initializeMSAL,
+            deps: [MSAL_INSTANCE],
+            multi: true
+        },
+        MsalGuard,
+        MsalService
+    ],
+    bootstrap: [AppComponent]
 })
 export class AppModule { }
