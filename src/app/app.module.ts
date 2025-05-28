@@ -11,7 +11,7 @@ export function MSALInstanceFactory(): IPublicClientApplication {
         auth: {
             clientId: '9a71ebd4-a3d4-4cfb-a5ac-c288332bafe4',
             authority: 'https://login.microsoftonline.com/c9e9898a-d915-4e67-be43-e989732b39f5',
-            redirectUri: '/'
+            redirectUri: '/dashboard'
         },
         cache: {
             cacheLocation: 'localStorage'

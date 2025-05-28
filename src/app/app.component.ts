@@ -1,6 +1,5 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { MSAL_GUARD_CONFIG, MsalGuardConfiguration, MsalService } from '@azure/msal-angular';
-import { RedirectRequest } from '@azure/msal-browser';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { MsalService } from '@azure/msal-angular';
 import { Subject } from 'rxjs';
 import { ClientPrincipal } from './models/user';
 
