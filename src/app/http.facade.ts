@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable, isDevMode } from "@angular/core";
 import { Store } from "@ngrx/store";
 import { Observable } from "rxjs";
-import { AppState } from "./app.config";
+import { AppState } from "./app.module";
 
 @Injectable({
     providedIn: 'root'

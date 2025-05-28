@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { catchError, EMPTY, map, Observable, of, switchMap, take, tap } from 'rxjs';
-import { AppState } from '../../app.config';
+import { EMPTY, Observable, switchMap, take, tap } from 'rxjs';
+import { AppState } from '../../app.module';
 import { HttpFacade } from '../../http.facade';
 import { ClientPrincipal } from '../../models/user';
 import { UserActions } from './user.actions';

@@ -1,5 +1,6 @@
 import { createSelector } from "@ngrx/store";
-import { appState, AppState } from "../../app.config";
+import { appState, AppState } from "../../app.module";
+
 
 export namespace UserSelectors {
     export const selectClientPrincipal = createSelector(
