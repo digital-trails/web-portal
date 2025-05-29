@@ -17,9 +17,7 @@ export class AppComponent implements OnInit {
 
   constructor(
     private authService: MsalService,
-    private router: Router,
-    @Inject(MSAL_GUARD_CONFIG) private msalGuardConfig: MsalGuardConfiguration,
-  ) { }
+  ) {  }
 
   ngOnInit(): void {
     this.setLoginDisplay();
@@ -36,16 +34,8 @@ export class AppComponent implements OnInit {
     });
   }
 
-  login() {
-    this.authService.loginRedirect({
-      ...this.msalGuardConfig.authRequest,
-    } as RedirectRequest);
-  }
-
   setLoginDisplay() {
     this.isLoggedIn = this.authService.instance.getAllAccounts().length > 0;
-    if(this.isLoggedIn) {
-      this.router.navigate(['/dashboard']);
-    }
   }
+  
 }

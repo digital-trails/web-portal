@@ -23,7 +23,7 @@ import {
       redirectUri: window.location.origin, // Points to window.location.origin by default. You must register this URI on Microsoft Entra admin center/App Registration.
       postLogoutRedirectUri: window.location.origin, // Points to window.location.origin by default.
       knownAuthorities: ["digitaltrailsuva.b2clogin.com"],
-      navigateToLoginRequestUrl: false
+      navigateToLoginRequestUrl: true
     },
     cache: {
       cacheLocation: BrowserCacheLocation.LocalStorage, // Configures cache location. "sessionStorage" is more secure, but "localStorage" gives you SSO between tabs.
@@ -46,5 +46,5 @@ import {
    * https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-permissions-and-consent#openid-connect-scopes
    */
   export const loginRequest = {
-    scopes: ["openid", "profile", "https://digitaltrailsuva.onmicrosoft.com/api"],
+    scopes: ["openid", "profile"],
   };

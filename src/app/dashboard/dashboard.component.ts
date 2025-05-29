@@ -17,10 +17,10 @@ export class DashboardComponent implements OnInit {
   
   ngOnInit(): void {
     this.userFacade.dashboardUrl$().pipe(
-      map(url =>  {
-        this.iframeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
-      }),
-      take(1)
-    ).subscribe();
+      map(url => this.sanitizer.bypassSecurityTrustResourceUrl(url)),
+      take(1),
+    ).subscribe(safeUrl => {
+      this.iframeUrl = safeUrl;
+    });
   }
 }
