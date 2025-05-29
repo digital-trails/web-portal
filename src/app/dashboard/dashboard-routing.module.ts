@@ -6,8 +6,7 @@ import { DashboardComponent } from './dashboard.component';
 const routes: Routes = [
   {
     path: '',
-    component: DashboardComponent,
-    canActivate: []
+    component: DashboardComponent
   }
 ];
 

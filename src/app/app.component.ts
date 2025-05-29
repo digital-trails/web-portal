@@ -1,7 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { MsalService } from '@azure/msal-angular';
-import { Subject } from 'rxjs';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { MSAL_GUARD_CONFIG, MsalGuardConfiguration, MsalService } from '@azure/msal-angular';
+import { catchError, map, of, Subject, switchMap } from 'rxjs';
 import { ClientPrincipal } from './models/user';
+import { Router } from '@angular/router';
+import { RedirectRequest } from '@azure/msal-browser';
 
 @Component({
   selector: 'app-root',
@@ -9,32 +11,41 @@ import { ClientPrincipal } from './models/user';
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent implements OnInit, OnDestroy {
+export class AppComponent implements OnInit {
   title = 'web-portal';
-  user?: ClientPrincipal = {};
-  destroy$ = new Subject<void>();
   isLoggedIn = false;
 
   constructor(
-    private authService: MsalService
+    private authService: MsalService,
+    private router: Router,
+    @Inject(MSAL_GUARD_CONFIG) private msalGuardConfig: MsalGuardConfiguration,
   ) { }
 
   ngOnInit(): void {
-    this.isLoggedIn = this.authService.instance.getAllAccounts().length > 0;
-    this.authService.loginPopup().subscribe({
+    this.setLoginDisplay();
+
+    this.authService.handleRedirectObservable().subscribe({
       next: (result) => {
-        this.isLoggedIn = true;
+        if (result) {
+          this.setLoginDisplay();
+        }
       },
-      error: (error) => console.log(error)
+      error: (error) => {
+        console.error('Authentication error:', error);
+      }
     });
   }
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
+  login() {
+    this.authService.loginRedirect({
+      ...this.msalGuardConfig.authRequest,
+    } as RedirectRequest);
   }
 
-  logout(): void {
-    window.location.href = "/logout";
+  setLoginDisplay() {
+    this.isLoggedIn = this.authService.instance.getAllAccounts().length > 0;
+    if(this.isLoggedIn) {
+      this.router.navigate(['/dashboard']);
+    }
   }
 }
