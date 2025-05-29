@@ -1,8 +1,9 @@
 <main class="main container my-5">
-  <div class="container-fluid d-flex justify-content-between align-items-center my-3" *ngIf="isLoggedIn">
-    <div></div>
+
+  <div class="d-flex justify-content-end mt-3" *ngIf="isLoggedIn">
     <a class="btn btn-outline-danger" (click)="logout()">Logout</a>
   </div>
+  
   <div class="hero r-6" *ngIf="!isLoggedIn">
     <div class="sign-in">
       <div class="row align-items-center ">

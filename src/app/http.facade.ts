@@ -24,7 +24,7 @@ export class HttpFacade {
 
 
     getAuth(): Observable<any> {
-        var url = isDevMode() ? "http://localhost:4280/.auth/me" : "https://portal.digital-trails.org/.auth/me";
+        var url = isDevMode() ? "http://localhost:4200/.auth/me" : "https://portal.digital-trails.org/.auth/me";
         return this.httpClient.get(url);
     }
 
