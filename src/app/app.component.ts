@@ -17,7 +17,7 @@ export class AppComponent implements OnInit {
 
   constructor(
     private authService: MsalService,
-  ) {  }
+  ) { }
 
   ngOnInit(): void {
     this.setLoginDisplay();
@@ -34,8 +34,11 @@ export class AppComponent implements OnInit {
     });
   }
 
-  setLoginDisplay() {
+  setLoginDisplay(): void {
     this.isLoggedIn = this.authService.instance.getAllAccounts().length > 0;
   }
-  
+
+  logout(): void {
+    this.authService.logoutRedirect();
+  }
 }

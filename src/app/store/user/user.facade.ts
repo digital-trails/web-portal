@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { EMPTY, Observable, switchMap, take, tap } from 'rxjs';
+import { EMPTY, map, Observable, switchMap, take, tap } from 'rxjs';
 import { AppState } from '../../app.module';
 import { HttpFacade } from '../../http.facade';
 import { ClientPrincipal } from '../../models/user';
@@ -38,7 +38,7 @@ export class UserFacade {
     }
 
     dashboardUrl$(): Observable<any> {
-        return this.httpFacade.get("https://portal.digital-trails.org/api/v2/signjwt?dashboard=1");
+        return this.httpFacade.get("https://portal.digital-trails.org/api/v2/signjwt?dashboard=1").pipe(map(data => data.url));
     }
 
     clearClaims(): void {

@@ -1,7 +1,10 @@
-<iframe
-  *ngIf="iframeUrl"
-  [src]="iframeUrl"
-  frameborder="0"
-  width="1000"
-  height="1000">
-</iframe>
+<div class="iframe-wrapper">
+  <div class="iframe-container">
+    <iframe
+      *ngIf="iframeUrl"
+      [src]="iframeUrl"
+      class="responsive-iframe"
+      allowtransparency="true">
+    </iframe>
+  </div>
+</div>
