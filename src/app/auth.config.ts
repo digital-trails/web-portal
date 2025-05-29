@@ -21,9 +21,9 @@ import {
       clientId: '9a71ebd4-a3d4-4cfb-a5ac-c288332bafe4', // This is the ONLY mandatory field that you need to supply.
       authority: 'https://digitaltrailsuva.b2clogin.com/digitaltrailsuva.onmicrosoft.com/B2C_1_SignUpSignIn', // Replace the placeholder with your tenant subdomain
       redirectUri: '/dashboard', // Points to window.location.origin by default. You must register this URI on Microsoft Entra admin center/App Registration.
-      postLogoutRedirectUri: '/dashboard', // Points to window.location.origin by default.
+      postLogoutRedirectUri: '/', // Points to window.location.origin by default.
       knownAuthorities: ["digitaltrailsuva.b2clogin.com"],
-      navigateToLoginRequestUrl: true
+      navigateToLoginRequestUrl: false
     },
     cache: {
       cacheLocation: BrowserCacheLocation.LocalStorage, // Configures cache location. "sessionStorage" is more secure, but "localStorage" gives you SSO between tabs.
