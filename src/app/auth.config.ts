@@ -20,7 +20,7 @@ import {
     auth: {
       clientId: '9a71ebd4-a3d4-4cfb-a5ac-c288332bafe4', // This is the ONLY mandatory field that you need to supply.
       authority: 'https://digitaltrailsuva.b2clogin.com/digitaltrailsuva.onmicrosoft.com/B2C_1_SignUpSignIn', // Replace the placeholder with your tenant subdomain
-      redirectUri: '/dashboard', // Points to window.location.origin by default. You must register this URI on Microsoft Entra admin center/App Registration.
+      redirectUri: '/', // Points to window.location.origin by default. You must register this URI on Microsoft Entra admin center/App Registration.
       postLogoutRedirectUri: '/', // Points to window.location.origin by default.
       knownAuthorities: ["digitaltrailsuva.b2clogin.com"],
       navigateToLoginRequestUrl: false

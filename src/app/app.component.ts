@@ -14,7 +14,7 @@ import { UserFacade } from './store/user/user.facade';
 export class AppComponent implements OnInit {
   title = 'web-portal';
   isLoggedIn = false;
-  isDashboardCollapsed = false;
+  isDashboardCollapsed = true;
   user?: User = undefined;
   dashboardNames: string[] = [];
 
@@ -50,7 +50,6 @@ export class AppComponent implements OnInit {
         this.user = user;
         if(user.admin?.studies) {
           this.dashboardNames = Array.from(user.admin.studies.keys());
-          this.selectDashboard(this.dashboardNames[0]);
         }
       })
     }

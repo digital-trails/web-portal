@@ -13,10 +13,11 @@
         <div class="sub-buttons" *ngIf="!isDashboardCollapsed">
           <button 
             class="sidebar-button sub-button" 
-            *ngFor="let entry of dashboardNames"
-            (click)="selectDashboard(entry)"
+            *ngFor="let name of dashboardNames"
+            [routerLink]="['/dashboard']" 
+            [queryParams]="{study: name}"
           >
-            {{ entry }}
+            {{ name }}
           </button>
         </div>
       </div>
