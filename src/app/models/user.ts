@@ -1,6 +1,3 @@
-export interface UserClaims {
-  email?: string;
-}
 
 export interface User {
   id: string,

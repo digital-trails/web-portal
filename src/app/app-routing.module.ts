@@ -8,6 +8,11 @@ const routes: Routes = [
     path: "dashboard",
     loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule),
     canActivate: [MsalGuard]
+  },
+  {
+    path: "console",
+    loadChildren: () => import('./console/console.module').then(m => m.ConsoleModule),
+    canActivate: [MsalGuard]
   }
 ];
 

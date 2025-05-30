@@ -1,24 +1,26 @@
 <main class="main-container">
   <div class="sidebar-container" *ngIf="isLoggedIn && !!user">
     <div class="sidebar">
-      <button class="sidebar-button static-button">
-        Menu
-      </button>
-      
-      <button class="sidebar-button collapsible-button" *ngIf="user.admin" (click)="dashboardCollapse()">
-        {{ isDashboardCollapsed ? '▶' : '▼' }} Dashboards
-      </button>
-      
-      <div class="sub-buttons" *ngIf="!isDashboardCollapsed">
-        <button 
-          class="sidebar-button sub-button" 
-          *ngFor="let entry of dashboards"
-          (click)="selectDashboard(entry[0], entry[1])"
-        >
-          {{ entry[0] }}
+      <div class="sidebar-content">
+        <button class="sidebar-button" *ngIf="user.super_admin" routerLink="/console">
+          Super admin stuff
         </button>
+        
+        <button class="sidebar-button" *ngIf="user.admin" (click)="dashboardCollapse()">
+          {{ isDashboardCollapsed ? '▶' : '▼' }} Dashboards
+        </button>
+        
+        <div class="sub-buttons" *ngIf="!isDashboardCollapsed">
+          <button 
+            class="sidebar-button sub-button" 
+            *ngFor="let entry of dashboards"
+            (click)="selectDashboard(entry[0], entry[1])"
+          >
+            {{ entry[0] }}
+          </button>
+        </div>
       </div>
-      <button class="sidebar-button static-button" (click)="logout()">
+      <button class="sidebar-button logout-button" (click)="logout()">
         Logout
       </button>
     </div>

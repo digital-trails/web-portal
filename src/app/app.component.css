@@ -1,14 +1,3 @@
-.hero {
-  background-image: repeating-linear-gradient(-45deg, #5555, #5555 1px, transparent 1px, transparent 6px);
-  background-size: 4px 4px;
-  background-color: #9119f610;
-  padding: 2rem;
-}
-
-.r-6 {
-  border-radius: 6px
-}
-
 .main-container {
   display: flex;
   min-height: calc(100vh - 120px);
@@ -21,16 +10,18 @@
 
 .sidebar {
   position: sticky;
-  top: 20px; 
+  top: 20px;
   height: calc(100vh);
   overflow-y: auto;
-  background-color:#9119f610;;
+  background-color:#9119f610;
   padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
-.content-area {
+.sidebar-content {
   flex: 1;
-  padding: 0 20px;
 }
 
 .sidebar-button {
@@ -48,6 +39,56 @@
 }
 
 
+.static-button {
+  background-color: #212529;
+  color: white;
+}
+
+.sub-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-left: 15px;
+  margin-bottom: 15px;
+}
+
+.sub-button {
+  background-color: #f1f1f1;
+  color: #333;
+  border-left: 3px solid #495057;
+}
+
+.sub-button:hover {
+  background-color: #ddd;
+}
+
+.logout-button {
+  background-color: #d63031;
+  color: white;
+  margin-top: auto;
+  margin-bottom: 0;
+}
+
+.logout-button:hover {
+  background-color: #ff7675;
+}
+
+.content-area {
+  flex: 1;
+  padding: 0 20px;
+}
+
+.hero {
+  background-image: repeating-linear-gradient(-45deg, #5555, #5555 1px, transparent 1px, transparent 6px);
+  background-size: 4px 4px;
+  background-color: #9119f610;
+  padding: 2rem;
+}
+
+.r-6 {
+  border-radius: 6px;
+}
+
 @media (max-width: 992px) {
   .main-container {
     flex-direction: column;
@@ -64,20 +105,8 @@
     height: auto;
     margin-bottom: 20px;
   }
-}
-
-.sub-buttons {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  margin-left: 15px;
-}
-
-.sub-button {
-  background-color: #f1f1f1;
-  color: #333;
-}
-
-.sub-button:hover {
-  background-color: #ddd;
+  
+  .logout-button {
+    margin-top: 15px;
+  }
 }
