@@ -1,21 +1,21 @@
 import { createReducer, on } from "@ngrx/store";
+import { User } from "../../models/user";
 import { UserActions } from "./user.actions";
-import { ClientPrincipal } from "../../models/user";
 
 export interface UserState {
-  clientPrincipal?: ClientPrincipal;
+  user?: User;
 }
 
 export const initialState: UserState = {
-  clientPrincipal: undefined
+  user: undefined
 };
 
 export const UserReducer = createReducer(
   initialState,
-  on(UserActions.setClientPrincipal, (state, { clientPrincipal }) => {
+  on(UserActions.setUser, (state, { user }) => {
     return {
       ...state,
-      clientPrincipal: clientPrincipal
+      user: user
     };
   })
 );

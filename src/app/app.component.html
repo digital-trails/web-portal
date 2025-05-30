@@ -1,27 +1,48 @@
-<main class="main container my-5">
-
-  <div class="d-flex justify-content-end mt-3" *ngIf="isLoggedIn">
-    <a class="btn btn-outline-danger" (click)="logout()">Logout</a>
+<main class="main-container">
+  <div class="sidebar-container" *ngIf="isLoggedIn && !!user">
+    <div class="sidebar">
+      <button class="sidebar-button static-button">
+        Menu
+      </button>
+      
+      <button class="sidebar-button collapsible-button" *ngIf="user.admin" (click)="dashboardCollapse()">
+        {{ isDashboardCollapsed ? '▶' : '▼' }} Dashboards
+      </button>
+      
+      <div class="sub-buttons" *ngIf="!isDashboardCollapsed">
+        <button 
+          class="sidebar-button sub-button" 
+          *ngFor="let entry of dashboards"
+          (click)="selectDashboard(entry[0], entry[1])"
+        >
+          {{ entry[0] }}
+        </button>
+      </div>
+      <button class="sidebar-button static-button" (click)="logout()">
+        Logout
+      </button>
+    </div>
   </div>
-  
-  <div class="hero r-6" *ngIf="!isLoggedIn">
-    <div class="sign-in">
-      <div class="row align-items-center ">
-        <div class="col-md-6">
-          <h2>Welcome to Digital Trails Portal</h2>
-          <div class="text-body-secondary">
-            Access your research dashboard, manage projects, and collaborate with team members.
-            Sign in to view your personalized workspace and continue your research journey.
-          </div>
-          <a routerLink="/dashboard" class="btn btn-primary btn-lg mt-3">Sign In</a>
-        </div>
 
-        <div class="col-md-6 text-center d-none d-md-block">
-          <img src="logo.svg" alt="Digital Trails Logo" height="300">
+  <div class="content-area">
+    <div class="hero r-6" *ngIf="!isLoggedIn">
+      <div class="sign-in">
+        <div class="row align-items-center ">
+          <div class="col-md-6">
+            <h2>Welcome to Digital Trails Portal</h2>
+            <div class="text-body-secondary">
+              Access your research dashboard, manage projects, and collaborate with team members.
+              Sign in to view your personalized workspace and continue your research journey.
+            </div>
+            <a routerLink="/dashboard" class="btn btn-primary btn-lg mt-3">Sign In</a>
+          </div>
+  
+          <div class="col-md-6 text-center d-none d-md-block">
+            <img src="logo.svg" alt="Digital Trails Logo" height="300">
+          </div>
         </div>
       </div>
     </div>
+    <router-outlet></router-outlet>
   </div>
 </main>
-
-<router-outlet></router-outlet>

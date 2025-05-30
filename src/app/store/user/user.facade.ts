@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { Store } from '@ngrx/store';
-import { EMPTY, map, Observable, switchMap, take, tap } from 'rxjs';
+import { forkJoin, map, Observable, of, switchMap, tap } from 'rxjs';
 import { AppState } from '../../app.module';
 import { HttpFacade } from '../../http.facade';
-import { ClientPrincipal } from '../../models/user';
-import { UserActions } from './user.actions';
+import { User } from '../../models/user';
 import { UserSelectors } from './user.selectors';
+import { UserActions } from './user.actions';
 
 
 @Injectable({
@@ -13,37 +14,54 @@ import { UserSelectors } from './user.selectors';
 })
 export class UserFacade {
 
-    constructor(private httpFacade: HttpFacade, private store: Store<AppState>) { }
+    constructor(private httpFacade: HttpFacade, private store: Store<AppState>, private sanitizer: DomSanitizer) { }
 
-    get getClientPrinciple$(): Observable<ClientPrincipal | undefined> {
-        return this.store.select(UserSelectors.selectClientPrincipal);
-    }
+    getUser$(): Observable<User> {
 
-    loadClientPrinciple(): void {
-        this.store.select(UserSelectors.selectIsLoaded).pipe(
-            take(1),
-            switchMap(isLoaded => {
-                if (isLoaded) {
-                    return EMPTY;
-                }
-                return this.httpFacade.getAuth().pipe(
-                    take(1),
-                    tap(data => {
-                        this.store.dispatch(UserActions.setClientPrincipal({
-                            clientPrincipal: data.clientPrincipal
-                        }));
-                    }));
+        return this.store.select(UserSelectors.selectUser).pipe(
+            switchMap(user => {
+                if(user) return of(user);
+                return this.httpFacade.get("https://portal.digital-trails.org/api/v2/user").pipe(
+                    switchMap(data => {
+        
+                        const adminStudies = data?.admin ? Object.entries(data.admin.studies) : [];
+                        const dashboardObservables = adminStudies.map(([key, value]) => 
+                            this.dashboardUrl$(Number(value)).pipe(
+                                map(url => [key, url] as [string, string])
+                            )
+                        );
+                        
+                        return forkJoin(dashboardObservables).pipe(
+                            map(dashboardResults => {
+        
+                                var user: User = {
+                                    id: data.id,
+                                    super_admin: data?.super_admin || false
+                                };
+        
+                                if(data?.admin) {
+                                    user.admin = {
+                                        studies: new Map<string, string>(dashboardResults)
+                                    };
+                                }
+        
+                                if(data?.user) {
+                                    user.user = {
+                                        studies: [...data?.user.studies]
+                                    };
+                                }
+        
+                                return user;
+                            })
+                        );
+                    }),
+                    tap(user =>  this.store.dispatch(UserActions.setUser({ user })))
+                );
             })
-        ).subscribe()
+        );
     }
 
-    dashboardUrl$(): Observable<any> {
-        return this.httpFacade.get("https://portal.digital-trails.org/api/v2/signjwt?dashboard=1").pipe(map(data => data.url));
-    }
-
-    clearClaims(): void {
-        this.store.dispatch(UserActions.setClientPrincipal({
-            clientPrincipal: undefined
-        }));
+    dashboardUrl$(dashboard: number | undefined): Observable<any> {
+        return this.httpFacade.get(`https://portal.digital-trails.org/api/v2/signjwt?dashboard=${dashboard}`).pipe(map(data => this.sanitizer.bypassSecurityTrustResourceUrl(data.url)));
     }
 }

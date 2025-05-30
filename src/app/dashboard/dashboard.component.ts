@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { take } from 'rxjs';
+import { SafeResourceUrl } from '@angular/platform-browser';
+import { map, switchMap, take } from 'rxjs';
 import { UserFacade } from '../store/user/user.facade';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -13,13 +14,17 @@ import { UserFacade } from '../store/user/user.facade';
 export class DashboardComponent implements OnInit {
   iframeUrl?: SafeResourceUrl;
 
-  constructor(private userFacade: UserFacade, private sanitizer: DomSanitizer) { }
+  constructor(private userFacade: UserFacade, private route: ActivatedRoute) { }
   
   ngOnInit(): void {
-    this.userFacade.dashboardUrl$().pipe(
-      take(1),
+    this.route.queryParams.pipe(
+      switchMap(params =>  {
+        return this.userFacade.getUser$().pipe(take(1), map(user => {
+          return user.admin?.studies.get(params["study"]);
+        }));
+      })
     ).subscribe(url => {
-      this.iframeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+      this.iframeUrl = url;
     });
   }
 }

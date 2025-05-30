@@ -1,11 +1,14 @@
-
-export interface ClientPrincipal {
-  userId?: string;
-  claims?: UserClaims[];
-  userDetails?: string;
-  roles?: string[];
-}
-
 export interface UserClaims {
   email?: string;
+}
+
+export interface User {
+  id: string,
+  admin?: {
+    studies: Map<string, string>
+  },
+  user?: {
+    studies: string[]
+  },
+  super_admin: boolean
 }

@@ -1,9 +1,9 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { MSAL_GUARD_CONFIG, MsalGuardConfiguration, MsalService } from '@azure/msal-angular';
-import { catchError, map, of, Subject, switchMap } from 'rxjs';
-import { ClientPrincipal } from './models/user';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { RedirectRequest } from '@azure/msal-browser';
+import { MsalService } from '@azure/msal-angular';
+import { take } from 'rxjs';
+import { User } from './models/user';
+import { UserFacade } from './store/user/user.facade';
 
 @Component({
   selector: 'app-root',
@@ -14,9 +14,14 @@ import { RedirectRequest } from '@azure/msal-browser';
 export class AppComponent implements OnInit {
   title = 'web-portal';
   isLoggedIn = false;
+  isDashboardCollapsed = false;
+  user?: User = undefined;
+  dashboards: [string, string][] = [];
 
   constructor(
+    private userFacade: UserFacade,
     private authService: MsalService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -29,16 +34,41 @@ export class AppComponent implements OnInit {
         }
       },
       error: (error) => {
+        this.setLoginDisplay();
         console.error('Authentication error:', error);
       }
     });
+
   }
 
   setLoginDisplay(): void {
     this.isLoggedIn = this.authService.instance.getAllAccounts().length > 0;
+
+    if (this.isLoggedIn) {
+      this.userFacade.getUser$().pipe(
+        take(1)
+      ).subscribe(user => {
+        this.user = user;
+        if(user.admin?.studies) {
+          this.dashboards = Array.from(user.admin.studies.entries());
+          this.selectDashboard(this.dashboards[0][0], this.dashboards[0][1]);
+        }
+      })
+    }
   }
 
   logout(): void {
     this.authService.logoutRedirect();
+  }
+
+  dashboardCollapse() {
+    this.isDashboardCollapsed = !this.isDashboardCollapsed;
+  }
+
+  selectDashboard(name: string, url: string) {
+
+    this.router.navigate(['/dashboard'], {
+      queryParams: { study: name }
+    });
   }
 }
