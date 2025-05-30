@@ -16,7 +16,7 @@ export class AppComponent implements OnInit {
   isLoggedIn = false;
   isDashboardCollapsed = false;
   user?: User = undefined;
-  dashboards: [string, string][] = [];
+  dashboardNames: string[] = [];
 
   constructor(
     private userFacade: UserFacade,
@@ -38,7 +38,6 @@ export class AppComponent implements OnInit {
         console.error('Authentication error:', error);
       }
     });
-
   }
 
   setLoginDisplay(): void {
@@ -50,8 +49,8 @@ export class AppComponent implements OnInit {
       ).subscribe(user => {
         this.user = user;
         if(user.admin?.studies) {
-          this.dashboards = Array.from(user.admin.studies.entries());
-          this.selectDashboard(this.dashboards[0][0], this.dashboards[0][1]);
+          this.dashboardNames = Array.from(user.admin.studies.keys());
+          this.selectDashboard(this.dashboardNames[0]);
         }
       })
     }
@@ -65,8 +64,7 @@ export class AppComponent implements OnInit {
     this.isDashboardCollapsed = !this.isDashboardCollapsed;
   }
 
-  selectDashboard(name: string, url: string) {
-
+  selectDashboard(name: string) {
     this.router.navigate(['/dashboard'], {
       queryParams: { study: name }
     });

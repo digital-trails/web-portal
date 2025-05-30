@@ -13,10 +13,10 @@
         <div class="sub-buttons" *ngIf="!isDashboardCollapsed">
           <button 
             class="sidebar-button sub-button" 
-            *ngFor="let entry of dashboards"
-            (click)="selectDashboard(entry[0], entry[1])"
+            *ngFor="let entry of dashboardNames"
+            (click)="selectDashboard(entry)"
           >
-            {{ entry[0] }}
+            {{ entry }}
           </button>
         </div>
       </div>
