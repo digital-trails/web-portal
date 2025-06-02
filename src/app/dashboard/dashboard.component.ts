@@ -20,11 +20,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.route.queryParams.pipe(
-      takeUntil(this.destroy$),  // Add takeUntil here
+      takeUntil(this.destroy$),
       switchMap(params => {
         return this.userFacade.getUser$().pipe(
           take(1),
-          map(user => user.admin?.studies.get(params["study"]))
+          map(user => user?.admin?.studies.get(params["study"]))
         );
       })
     ).subscribe(url => {

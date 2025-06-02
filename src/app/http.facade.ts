@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable, isDevMode } from "@angular/core";
 import { MsalService } from "@azure/msal-angular";
-import { catchError, from, Observable, of, switchMap, take } from "rxjs";
+import { from, Observable, switchMap, take } from "rxjs";
 
 @Injectable({
     providedIn: 'root'
@@ -15,9 +15,6 @@ export class HttpFacade {
             switchMap(token => {
                 const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
                 return this.httpClient.get(path, { headers });
-            }),
-            catchError(error => {
-                return of(error);
             })
         );
     }

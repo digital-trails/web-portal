@@ -15,7 +15,7 @@ export class AppComponent implements OnInit {
   title = 'web-portal';
   isLoggedIn = false;
   isDashboardCollapsed = true;
-  user?: User = undefined;
+  user: User | undefined = undefined;
   dashboardNames: string[] = [];
 
   constructor(
@@ -47,9 +47,11 @@ export class AppComponent implements OnInit {
       this.userFacade.getUser$().pipe(
         take(1)
       ).subscribe(user => {
-        this.user = user;
-        if(user.admin?.studies) {
-          this.dashboardNames = Array.from(user.admin.studies.keys());
+        if(user) {
+          this.user = user;
+          if(user.admin?.studies) {
+            this.dashboardNames = Array.from(user.admin.studies.keys());
+          }
         }
       })
     }

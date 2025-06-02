@@ -1,7 +1,7 @@
 <main class="main-container">
-  <div class="sidebar-container" *ngIf="isLoggedIn && !!user">
+  <div class="sidebar-container">
     <div class="sidebar">
-      <div class="sidebar-content">
+      <div class="sidebar-content" *ngIf="isLoggedIn && !!user">
         <button class="sidebar-button" *ngIf="user.super_admin" routerLink="/console">
           Super admin stuff
         </button>
@@ -21,7 +21,7 @@
           </button>
         </div>
       </div>
-      <button class="sidebar-button logout-button" (click)="logout()">
+      <button class="sidebar-button logout-button" (click)="logout()" *ngIf="isLoggedIn">
         Logout
       </button>
     </div>
