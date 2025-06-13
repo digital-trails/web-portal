@@ -1,0 +1,48 @@
+# GitHub recommends pinning actions to a commit SHA.
+# To get a newer version, you will need to update the SHA.
+# You can also reference a tag or branch, but the action may change without warning.
+name: Build and Deploy Angular App to Azure Static Web Apps
+env:
+  APP_LOCATION: "/" # location of your Angular app source
+  OUTPUT_LOCATION: "dist/web-portal/browser" # Angular build output location (update with your app name)
+  API_LOCATION: "api"
+
+on:
+  # Automatically run this workflow when pushing to main
+  push:
+    branches:
+      - staging
+  # Manually run this workflow from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    name: Build and Deploy
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+          
+      - name: Install Dependencies
+        run: |
+          npm ci
+          npm install @azure/msal-angular @azure/msal-browser
+        
+      - name: Build Angular App
+        run: npm run build
+        
+      - name: Deploy Website
+        uses: Azure/static-web-apps-deploy@1a947af9992250f3bc2e68ad0754c0b0c11566c9
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.STAGING_WEB_PORTAL_API_TOKEN }}
+          action: "upload"
+          app_location: ${{ env.APP_LOCATION }}
+          output_location: ${{ env.OUTPUT_LOCATION }}
+          api_location: ${{ env.API_LOCATION }}
+          app_build_command: "npm run build"
