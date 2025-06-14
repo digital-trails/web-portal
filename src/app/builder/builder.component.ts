@@ -1,13 +1,13 @@
-// console.component.ts
+// builder.component.ts
 import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-console',
   standalone: false,
-  templateUrl: './console.component.html',
-  styleUrls: ['./console.component.css']
+  templateUrl: './builder.component.html',
+  styleUrls: ['./builder.component.css']
 })
-export class ConsoleComponent {
+export class BuilderComponent {
   activeSection = 'users';
   searchQuery = '';
 

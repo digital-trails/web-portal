@@ -13,6 +13,11 @@ const routes: Routes = [
     path: "console",
     loadChildren: () => import('./console/console.module').then(m => m.ConsoleModule),
     canActivate: [MsalGuard]
+  },
+  {
+    path: "builder",
+    loadChildren: () => import('./builder/builder.module').then(m => m.BuilderModule),
+    canActivate: [MsalGuard]
   }
 ];
 
