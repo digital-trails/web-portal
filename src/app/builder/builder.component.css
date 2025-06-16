@@ -238,12 +238,36 @@
   color: #666;
   cursor: pointer;
   padding: 4px;
+  transition: all 0.2s ease;
+  border-radius: 6px;
+}
+
+.footer-btn:hover {
+  background: rgba(99, 102, 241, 0.1);
+  color: #6366f1;
 }
 
 .footer-btn i {
-  font-size: 16px;
+  font-size: 18px;
   margin-bottom: 2px;
   color: #4a5568;
+  font-weight: bold;
+}
+
+.footer-btn:hover i {
+  color: #6366f1;
+}
+
+/* Ensure PrimeIcons are loaded */
+.footer-btn i.pi {
+  font-family: 'primeicons' !important;
+  font-style: normal;
+  font-weight: normal !important;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  display: inline-block;
+  -webkit-font-smoothing: antialiased;
 }
 
 /* PrimeNG Overrides */
