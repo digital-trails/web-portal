@@ -69,6 +69,14 @@ html {
   margin-top: 16px !important;
 }
 
+.p-button .p-button-icon {
+  margin-right: 8px !important;
+}
+
+.p-button .p-button-label {
+  margin-left: 4px !important;
+}
+
 .p-button:hover {
   background: #5856eb !important;
 }
