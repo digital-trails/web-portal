@@ -75,19 +75,21 @@
   height: 640px;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   border-radius: 30px;
-  padding: 20px;
+  padding: 15px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
   border: 8px solid #2d3748;
   position: relative;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Phone Header */
 .phone-header {
   background: rgba(255, 255, 255, 0.95);
-  border-radius: 15px;
-  padding: 16px;
-  margin-bottom: 20px;
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin-bottom: 15px;
   backdrop-filter: blur(10px);
 }
 
@@ -95,11 +97,11 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
 .app-title {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: bold;
   color: #2d3748;
 }
@@ -107,18 +109,17 @@
 .star-btn {
   background: none;
   border: none;
-  font-size: 20px;
+  font-size: 18px;
   color: #ffd700;
   cursor: pointer;
 }
 
-.phone-flavors {
-  font-size: 14px;
-  color: #666;
+.phone-subtitle {
+  margin-top: 4px;
 }
 
-.phone-subtitle {
-  font-size: 14px;
+.flavor-text {
+  font-size: 13px;
   color: #666;
 }
 
@@ -127,25 +128,31 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 15px;
+  min-height: 0;
 }
 
 /* Surveys Section */
 .surveys-section {
   display: flex;
   justify-content: center;
+  padding: 20px 10px;
+  flex: 0 0 auto;
 }
 
 .surveys-btn {
   background: #48bb78;
   color: white;
   border: none;
-  padding: 12px 24px;
-  border-radius: 20px;
+  padding: 16px 24px;
+  border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
   box-shadow: 0 4px 12px rgba(72, 187, 120, 0.3);
   transition: all 0.3s ease;
+  width: 100%;
+  max-width: 200px;
+  font-size: 14px;
 }
 
 .surveys-btn:hover {
@@ -157,15 +164,17 @@
 .buttons-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 15px;
+  gap: 12px;
   flex: 1;
+  padding: 0 5px;
+  min-height: 160px;
 }
 
 .app-button {
   border: none;
-  border-radius: 15px;
-  padding: 20px 12px;
-  font-size: 13px;
+  border-radius: 12px;
+  padding: 16px 8px;
+  font-size: 12px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -175,47 +184,50 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 80px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+  word-break: break-word;
+  line-height: 1.2;
 }
 
 .app-button:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
-/* Button Colors */
+/* Button Colors - matching the image */
 .top-left {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: #e6e6fa;
+  color: #4a5568;
 }
 
 .top-right {
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-  color: white;
+  background: #f0fff0;
+  color: #4a5568;
 }
 
 .bottom-left {
-  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-  color: white;
+  background: #e0f6ff;
+  color: #4a5568;
 }
 
 .bottom-right {
-  background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-  color: white;
+  background: #f5f0ff;
+  color: #4a5568;
 }
 
 /* Phone Footer */
 .phone-footer {
-  background: rgba(255, 255, 255, 0.9);
-  border-radius: 15px;
-  padding: 12px;
-  margin-top: auto;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  padding: 8px;
+  margin-top: 10px;
+  flex: 0 0 auto;
 }
 
 .footer-buttons {
   display: flex;
   justify-content: space-around;
+  align-items: center;
 }
 
 .footer-btn {
@@ -225,11 +237,13 @@
   font-size: 10px;
   color: #666;
   cursor: pointer;
+  padding: 4px;
 }
 
 .footer-btn i {
   font-size: 16px;
-  margin-bottom: 4px;
+  margin-bottom: 2px;
+  color: #4a5568;
 }
 
 /* PrimeNG Overrides */
