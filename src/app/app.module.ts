@@ -1,5 +1,6 @@
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
   MSAL_GUARD_CONFIG,
   MSAL_INSTANCE,
@@ -57,6 +58,7 @@ export function initializeMSAL(msalInstance: IPublicClientApplication) {
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     AppRoutingModule,
     MsalModule
   ],
