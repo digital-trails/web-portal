@@ -45,6 +45,11 @@ html {
   transition: border-color 0.2s !important;
   width: 100% !important;
   background: white !important;
+  color: #1f2937 !important;
+}
+
+.p-inputtext::placeholder {
+  color: #9ca3af !important;
 }
 
 .p-inputtext:focus {
@@ -61,6 +66,7 @@ html {
   color: white !important;
   cursor: pointer !important;
   transition: background 0.2s !important;
+  margin-top: 16px !important;
 }
 
 .p-button:hover {
