@@ -1,3 +1,157 @@
-<div>
-    Builder
+<div class="builder-container">
+  <!-- Left side - Form Editor -->
+  <div class="form-editor">
+    <p-panel header="App Builder" [toggleable]="false">
+      <form [formGroup]="appForm">
+        <!-- Basic Information -->
+        <div class="form-section">
+          <h3>Basic Information</h3>
+          <div class="p-fluid">
+            <div class="field">
+              <label for="title">App Title</label>
+              <input 
+                id="title" 
+                type="text" 
+                pInputText 
+                formControlName="title" 
+                placeholder="Enter app title"
+              />
+            </div>
+            
+            <div class="field">
+              <label for="subtitle">Subtitle</label>
+              <input 
+                id="subtitle" 
+                type="text" 
+                pInputText 
+                formControlName="subtitle" 
+                placeholder="Enter subtitle"
+              />
+            </div>
+          </div>
+        </div>
+
+        <p-divider></p-divider>
+
+        <!-- Buttons Section -->
+        <div class="form-section">
+          <h3>Button Labels</h3>
+          <div class="p-fluid">
+            <div class="field">
+              <label for="button1">Button 1</label>
+              <input 
+                id="button1" 
+                type="text" 
+                pInputText 
+                formControlName="button1" 
+                placeholder="Button 1 text"
+              />
+            </div>
+            
+            <div class="field">
+              <label for="button2">Button 2</label>
+              <input 
+                id="button2" 
+                type="text" 
+                pInputText 
+                formControlName="button2" 
+                placeholder="Button 2 text"
+              />
+            </div>
+            
+            <div class="field">
+              <label for="button3">Button 3</label>
+              <input 
+                id="button3" 
+                type="text" 
+                pInputText 
+                formControlName="button3" 
+                placeholder="Button 3 text"
+              />
+            </div>
+            
+            <div class="field">
+              <label for="button4">Button 4</label>
+              <input 
+                id="button4" 
+                type="text" 
+                pInputText 
+                formControlName="button4" 
+                placeholder="Button 4 text"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Export Button -->
+        <div class="form-section">
+          <p-button 
+            label="Export Config" 
+            icon="pi pi-download" 
+            (onClick)="exportConfig()"
+            severity="secondary">
+          </p-button>
+        </div>
+      </form>
+    </p-panel>
+  </div>
+
+  <!-- Right side - Phone Preview -->
+  <div class="phone-preview">
+    <div class="phone-container">
+      <!-- Phone Frame -->
+      <div class="phone-frame">
+        <!-- Phone Header -->
+        <div class="phone-header">
+          <div class="phone-header-content">
+            <span class="app-title">{{ appData.title }}</span>
+            <button class="star-btn">★</button>
+          </div>
+          <div class="phone-subtitle">
+            <span>{{ appData.subtitle }}</span>
+          </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="phone-content">
+          <!-- Four Main Buttons Grid -->
+          <div class="buttons-grid">
+            <button class="app-button top-left">
+              {{ appData.button1 }}
+            </button>
+            
+            <button class="app-button top-right">
+              {{ appData.button2 }}
+            </button>
+            
+            <button class="app-button bottom-left">
+              {{ appData.button3 }}
+            </button>
+            
+            <button class="app-button bottom-right">
+              {{ appData.button4 }}
+            </button>
+          </div>
+        </div>
+
+        <!-- Phone Footer -->
+        <div class="phone-footer">
+          <div class="footer-buttons">
+            <div class="footer-btn">
+              <i class="pi pi-bars"></i>
+              <span>Menu</span>
+            </div>
+            <div class="footer-btn">
+              <i class="pi pi-home"></i>
+              <span>Home</span>
+            </div>
+            <div class="footer-btn">
+              <i class="pi pi-cog"></i>
+              <span>Settings</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

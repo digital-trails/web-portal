@@ -2,43 +2,57 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
 
-interface AppButton {
-  text: string;
-  icon?: string | { url: string; tint: boolean };
-  action?: string;
-}
-
-interface AppConfig {
-  home: {
-    title: string;
-    banner_text: string;
-    banner_icon: string;
-    button_ls: AppButton;
-    button_rs: AppButton;
-    button_surveys: AppButton;
-    button_tl: AppButton;
-    button_tr: AppButton;
-    button_br: AppButton;
-    button_bl: AppButton;
-  };
-}
-
 @Component({
   selector: 'app-builder',
   standalone: false,
   templateUrl: './builder.component.html',
   styleUrls: ['./builder.component.css']
 })
-export class BuilderComponent {
-  activeSection = 'users';
-  searchQuery = '';
+export class BuilderComponent implements OnInit {
+  appForm: FormGroup;
+  
+  // Simple data structure for the phone preview
+  appData = {
+    title: "My App",
+    subtitle: "App Builder Demo",
+    button1: "Button 1",
+    button2: "Button 2", 
+    button3: "Button 3",
+    button4: "Button 4"
+  };
 
+  constructor(private fb: FormBuilder) {
+    this.appForm = this.createForm();
+  }
 
-  showSection(section: string) {
-    this.activeSection = section;
+  ngOnInit(): void {
+    // Subscribe to form changes for real-time updates
+    this.appForm.valueChanges.subscribe((value) => {
+      this.updateAppData(value);
+    });
+  }
+
+  createForm(): FormGroup {
+    return this.fb.group({
+      title: [this.appData.title],
+      subtitle: [this.appData.subtitle],
+      button1: [this.appData.button1],
+      button2: [this.appData.button2],
+      button3: [this.appData.button3],
+      button4: [this.appData.button4]
+    });
+  }
+
+  updateAppData(formValue: any): void {
+    this.appData.title = formValue.title || "My App";
+    this.appData.subtitle = formValue.subtitle || "App Builder Demo";
+    this.appData.button1 = formValue.button1 || "Button 1";
+    this.appData.button2 = formValue.button2 || "Button 2";
+    this.appData.button3 = formValue.button3 || "Button 3";
+    this.appData.button4 = formValue.button4 || "Button 4";
   }
 
   exportConfig(): void {
-    console.log('Current App Config:', JSON.stringify(this.appConfig, null, 2));
+    console.log('Current App Data:', JSON.stringify(this.appData, null, 2));
   }
 }

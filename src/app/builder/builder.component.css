@@ -1,1 +1,300 @@
+/* Main container layout */
+.builder-container {
+  display: flex;
+  height: 100vh;
+  background: #f5f5f5;
+  gap: 20px;
+  padding: 20px;
+}
 
+/* Left side - Form Editor */
+.form-editor {
+  flex: 1;
+  max-width: 500px;
+  overflow-y: auto;
+}
+
+/* Form styling */
+.form-section {
+  margin-bottom: 24px;
+}
+
+.form-section h3 {
+  margin: 0 0 16px 0;
+  color: #333;
+  font-weight: 600;
+}
+
+.field {
+  margin-bottom: 16px;
+}
+
+.field label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.field-group {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.button-row {
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.button-config-group {
+  margin-bottom: 20px;
+}
+
+.sessions-label {
+  display: inline-block;
+  margin-right: 12px;
+  vertical-align: middle;
+}
+
+/* Right side - Phone Preview */
+.phone-preview {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 400px;
+}
+
+.phone-container {
+  position: relative;
+}
+
+/* Phone Frame */
+.phone-frame {
+  width: 320px;
+  height: 640px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 30px;
+  padding: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  border: 8px solid #2d3748;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Phone Header */
+.phone-header {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 15px;
+  padding: 16px;
+  margin-bottom: 20px;
+  backdrop-filter: blur(10px);
+}
+
+.phone-header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.app-title {
+  font-size: 18px;
+  font-weight: bold;
+  color: #2d3748;
+}
+
+.star-btn {
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: #ffd700;
+  cursor: pointer;
+}
+
+.phone-flavors {
+  font-size: 14px;
+  color: #666;
+}
+
+.phone-subtitle {
+  font-size: 14px;
+  color: #666;
+}
+
+/* Phone Content */
+.phone-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Surveys Section */
+.surveys-section {
+  display: flex;
+  justify-content: center;
+}
+
+.surveys-btn {
+  background: #48bb78;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 20px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(72, 187, 120, 0.3);
+  transition: all 0.3s ease;
+}
+
+.surveys-btn:hover {
+  background: #38a169;
+  transform: translateY(-2px);
+}
+
+/* Buttons Grid */
+.buttons-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  flex: 1;
+}
+
+.app-button {
+  border: none;
+  border-radius: 15px;
+  padding: 20px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 80px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.app-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Button Colors */
+.top-left {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.top-right {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  color: white;
+}
+
+.bottom-left {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  color: white;
+}
+
+.bottom-right {
+  background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+  color: white;
+}
+
+/* Phone Footer */
+.phone-footer {
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 15px;
+  padding: 12px;
+  margin-top: auto;
+}
+
+.footer-buttons {
+  display: flex;
+  justify-content: space-around;
+}
+
+.footer-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 10px;
+  color: #666;
+  cursor: pointer;
+}
+
+.footer-btn i {
+  font-size: 16px;
+  margin-bottom: 4px;
+}
+
+/* PrimeNG Overrides */
+::ng-deep .p-panel .p-panel-header {
+  background: #6366f1;
+  color: white;
+  border: none;
+  border-radius: 8px 8px 0 0;
+}
+
+::ng-deep .p-panel .p-panel-content {
+  padding: 24px;
+  border: 1px solid #e5e7eb;
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+}
+
+::ng-deep .p-inputtext {
+  border: 2px solid #e5e7eb;
+  border-radius: 6px;
+  padding: 10px 12px;
+  transition: border-color 0.2s;
+}
+
+::ng-deep .p-inputtext:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+::ng-deep .p-button {
+  background: #6366f1;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 20px;
+}
+
+::ng-deep .p-button:hover {
+  background: #5856eb;
+}
+
+::ng-deep .p-divider {
+  margin: 20px 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .builder-container {
+    flex-direction: column;
+    height: auto;
+  }
+  
+  .form-editor {
+    max-width: none;
+  }
+  
+  .phone-frame {
+    width: 280px;
+    height: 560px;
+  }
+  
+  .field-group {
+    grid-template-columns: 1fr;
+  }
+  
+  .button-row {
+    grid-template-columns: 1fr;
+  }
+}
