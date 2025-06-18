@@ -16,11 +16,12 @@ import { TabViewModule } from 'primeng/tabview';
 import { UserFacade } from '../store/user/user.facade';
 import { BuilderComponent } from './builder.component';
 import { BuilderRoutingModule } from './builder-routing.module';
+import { AuthComponent } from './auth/auth.component';
 
 
 
 @NgModule({
-  declarations: [BuilderComponent],
+  declarations: [BuilderComponent, AuthComponent],
   imports: [
     BuilderRoutingModule,
     CommonModule,

@@ -1,0 +1,29 @@
+<h2>Authorizing via GitHub...</h2>
+
+<script>
+  (function () {
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get('code');
+
+    if (code) {
+      fetch(`https://digital-trails.org/api/v1/gh-token?code=${code}`, {
+        method: 'POST'
+      })
+        .then(response => response.json())
+        .then(data => {
+          console.log('Access Token:', data.token);
+          localStorage.setItem('githubAccessToken', data.token);
+
+          // Optional: redirect or show success
+          window.location.href = '/builder';
+        })
+        .catch(error => {
+          console.error('Token exchange failed:', error);
+          document.body.innerHTML = '<h3>Authorization failed.</h3>';
+        });
+    } else {
+      console.error('No code found.');
+      document.body.innerHTML = '<h3>No authorization code found.</h3>';
+    }
+  })();
+</script>
