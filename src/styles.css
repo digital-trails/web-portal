@@ -1,3 +1,5 @@
+@import "primeicons/primeicons.css";
+
 .footer {
     display: block;
     unicode-bidi: isolate;
@@ -7,4 +9,89 @@ html {
 	/* force the scroll bar to show so that
 	 * content doesn't shift between pages */
 	overflow-y: scroll;
+}
+
+/* Basic PrimeNG styling overrides since we can't import the theme CSS */
+.p-component {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* Builder specific global styles */
+.builder-container * {
+  box-sizing: border-box;
+}
+
+/* Custom PrimeNG component styling to replace missing theme CSS */
+.p-panel .p-panel-header {
+  background: #6366f1 !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 8px 8px 0 0 !important;
+  padding: 1rem !important;
+}
+
+.p-panel .p-panel-content {
+  padding: 24px !important;
+  border: 1px solid #e5e7eb !important;
+  border-top: none !important;
+  border-radius: 0 0 8px 8px !important;
+  background: white !important;
+}
+
+.p-inputtext {
+  border: 2px solid #e5e7eb !important;
+  border-radius: 6px !important;
+  padding: 10px 12px !important;
+  transition: border-color 0.2s !important;
+  width: 100% !important;
+  background: white !important;
+  color: #1f2937 !important;
+}
+
+.p-inputtext::placeholder {
+  color: #9ca3af !important;
+}
+
+.p-inputtext:focus {
+  border-color: #6366f1 !important;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1) !important;
+  outline: none !important;
+}
+
+.p-button {
+  background: #6366f1 !important;
+  border: none !important;
+  border-radius: 6px !important;
+  padding: 10px 20px !important;
+  color: white !important;
+  cursor: pointer !important;
+  transition: background 0.2s !important;
+  margin-top: 16px !important;
+}
+
+.p-button .p-button-icon {
+  margin-right: 8px !important;
+}
+
+.p-button .p-button-label {
+  margin-left: 4px !important;
+}
+
+.p-button:hover {
+  background: #5856eb !important;
+}
+
+.p-inputswitch .p-inputswitch-slider {
+  background: #cbd5e1 !important;
+  border-radius: 14px !important;
+  transition: background 0.2s !important;
+}
+
+.p-inputswitch.p-inputswitch-checked .p-inputswitch-slider {
+  background: #6366f1 !important;
+}
+
+.p-divider {
+  margin: 20px 0 !important;
+  border-top: 1px solid #e5e7eb !important;
 }
