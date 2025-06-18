@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { Router } from '@angular/router';
+import { MsalService } from '@azure/msal-angular';
+
 @Component({
   selector: 'app-builder',
   standalone: false,
@@ -19,7 +22,11 @@ export class BuilderComponent implements OnInit {
     button4: "Button 4"
   };
 
-  constructor(private fb: FormBuilder) {
+  constructor(
+    private fb: FormBuilder,
+    private authService: MsalService,
+    private router: Router
+  ) {
     this.appForm = this.createForm();
   }
 
@@ -69,5 +76,9 @@ export class BuilderComponent implements OnInit {
 
   onSidebarClick(): void {
     console.log('Sidebar button clicked — open settings modal.');
+  }
+
+  onLogoutClick(): void {
+    this.authService.logoutRedirect();
   }
 }

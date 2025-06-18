@@ -23,6 +23,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { loginRequest, msalConfig } from './auth.config';
 import { UserReducer, UserState } from './store/user/user.reducer';
+import { BuilderNavComponent } from './components/builder-nav/builder-nav.component';
+import { HeaderComponent } from './components/header/header.component';
 // import { BottomBarComponent } from './components/bottom-bar/bottom-bar.component';
 
 export const appState = (state: AppState) => state;
@@ -56,6 +58,8 @@ export function initializeMSAL(msalInstance: IPublicClientApplication) {
 @NgModule({
   declarations: [
     AppComponent,
+    BuilderNavComponent,
+    HeaderComponent,
     // BottomBarComponent
   ],
   imports: [
