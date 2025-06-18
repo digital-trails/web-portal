@@ -1,7 +1,5 @@
-// builder.component.ts
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
-
+import { FormBuilder, FormGroup } from '@angular/forms';
 @Component({
   selector: 'app-builder',
   standalone: false,
@@ -54,5 +52,22 @@ export class BuilderComponent implements OnInit {
 
   exportConfig(): void {
     console.log('Current App Data:', JSON.stringify(this.appData, null, 2));
+  }
+
+  // BottomBar button handlers
+  onHomeClick(): void {
+    console.log('Home button clicked — maybe reset form or navigate.');
+  }
+
+  onScriptsClick(): void {
+    console.log('Scripts button clicked — could trigger a search feature.');
+  }
+
+  onSensorsClick(): void {
+    console.log('Sensors button clicked — open profile settings.');
+  }
+
+  onSidebarClick(): void {
+    console.log('Sidebar button clicked — open settings modal.');
   }
 }
