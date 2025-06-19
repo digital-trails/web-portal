@@ -1,0 +1,22 @@
+<div class="sub-navbar bg-body-secondary" *ngIf="isBuilderPage">
+  <div class="container-fluid">
+    <div class="sub-nav-content">
+      <div class="nav-buttons">
+        <button class="btn btn-indigo" (click)="onScriptsClick()">
+          <i class="pi pi-file-edit"></i> Scripts
+        </button>
+        <button class="btn btn-indigo" (click)="onSensorsClick()">
+          <i class="pi pi-cog"></i> Sensors
+        </button>
+        <button class="btn btn-indigo" (click)="onSidebarClick()">
+          <i class="pi pi-bars"></i> Menu
+        </button>
+      </div>
+      <div class="logout-section">
+        <button class="btn btn-logout" (click)="onLogoutClick()">
+          <i class="pi pi-sign-out"></i> Logout
+        </button>
+      </div>
+    </div>
+  </div>
+</div> 

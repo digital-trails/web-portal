@@ -1,10 +1,14 @@
+/* Removed old builder navigation integration styles */
+
 /* Main container layout */
 .builder-container {
   display: flex;
-  height: 100vh;
+  height: calc(100vh - 120px);
   background: #f5f5f5;
   gap: 20px;
   padding: 20px;
+  margin: 0;
+  width: 100%;
 }
 
 /* Left side - Form Editor */

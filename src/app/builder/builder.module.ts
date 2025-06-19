@@ -17,10 +17,14 @@ import { UserFacade } from '../store/user/user.facade';
 import { BuilderComponent } from './builder.component';
 import { BuilderRoutingModule } from './builder-routing.module';
 
-
+// import your BottomBarComponent here
+import { BottomBarComponent } from '../components/bottom-bar/bottom-bar.component';
 
 @NgModule({
-  declarations: [BuilderComponent],
+  declarations: [
+    BuilderComponent,
+    BottomBarComponent
+  ],
   imports: [
     BuilderRoutingModule,
     CommonModule,
