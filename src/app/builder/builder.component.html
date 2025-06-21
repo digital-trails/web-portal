@@ -3,6 +3,32 @@
   <div class="form-editor">
     <p-panel header="App Builder" [toggleable]="false">
       <form [formGroup]="appForm">
+        
+        <!-- File Upload Section -->
+        <div class="form-section">
+          <h3>Upload Protocol.json</h3>
+          <div class="upload-container">
+            <input 
+              type="file" 
+              accept=".json"
+              (change)="onFileUpload($event)"
+              class="file-input"
+              id="file-upload"
+            />
+            <label for="file-upload" class="file-upload-label">
+              <i class="pi pi-upload"></i>
+              Upload protocol.json
+            </label>
+            <p-message 
+              *ngIf="uploadError" 
+              severity="error" 
+              [text]="uploadError">
+            </p-message>
+          </div>
+        </div>
+
+        <p-divider></p-divider>
+
         <!-- Basic Information -->
         <div class="form-section">
           <h3>Basic Information</h3>
@@ -28,14 +54,25 @@
                 placeholder="Enter subtitle"
               />
             </div>
+
+            <div class="field">
+              <label for="appIcon">App Icon URL</label>
+              <input 
+                id="appIcon" 
+                type="text" 
+                pInputText 
+                formControlName="appIcon" 
+                placeholder="Enter app icon URL"
+              />
+            </div>
           </div>
         </div>
 
         <p-divider></p-divider>
 
-        <!-- Buttons Section -->
+        <!-- Legacy Buttons Section -->
         <div class="form-section">
-          <h3>Button Labels</h3>
+          <h3>Button Labels (Legacy Support)</h3>
           <div class="p-fluid">
             <div class="field">
               <label for="button1">Button 1</label>
@@ -83,6 +120,134 @@
           </div>
         </div>
 
+        <p-divider></p-divider>
+
+        <!-- Dynamic Elements Section -->
+        <div class="form-section">
+          <h3>App Elements</h3>
+          
+          <!-- Add Element Buttons -->
+          <div class="add-element-buttons">
+            <p-button 
+              label="Add Alert" 
+              icon="pi pi-info-circle" 
+              (onClick)="addNewElement('alert')"
+              severity="secondary"
+              size="small">
+            </p-button>
+            <p-button 
+              label="Add Sessions" 
+              icon="pi pi-calendar" 
+              (onClick)="addNewElement('sessions')"
+              severity="secondary"
+              size="small">
+            </p-button>
+            <p-button 
+              label="Add Button" 
+              icon="pi pi-plus" 
+              (onClick)="addNewElement('button')"
+              severity="secondary"
+              size="small">
+            </p-button>
+            <p-button 
+              label="Add Carousel" 
+              icon="pi pi-images" 
+              (onClick)="addNewElement('carousel')"
+              severity="secondary"
+              size="small">
+            </p-button>
+            <p-button 
+              label="Add Tiles" 
+              icon="pi pi-th-large" 
+              (onClick)="addNewElement('tiles')"
+              severity="secondary"
+              size="small">
+            </p-button>
+          </div>
+
+          <!-- Dynamic Elements Forms -->
+          <div formArrayName="elements">
+            <div *ngFor="let elementForm of elementsArray.controls; let i = index" 
+                 [formGroupName]="i" 
+                 class="element-form">
+              
+              <!-- Element Header -->
+              <div class="element-header">
+                <span class="element-type">{{ elementForm.get('type')?.value | titlecase }}</span>
+                <p-button 
+                  icon="pi pi-trash" 
+                  (onClick)="removeElement(i)"
+                  severity="danger"
+                  size="small"
+                  [text]="true">
+                </p-button>
+              </div>
+
+              <!-- Alert Element -->
+              <div *ngIf="elementForm.get('type')?.value === 'alert'" class="element-content">
+                <div class="field">
+                  <label>Alert Title</label>
+                  <input type="text" pInputText formControlName="title" placeholder="Alert title" />
+                </div>
+                <div class="field">
+                  <label>Alert Message</label>
+                  <input type="text" pInputText formControlName="message" placeholder="Alert message" />
+                </div>
+                <div class="field">
+                  <label>Icon URL</label>
+                  <input type="text" pInputText formControlName="iconUrl" placeholder="Icon URL" />
+                </div>
+                <div class="field">
+                  <label>Icon Tint</label>
+                  <p-checkbox formControlName="iconTint" [binary]="true"></p-checkbox>
+                </div>
+              </div>
+
+              <!-- Sessions Element -->
+              <div *ngIf="elementForm.get('type')?.value === 'sessions'" class="element-content">
+                <div class="field">
+                  <label>Left Text</label>
+                  <input type="text" pInputText formControlName="leftText" placeholder="Left side text" />
+                </div>
+                <div class="field">
+                  <label>Left Icon</label>
+                  <input type="text" pInputText formControlName="leftIcon" placeholder="Left icon URL" />
+                </div>
+                <div class="field">
+                  <label>Right Text</label>
+                  <input type="text" pInputText formControlName="rightText" placeholder="Right side text" />
+                </div>
+                <div class="field">
+                  <label>Right Icon</label>
+                  <input type="text" pInputText formControlName="rightIcon" placeholder="Right icon URL" />
+                </div>
+                <div class="field">
+                  <label>Right Action</label>
+                  <input type="text" pInputText formControlName="rightAction" placeholder="Action URL" />
+                </div>
+              </div>
+
+              <!-- Button Element -->
+              <div *ngIf="elementForm.get('type')?.value === 'button'" class="element-content">
+                <div class="field">
+                  <label>Button Text</label>
+                  <input type="text" pInputText formControlName="actionText" placeholder="Button text" />
+                </div>
+                <div class="field">
+                  <label>Action URL</label>
+                  <input type="text" pInputText formControlName="actionUrl" placeholder="Action URL" />
+                </div>
+              </div>
+
+              <!-- Carousel/Tiles Element -->
+              <div *ngIf="elementForm.get('type')?.value === 'carousel' || elementForm.get('type')?.value === 'tiles'" class="element-content">
+                <p>Actions configuration for {{ elementForm.get('type')?.value }} (Advanced editing available after upload)</p>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
         <!-- Export Button -->
         <div class="form-section">
           <p-button 
@@ -104,7 +269,7 @@
         <!-- Phone Header -->
         <div class="phone-header">
           <div class="phone-header-content">
-            <span class="app-title">{{ appData.title }}</span>
+            <span class="app-title">{{ protocol.home.title || appData.title }}</span>
             <button class="star-btn">★</button>
           </div>
           <div class="phone-subtitle">
@@ -114,15 +279,63 @@
 
         <!-- Main Content Area -->
         <div class="phone-content">
-          <!-- View Surveys Section -->
-          <div class="surveys-section">
-            <button class="surveys-btn">
-              View Surveys
-            </button>
+          <!-- Dynamic Elements Preview -->
+          <div *ngFor="let element of protocol.home.elements" class="protocol-element">
+            
+            <!-- Alert Element -->
+            <div *ngIf="element.type === 'alert'" class="alert-element">
+              <div class="alert-header">
+                <img *ngIf="element.icon?.url" [src]="element.icon?.url" alt="Alert icon" class="alert-icon">
+                <span class="alert-title">{{ element.title }}</span>
+              </div>
+              <p class="alert-message">{{ element.message }}</p>
+            </div>
+
+            <!-- Sessions Element -->
+            <div *ngIf="element.type === 'sessions'" class="sessions-element">
+              <div class="sessions-left">
+                <img *ngIf="element.left?.icon" [src]="element.left!.icon" alt="Sessions icon" class="sessions-icon">
+                <span>{{ element.left!.text }}</span>
+              </div>
+              <div class="sessions-right">
+                <button class="sessions-btn">
+                  <img *ngIf="element.right?.icon" [src]="element.right!.icon" alt="Launch icon" class="sessions-icon">
+                  {{ element.right!.text }}
+                </button>
+              </div>
+            </div>
+
+            <!-- Button Element -->
+            <div *ngIf="element.type === 'button'" class="button-element">
+              <button class="protocol-button">{{ element.action!.text }}</button>
+            </div>
+
+            <!-- Carousel Element -->
+            <div *ngIf="element.type === 'carousel'" class="carousel-element">
+              <div class="carousel-container">
+                <div *ngFor="let action of element.actions" class="carousel-item" 
+                     [style.background-color]="action.backgroundcolor">
+                  <img *ngIf="action.icon" [src]="action.icon" alt="Carousel item" class="carousel-icon">
+                  <span class="carousel-text">{{ action.text }}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tiles Element -->
+            <div *ngIf="element.type === 'tiles'" class="tiles-element">
+              <div class="tiles-grid">
+                <div *ngFor="let action of element.actions" class="tile-item"
+                     [style.background-color]="action.backgroundcolor">
+                  <img *ngIf="action.icon" [src]="action.icon" alt="Tile item" class="tile-icon">
+                  <span class="tile-text">{{ action.text }}</span>
+                </div>
+              </div>
+            </div>
+
           </div>
 
-          <!-- Four Main Buttons Grid -->
-          <div class="buttons-grid">
+          <!-- Legacy Buttons Grid (if no elements or for fallback) -->
+          <div *ngIf="!protocol.home.elements || protocol.home.elements.length === 0" class="buttons-grid">
             <button class="app-button top-left">
               {{ appData.button1 }}
             </button>
