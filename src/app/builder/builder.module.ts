@@ -12,18 +12,19 @@ import { PanelModule } from 'primeng/panel';
 import { DividerModule } from 'primeng/divider';
 import { TooltipModule } from 'primeng/tooltip';
 import { TabViewModule } from 'primeng/tabview';
+import { FileUploadModule } from 'primeng/fileupload';
+import { MessageModule } from 'primeng/message';
+import { DropdownModule } from 'primeng/dropdown';
+import { ColorPickerModule } from 'primeng/colorpicker';
+import { CheckboxModule } from 'primeng/checkbox';
 
 import { UserFacade } from '../store/user/user.facade';
 import { BuilderComponent } from './builder.component';
 import { BuilderRoutingModule } from './builder-routing.module';
 
-// import your BottomBarComponent here
-import { BottomBarComponent } from '../components/bottom-bar/bottom-bar.component';
-
 @NgModule({
   declarations: [
-    BuilderComponent,
-    BottomBarComponent
+    BuilderComponent
   ],
   imports: [
     BuilderRoutingModule,
@@ -37,7 +38,12 @@ import { BottomBarComponent } from '../components/bottom-bar/bottom-bar.componen
     PanelModule,
     DividerModule,
     TooltipModule,
-    TabViewModule
+    TabViewModule,
+    FileUploadModule,
+    MessageModule,
+    DropdownModule,
+    ColorPickerModule,
+    CheckboxModule
   ],
   providers: [
     UserFacade,
