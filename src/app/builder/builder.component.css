@@ -340,3 +340,242 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* File Upload Styles */
+.upload-container {
+  margin-bottom: 16px;
+}
+
+.file-input {
+  display: none;
+}
+
+.file-upload-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: #e3f2fd;
+  border: 2px dashed #2196f3;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: #1976d2;
+  font-weight: 500;
+}
+
+.file-upload-label:hover {
+  background: #bbdefb;
+  border-color: #1976d2;
+}
+
+/* Element Management Styles */
+.add-element-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.element-form {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  background: #f9f9f9;
+}
+
+.element-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: #f5f5f5;
+  border-bottom: 1px solid #e0e0e0;
+  border-radius: 8px 8px 0 0;
+}
+
+.element-type {
+  font-weight: 600;
+  color: #333;
+}
+
+.element-content {
+  padding: 16px;
+}
+
+/* Protocol Elements Preview Styles */
+.protocol-element {
+  margin-bottom: 12px;
+}
+
+/* Alert Element */
+.alert-element {
+  background: rgba(255, 193, 7, 0.1);
+  border: 1px solid rgba(255, 193, 7, 0.3);
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 10px;
+}
+
+.alert-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.alert-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.alert-title {
+  font-weight: 600;
+  color: #333;
+  font-size: 14px;
+}
+
+.alert-message {
+  font-size: 12px;
+  color: #666;
+  margin: 0;
+}
+
+/* Sessions Element */
+.sessions-element {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(76, 175, 80, 0.1);
+  border: 1px solid rgba(76, 175, 80, 0.3);
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 10px;
+}
+
+.sessions-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #333;
+}
+
+.sessions-right {
+  display: flex;
+  align-items: center;
+}
+
+.sessions-icon {
+  width: 16px;
+  height: 16px;
+}
+
+.sessions-btn {
+  background: #4caf50;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 11px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Button Element */
+.button-element {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.protocol-button {
+  background: #2196f3;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Carousel Element */
+.carousel-element {
+  margin-bottom: 10px;
+}
+
+.carousel-container {
+  display: flex;
+  overflow-x: auto;
+  gap: 8px;
+  padding: 8px 0;
+}
+
+.carousel-item {
+  flex: 0 0 80px;
+  height: 60px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  text-align: center;
+}
+
+.carousel-icon {
+  width: 20px;
+  height: 20px;
+  margin-bottom: 2px;
+}
+
+.carousel-text {
+  font-size: 9px;
+  color: white;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
+}
+
+/* Tiles Element */
+.tiles-element {
+  margin-bottom: 10px;
+}
+
+.tiles-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.tile-item {
+  height: 50px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  text-align: center;
+}
+
+.tile-icon {
+  width: 18px;
+  height: 18px;
+  margin-bottom: 2px;
+}
+
+.tile-text {
+  font-size: 10px;
+  color: white;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
+}
