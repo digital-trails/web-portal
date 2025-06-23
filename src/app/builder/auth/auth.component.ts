@@ -16,21 +16,22 @@ export class AuthComponent implements OnInit {
     const code = urlParams.get('code');
 
     if (code) {
-      console.log('GitHub Code:', code);
-
-      this.http.post<any>(`https://digital-trails.org/api/v1/gh-token?code=${code}`, {})
-        .subscribe({
-          next: (data) => {
-            console.log('Access Token:', data.token);
-            localStorage.setItem('githubAccessToken', data.token);
-            window.location.href = '/builder';
-          },
-          error: (err) => {
-            console.error('Token exchange failed:', err);
-          }
-        });
+      this.http.post(
+        `https://digital-trails.org/api/v1/gh-token?client_id=Ov23liM8jdVptvkhxswe&code=${code}`,
+        {},
+        { responseType: 'text' }
+      )
+      .subscribe({
+        next: (data) => {
+          localStorage.setItem('githubAccessToken', data);
+          window.location.href = '/builder';
+        },
+        error: () => {
+          console.error('Error fetching access token');
+        }
+      });
     } else {
-      console.error('No code found.');
+      console.log('No code parameter found in URL');
     }
   }
 }
