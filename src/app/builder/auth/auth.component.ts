@@ -17,7 +17,7 @@ export class AuthComponent implements OnInit {
 
     if (code) {
       this.http.post(
-        `https://digital-trails.org/api/v1/gh-token?client_id=Ov23lisTlJQgZC8wmGWj&code=${code}`,
+        `https://digital-trails.org/api/v1/gh-token?client_id=Ov23liM8jdVptvkhxswe&code=${code}`,
         {},
         { responseType: 'text' }
       )
