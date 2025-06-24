@@ -17,6 +17,7 @@ import { UserFacade } from '../store/user/user.facade';
 import { BuilderComponent } from './builder.component';
 import { BuilderRoutingModule } from './builder-routing.module';
 import { AuthComponent } from './auth/auth.component';
+import { fileService } from './file-service.service';
 
 
 
@@ -38,7 +39,8 @@ import { AuthComponent } from './auth/auth.component';
   ],
   providers: [
     UserFacade,
-    provideHttpClient(withInterceptorsFromDi())
+    provideHttpClient(withInterceptorsFromDi()),
+    fileService
   ]
 })
 export class BuilderModule { }

@@ -23,7 +23,9 @@ export class AuthComponent implements OnInit {
       )
       .subscribe({
         next: (data) => {
-          localStorage.setItem('githubAccessToken', data);
+          const params = new URLSearchParams(data);
+          const accessToken = params.get('access_token');
+          sessionStorage.setItem('githubAccessToken', accessToken || '');
           window.location.href = '/builder';
         },
         error: () => {

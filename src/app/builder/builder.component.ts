@@ -1,6 +1,7 @@
 // builder.component.ts
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
+import { fileService } from './file-service.service';
 
 @Component({
   selector: 'app-builder',
@@ -21,11 +22,18 @@ export class BuilderComponent implements OnInit {
     button4: "Button 4"
   };
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private fileService: fileService) {
     this.appForm = this.createForm();
   }
 
   ngOnInit(): void {
+    this.fileService.fetchAndDecodeJson().subscribe({
+    next: (decodedJson) => {
+      console.log('✅ Decoded JSON:', decodedJson);
+      // You can now call updateFile() using this.githubService.updateFile()
+    },
+    error: (err) => console.error('❌ Error fetching and decoding:', err)
+  });
     // Subscribe to form changes for real-time updates
     this.appForm.valueChanges.subscribe((value) => {
       this.updateAppData(value);
