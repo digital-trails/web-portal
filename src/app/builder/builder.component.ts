@@ -28,9 +28,8 @@ export class BuilderComponent implements OnInit {
 
   ngOnInit(): void {
     this.fileService.fetchAndDecodeJson().subscribe({
-    next: (decodedJson) => {
+    next: (decodedJson) => { // MUNEER use decodedJson to populate the UI if you can
       console.log('✅ Decoded JSON:', decodedJson);
-      // You can now call updateFile() using this.githubService.updateFile()
     },
     error: (err) => console.error('❌ Error fetching and decoding:', err)
   });

@@ -8,7 +8,7 @@ import { Observable, map } from 'rxjs';
 export class fileService {
   private token = sessionStorage.getItem('githubAccessToken') || '';
   private owner!: string;
-  private repo = "test"; // need to change, just test for now
+  private repo = "test"; // need to change to name of the repository with src/protocol.json, just using my own test repo for now
   private filePath = "src/protocol.json";
   private sha!: string;
 
