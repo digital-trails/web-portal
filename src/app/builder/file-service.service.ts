@@ -41,7 +41,7 @@ export class fileService {
 
   // Combined method: fetch file + decode JSON
   fetchAndDecodeJson(): Observable<any> {
-    console.log('Auth header:', `token ${this.token}`);
+    console.log('Auth header:', `bearer ${this.token}`);
     return new Observable(observer => {
       this.getUserInfo().subscribe({
         next: (user) => {
@@ -61,9 +61,9 @@ export class fileService {
     });
   }
 
-  updateFile(token: string, repo: string, path: string, newContent: string, commitMessage: string): Observable<any> {
+  updateFile(newContent: string, commitMessage: string): Observable<any> {
     const headers = new HttpHeaders({
-      Authorization: `token ${token}`,
+      Authorization: `bearer ${this.token}`,
       Accept: 'application/vnd.github.v3+json'
     });
     const base64Content = btoa(newContent);
@@ -74,6 +74,6 @@ export class fileService {
       sha: this.sha
     };
 
-    return this.http.put(`https://api.github.com/repos/${this.owner}/${repo}/contents/${path}`, body, { headers });
+    return this.http.put(`https://api.github.com/repos/${this.owner}/${this.repo}/contents/${this.filePath}`, body, { headers });
   }
 }
