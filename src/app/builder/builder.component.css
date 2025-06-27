@@ -77,7 +77,7 @@
 .phone-frame {
   width: 320px;
   height: 640px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #1a1a1a;
   border-radius: 30px;
   padding: 15px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
@@ -90,7 +90,7 @@
 
 /* Phone Header */
 .phone-header {
-  background: rgba(255, 255, 255, 0.95);
+  background: #2a2a2a;
   border-radius: 12px;
   padding: 12px 16px;
   margin-bottom: 15px;
@@ -107,7 +107,7 @@
 .app-title {
   font-size: 16px;
   font-weight: bold;
-  color: #2d3748;
+  color: #ffffff;
 }
 
 .star-btn {
@@ -124,7 +124,7 @@
 
 .flavor-text {
   font-size: 13px;
-  color: #666;
+  color: #cccccc;
 }
 
 /* Phone Content */
@@ -136,32 +136,24 @@
   min-height: 0;
 }
 
-/* Surveys Section */
-.surveys-section {
-  display: flex;
-  justify-content: center;
-  padding: 20px 10px;
-  flex: 0 0 auto;
-}
-
+/* Show Surveys Button */
 .surveys-btn {
-  background: #48bb78;
-  color: white;
+  background: #2a2a2a;
+  color: #ffffff;
   border: none;
   padding: 16px 24px;
-  border-radius: 8px;
-  font-weight: 600;
+  border-radius: 12px;
+  font-weight: 500;
   cursor: pointer;
-  box-shadow: 0 4px 12px rgba(72, 187, 120, 0.3);
-  transition: all 0.3s ease;
   width: 100%;
-  max-width: 200px;
-  font-size: 14px;
+  font-size: 16px;
+  text-align: center;
+  transition: all 0.3s ease;
 }
 
 .surveys-btn:hover {
-  background: #38a169;
-  transform: translateY(-2px);
+  background: #3a3a3a;
+  transform: translateY(-1px);
 }
 
 /* Buttons Grid */
@@ -169,28 +161,52 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
-  flex: 1;
-  padding: 0 5px;
-  min-height: 160px;
+  padding: 0 8px;
+  margin-bottom: 16px;
+}
+
+/* Home screen sections */
+.top-tiles {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding: 0 8px;
+  margin-bottom: 16px;
+}
+
+.surveys-section {
+  padding: 0 8px;
+  margin-bottom: 16px;
+}
+
+.bottom-tiles {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding: 0 8px;
+  margin-bottom: 16px;
 }
 
 .app-button {
   border: none;
   border-radius: 12px;
   padding: 16px 8px;
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
   text-align: center;
   overflow: hidden;
   text-overflow: ellipsis;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
   word-break: break-word;
   line-height: 1.2;
+  min-height: 100px;
+  color: #ffffff;
 }
 
 .app-button:hover {
@@ -198,30 +214,45 @@
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
-/* Button Colors - matching the image */
-.top-left {
-  background: #e6e6fa;
-  color: #4a5568;
+/* Tile Colors - matching the app */
+.tile-neutral {
+  background: #3a3a3a;
+  color: #ffffff;
 }
 
-.top-right {
-  background: #f0fff0;
-  color: #4a5568;
+.tile-launch {
+  background: #3a3a3a;
+  color: #ffffff;
 }
 
-.bottom-left {
-  background: #e0f6ff;
-  color: #4a5568;
+.tile-surveys {
+  background: #8B5CF6;
+  color: #ffffff;
 }
 
-.bottom-right {
-  background: #f5f0ff;
-  color: #4a5568;
+.tile-blue {
+  background: #1e40af;
+  color: #ffffff;
+}
+
+.tile-green {
+  background: #059669;
+  color: #ffffff;
+}
+
+.tile-teal {
+  background: #0891b2;
+  color: #ffffff;
+}
+
+.tile-purple {
+  background: #7c3aed;
+  color: #ffffff;
 }
 
 /* Phone Footer */
 .phone-footer {
-  background: rgba(255, 255, 255, 0.95);
+  background: #2a2a2a;
   border-radius: 12px;
   padding: 8px;
   margin-top: 10px;
@@ -238,12 +269,31 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  font-size: 10px;
-  color: #666;
+  font-size: 12px;
+  color: #cccccc; /* Default light gray for dark theme */
   cursor: pointer;
-  padding: 4px;
+  padding: 8px 12px;
   transition: all 0.2s ease;
-  border-radius: 6px;
+  border-radius: 8px;
+  background: transparent;
+  border: none;
+}
+
+.footer-btn span {
+  color: inherit; /* Inherit color from parent */
+}
+
+.footer-btn.active {
+  color: #8B5CF6;
+}
+
+.footer-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.footer-btn i {
+  font-size: 18px;
+  margin-bottom: 4px;
 }
 
 .footer-btn:hover {
@@ -275,6 +325,17 @@
 }
 
 /* PrimeNG Overrides */
+::ng-deep .p-tooltip .p-tooltip-text {
+  background: rgba(255, 255, 255, 0.95) !important;
+  color: #000 !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  font-weight: 500 !important;
+}
+
+::ng-deep .p-tooltip .p-tooltip-arrow {
+  display: none !important;
+}
+
 ::ng-deep .p-panel .p-panel-header {
   background: #6366f1;
   color: white;
@@ -578,4 +639,972 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   width: 100%;
+}
+
+/* Back navigation */
+.nav-controls {
+  display: flex;
+  align-items: center;
+}
+
+.back-btn {
+  background: none;
+  border: none;
+  color: #4a5568;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 4px 8px;
+  margin-right: 8px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.back-btn:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+/* Screen indicator */
+.screen-indicator {
+  position: absolute;
+  bottom: -80px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.9);
+  color: #000;
+  border-radius: 12px;
+  padding: 4px 10px;
+  font-size: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.screen-info {
+  display: flex;
+}
+
+.current-screen {
+  font-weight: bold;
+}
+
+.preview-controls {
+  position: absolute;
+  bottom: -110px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+}
+
+.control-instructions {
+  position: absolute;
+  bottom: -140px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  color: #000 !important;
+}
+
+.control-instructions .instruction-text {
+  font-size: 12px !important;
+  color: #000 !important;
+  font-style: italic !important;
+  font-weight: 500 !important;
+  text-shadow: none !important;
+  opacity: 1 !important;
+}
+
+/* Screen Styles */
+.screen-home, 
+.screen-action, 
+.screen-session, 
+.screen-button {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-height: 0;
+  flex: 1;
+  overflow-y: auto;
+  padding-bottom: 16px;
+}
+
+/* Action Screen */
+.action-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  text-align: center;
+  background: #2a2a2a;
+  border-radius: 12px;
+  margin: 8px;
+  flex: 1;
+}
+
+.action-icon {
+  width: 64px;
+  height: 64px;
+  margin-bottom: 16px;
+}
+
+.action-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin: 8px 0 16px;
+  color: #ffffff;
+}
+
+.action-description {
+  font-size: 14px;
+  color: #cccccc;
+  margin-bottom: 24px;
+  line-height: 1.4;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+.action-button {
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  font-size: 14px;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.action-button.primary {
+  background: #8B5CF6;
+  color: white;
+}
+
+.action-button:hover {
+  transform: translateY(-2px);
+}
+
+/* Session Screen */
+.session-content {
+  display: flex;
+  flex-direction: column;
+  padding: 20px 16px;
+  background: #2a2a2a;
+  border-radius: 12px;
+  margin: 8px;
+  flex: 1;
+}
+
+.session-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 0 0 16px;
+  color: #ffffff;
+}
+
+.session-description {
+  font-size: 14px;
+  color: #cccccc;
+  margin-bottom: 24px;
+  line-height: 1.4;
+}
+
+.session-info {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 20px;
+}
+
+.session-info-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.session-info-item:last-child {
+  border-bottom: none;
+}
+
+.info-label {
+  font-weight: 500;
+  color: #cccccc;
+}
+
+.info-value {
+  color: #ffffff;
+}
+
+.session-buttons {
+  margin-top: auto;
+  display: flex;
+  justify-content: center;
+}
+
+.session-button {
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  font-size: 14px;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.session-button.primary {
+  background: #8B5CF6;
+  color: white;
+}
+
+.session-button:hover {
+  transform: translateY(-2px);
+}
+
+/* Button Screen */
+.button-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  text-align: center;
+  background: #2a2a2a;
+  border-radius: 12px;
+  margin: 8px;
+  flex: 1;
+}
+
+.button-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin: 8px 0 16px;
+  color: #ffffff;
+}
+
+.button-description {
+  font-size: 14px;
+  color: #cccccc;
+  margin-bottom: 24px;
+  line-height: 1.4;
+}
+
+.button-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+.button-button {
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  font-size: 14px;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.button-button.primary {
+  background: #8B5CF6;
+  color: white;
+}
+
+.button-button:hover {
+  transform: translateY(-2px);
+}
+
+/* Protocol Elements Styling */
+.protocol-element {
+  margin-bottom: 12px;
+}
+
+/* Alert Element */
+.alert-element {
+  background: #2a2a2a;
+  border-radius: 12px;
+  padding: 16px;
+  border-left: 4px solid #8B5CF6;
+}
+
+.alert-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.alert-icon {
+  width: 24px;
+  height: 24px;
+  margin-right: 12px;
+}
+
+.alert-title {
+  font-weight: bold;
+  color: #ffffff;
+  font-size: 16px;
+}
+
+.alert-message {
+  color: #cccccc;
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Sessions Element */
+.sessions-element {
+  background: #2a2a2a;
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sessions-left {
+  display: flex;
+  align-items: center;
+  color: #ffffff;
+}
+
+.sessions-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+}
+
+.sessions-right {
+  display: flex;
+  align-items: center;
+}
+
+.sessions-btn {
+  background: #8B5CF6;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.sessions-btn:hover {
+  background: #7C3AED;
+  transform: translateY(-1px);
+}
+
+/* Button Element */
+.button-element {
+  margin-bottom: 12px;
+}
+
+.protocol-button {
+  background: #8B5CF6;
+  color: white;
+  border: none;
+  padding: 16px 24px;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+.protocol-button:hover {
+  background: #7C3AED;
+  transform: translateY(-2px);
+}
+
+/* Tile styling for new layout */
+.tile-text {
+  font-size: 14px;
+  text-align: center;
+  line-height: 1.2;
+  font-weight: 500;
+  color: #ffffff; /* Default white text for dark theme */
+}
+
+.hexagon-icon {
+  font-size: 24px;
+  color: #ffffff;
+}
+
+/* Surveys Screen */
+.screen-surveys {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 16px;
+}
+
+.surveys-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.survey-item {
+  background: #8B5CF6;
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.survey-item:hover {
+  background: #7C3AED;
+  transform: translateY(-2px);
+}
+
+.survey-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.survey-arrow {
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.survey-icon {
+  font-size: 20px;
+  margin-right: 12px;
+}
+
+.survey-text {
+  color: #ffffff; /* Default white text for dark theme */
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.survey-icon {
+  color: #ffffff; /* Default white text for dark theme */
+}
+
+/* Settings Screen */
+.screen-settings {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 16px;
+}
+
+.settings-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.settings-item {
+  background: #2a2a2a;
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.settings-item:first-child {
+  border-radius: 12px 12px 0 0;
+}
+
+.settings-item:last-child {
+  border-radius: 0 0 12px 12px;
+  border-bottom: none;
+}
+
+.settings-text {
+  color: #ffffff; /* Default white text for dark theme */
+  font-size: 16px;
+}
+
+.settings-action {
+  display: flex;
+  align-items: center;
+}
+
+.toggle-switch {
+  width: 50px;
+  height: 28px;
+  background: #444;
+  border-radius: 14px;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.toggle-switch.active {
+  background: #8B5CF6;
+}
+
+.toggle-switch:before {
+  content: '';
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: white;
+  top: 2px;
+  left: 2px;
+  transition: transform 0.3s ease;
+}
+
+.toggle-switch.active:before {
+  transform: translateX(22px);
+}
+
+.settings-arrow {
+  color: #cccccc;
+  font-size: 18px;
+}
+
+/* Light Theme Styles */
+.phone-frame.light-theme {
+  background: #f8f9fa !important;
+}
+
+.phone-frame.light-theme .phone-content {
+  background: #ffffff !important;
+  color: #333333 !important;
+}
+
+.phone-frame.light-theme .phone-footer {
+  background: #ffffff !important;
+  border-top: 1px solid #e9ecef !important;
+}
+
+.phone-frame.light-theme .alert-element {
+  background: #e7f3ff !important;
+  border-left: 4px solid #007bff !important;
+}
+
+.phone-frame.light-theme .alert-title {
+  color: #007bff !important;
+}
+
+.phone-frame.light-theme .alert-message {
+  color: #6c757d !important;
+}
+
+.phone-frame.light-theme .app-button {
+  color: #333333 !important;
+  border: 1px solid #e9ecef !important;
+}
+
+.phone-frame.light-theme .app-button .tile-text {
+  color: #333333 !important;
+}
+
+.phone-frame.light-theme .app-button.tile-blue {
+  background: #e3f2fd !important;
+}
+
+.phone-frame.light-theme .app-button.tile-blue .tile-text {
+  color: #1976d2 !important;
+}
+
+.phone-frame.light-theme .app-button.tile-green {
+  background: #e8f5e8 !important;
+}
+
+.phone-frame.light-theme .app-button.tile-green .tile-text {
+  color: #388e3c !important;
+}
+
+.phone-frame.light-theme .app-button.tile-teal {
+  background: #e0f2f1 !important;
+}
+
+.phone-frame.light-theme .app-button.tile-teal .tile-text {
+  color: #00796b !important;
+}
+
+.phone-frame.light-theme .app-button.tile-purple {
+  background: #f3e5f5 !important;
+}
+
+.phone-frame.light-theme .app-button.tile-purple .tile-text {
+  color: #7b1fa2 !important;
+}
+
+.phone-frame.light-theme .app-button.tile-neutral {
+  background: #f5f5f5 !important;
+}
+
+.phone-frame.light-theme .app-button.tile-neutral .tile-text {
+  color: #666666 !important;
+}
+
+.phone-frame.light-theme .app-button.tile-launch {
+  background: #fff3e0 !important;
+}
+
+.phone-frame.light-theme .app-button.tile-launch .tile-text {
+  color: #f57c00 !important;
+}
+
+.phone-frame.light-theme .surveys-btn {
+  background: #007bff !important;
+  color: white !important;
+}
+
+.phone-frame.light-theme .footer-btn {
+  color: #6c757d !important;
+}
+
+.phone-frame.light-theme .footer-btn.active {
+  color: #007bff !important;
+  background: #e3f2fd !important;
+}
+
+.phone-frame.light-theme .footer-btn span {
+  color: inherit !important;
+}
+
+.phone-frame.light-theme .survey-item {
+  background: #f8f9fa !important;
+  border: 1px solid #e9ecef !important;
+}
+
+.phone-frame.light-theme .survey-text {
+  color: #333333 !important;
+}
+
+.phone-frame.light-theme .survey-icon {
+  color: #333333 !important;
+}
+
+.phone-frame.light-theme .settings-item {
+  background: #ffffff !important;
+  border-bottom: 1px solid #e9ecef !important;
+}
+
+.phone-frame.light-theme .settings-text {
+  color: #333333 !important;
+}
+
+.phone-frame.light-theme .settings-arrow {
+  color: #6c757d !important;
+}
+
+.phone-frame.light-theme .toggle-switch {
+  background: #e9ecef !important;
+}
+
+.phone-frame.light-theme .toggle-switch.active {
+  background: #007bff !important;
+}
+
+/* Survey Question Screen Styles */
+.screen-survey-question {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 16px;
+  padding-bottom: 40px; /* Remove extra padding */
+  position: relative;
+}
+
+.question-content {
+  display: flex;
+  flex-direction: column;
+  height: calc(100% - 80px); /* Reserve space for navigation */
+  padding-bottom: 16px;
+}
+
+.question-progress {
+  margin-bottom: 24px;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: #2a2a2a;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: #8B5CF6;
+  transition: width 0.3s ease;
+}
+
+.progress-text {
+  color: #cccccc;
+  font-size: 14px;
+  text-align: center;
+  display: block;
+}
+
+.question-header {
+  margin-bottom: 24px;
+}
+
+.question-title {
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.answer-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.answer-option {
+  background: #2a2a2a;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.answer-option:hover {
+  background: #3a3a3a;
+  border-color: #8B5CF6;
+}
+
+.answer-option.selected {
+  background: #8B5CF6;
+  border-color: #7C3AED;
+}
+
+.option-text {
+  color: #ffffff;
+  font-size: 16px;
+  flex: 1;
+}
+
+.option-check {
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.question-actions {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  background: inherit;
+  padding: 16px;
+  z-index: 10;
+}
+
+.back-btn {
+  background: #4a4a4a;
+  color: #ffffff;
+  border: none;
+  padding: 12px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+}
+
+.back-btn:hover {
+  background: #5a5a5a;
+}
+
+.next-btn {
+  background: #8B5CF6;
+  color: #ffffff;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+}
+
+.next-btn:hover:not(:disabled) {
+  background: #7C3AED;
+}
+
+.next-btn:disabled {
+  background: #4a4a4a;
+  color: #888888;
+  cursor: not-allowed;
+}
+
+/* Success Toast */
+.success-toast {
+  position: absolute;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #10B981;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  animation: slideDown 0.3s ease;
+}
+
+.toast-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.toast-icon {
+  font-size: 16px;
+}
+
+.toast-message {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+/* Light Theme Survey Styles */
+.phone-frame.light-theme .screen-survey-question {
+  color: #333333;
+}
+
+.phone-frame.light-theme .progress-bar {
+  background: #e9ecef !important;
+}
+
+.phone-frame.light-theme .progress-fill {
+  background: #007bff !important;
+}
+
+.phone-frame.light-theme .progress-text {
+  color: #6c757d !important;
+}
+
+.phone-frame.light-theme .question-title {
+  color: #333333 !important;
+}
+
+.phone-frame.light-theme .answer-option {
+  background: #f8f9fa !important;
+  border-color: #e9ecef !important;
+}
+
+.phone-frame.light-theme .answer-option:hover {
+  background: #e9ecef !important;
+  border-color: #007bff !important;
+}
+
+.phone-frame.light-theme .answer-option.selected {
+  background: #007bff !important;
+  border-color: #0056b3 !important;
+}
+
+.phone-frame.light-theme .option-text {
+  color: #333333 !important;
+}
+
+.phone-frame.light-theme .answer-option.selected .option-text {
+  color: #ffffff !important;
+}
+
+.phone-frame.light-theme .back-btn {
+  background: #6c757d !important;
+}
+
+.phone-frame.light-theme .back-btn:hover {
+  background: #5a6268 !important;
+}
+
+.phone-frame.light-theme .next-btn {
+  background: #007bff !important;
+}
+
+.phone-frame.light-theme .next-btn:hover:not(:disabled) {
+  background: #0056b3 !important;
+}
+
+.phone-frame.light-theme .next-btn:disabled {
+  background: #e9ecef !important;
+  color: #6c757d !important;
+}
+
+.phone-frame.light-theme .survey-arrow {
+  color: #333333 !important;
+}
+
+/* Survey Configuration Form Styles */
+.survey-questions {
+  margin-top: 16px;
+}
+
+.question-group {
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.question-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #495057;
+}
+
+.question-group input {
+  margin-bottom: 12px;
+}
+
+.question-group input:last-child {
+  margin-bottom: 0;
+}
+
+.form-section h4 {
+  color: #495057;
+  font-size: 16px;
+  font-weight: 600;
+  margin: 20px 0 12px 0;
+  padding: 8px 0;
+  border-bottom: 2px solid #e9ecef;
+}
+
+/* Light theme adjustments for question actions */
+.phone-frame.light-theme .question-actions {
+  background: #ffffff !important;
 }
