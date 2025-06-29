@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Component({
   selector: 'app-auth',
@@ -26,7 +26,23 @@ export class AuthComponent implements OnInit {
           const params = new URLSearchParams(data);
           const accessToken = params.get('access_token');
           sessionStorage.setItem('githubAccessToken', accessToken || '');
-          window.location.href = '/builder';
+          sessionStorage.setItem('githubRepo', 'test'); // hardcoded test repo
+          
+          const headers = new HttpHeaders({
+            Authorization: `bearer ${sessionStorage.getItem('githubAccessToken') || ''}`,
+          });
+          console.log("before http get request for user info");
+          this.http.get<any>('https://api.github.com/user', { headers })
+            .subscribe({
+              next: (user) => {
+                console.log('User info:', user);
+                sessionStorage.setItem('githubUser', user.login || '');
+                window.location.href = '/builder';
+              },
+              error: (err) => {
+                console.error('Error fetching user info:', err);
+              }
+            });
         },
         error: () => {
           console.error('Error fetching access token');

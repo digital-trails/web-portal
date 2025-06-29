@@ -17,7 +17,7 @@ import { UserFacade } from '../store/user/user.facade';
 import { BuilderComponent } from './builder.component';
 import { BuilderRoutingModule } from './builder-routing.module';
 import { AuthComponent } from './auth/auth.component';
-import { fileService } from './file-service.service';
+import { GithubFacade } from './github.facade';
 
 
 
@@ -40,7 +40,7 @@ import { fileService } from './file-service.service';
   providers: [
     UserFacade,
     provideHttpClient(withInterceptorsFromDi()),
-    fileService
+    GithubFacade
   ]
 })
 export class BuilderModule { }

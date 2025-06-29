@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { fileService } from './file-service.service';
+import { GithubFacade } from './github.facade';
 
 describe('FileServiceService', () => {
-  let service: fileService;
+  let service: GithubFacade;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(fileService);
+    service = TestBed.inject(GithubFacade);
   });
 
   it('should be created', () => {

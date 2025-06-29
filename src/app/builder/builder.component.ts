@@ -1,7 +1,7 @@
 // builder.component.ts
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
-import { fileService } from './file-service.service';
+import { GithubFacade } from './github.facade';
 
 @Component({
   selector: 'app-builder',
@@ -22,13 +22,11 @@ export class BuilderComponent implements OnInit {
     button4: "Button 4"
   };
 
-  constructor(private fb: FormBuilder, private fileService: fileService) {
+  constructor(private fb: FormBuilder, private GithubFacade: GithubFacade) {
     this.appForm = this.createForm();
   }
 
   ngOnInit(): void {
-    
-    
     const testJSON = {
     "icon": "/assets/home_mindtrails.png",
     "home": {
@@ -166,17 +164,11 @@ export class BuilderComponent implements OnInit {
         }
     ]
 }
-this.fileService.fetchAndDecodeJson().subscribe({
-    next: (decodedJson) => { // MUNEER use decodedJson to populate the UI if you can
-      console.log('✅ Decoded JSON:', decodedJson);
-      this.fileService.updateFile(JSON.stringify(testJSON), "testing JSON update").subscribe({ // should run updateFile after fetchAndDecodeJson's next block
-        next: (response) => {
-          console.log('File updated successfully:', response);
-        },
-        error: (error) => {
-          console.error('Error updating file:', error);
-        }
-      });
+this.GithubFacade.getFile().subscribe({
+    next: (file) => { // MUNEER use decodedJson to populate the UI if you can
+      console.log('✅ Decoded JSON:', file.content);
+      file.content = testJSON; // Using testJSON to test
+      this.GithubFacade.updateFile(file, "testing JSON update");
     },
     error: (err) => console.error('❌ Error fetching and decoding:', err)
   });
