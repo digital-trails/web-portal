@@ -87,9 +87,50 @@
 
         <p-divider></p-divider>
 
-        <!-- Basic Information -->
+        <!-- Top-Level Protocol Properties -->
         <div class="form-section">
-          <h3>Basic Information</h3>
+          <h3>Protocol Configuration</h3>
+          <div class="p-fluid">
+            <div class="field">
+              <label for="icon">App Icon</label>
+              <input 
+                id="icon" 
+                type="text" 
+                pInputText 
+                formControlName="icon" 
+                placeholder="/assets/home_mindtrails.png"
+              />
+            </div>
+            
+            <div class="field">
+              <label for="datums_endpoint">Datums Endpoint</label>
+              <input 
+                id="datums_endpoint" 
+                type="text" 
+                pInputText 
+                formControlName="datums_endpoint" 
+                placeholder="https://digital-trails.org/api/v1/datums"
+              />
+            </div>
+
+            <div class="field">
+              <label for="sessions">Sessions Flow</label>
+              <input 
+                id="sessions" 
+                type="text" 
+                pInputText 
+                formControlName="sessions" 
+                placeholder="flow://flows/doses"
+              />
+            </div>
+          </div>
+        </div>
+
+        <p-divider></p-divider>
+
+        <!-- Home Configuration -->
+        <div class="form-section" formGroupName="home">
+          <h3>Home Screen Configuration</h3>
           <div class="p-fluid">
             <div class="field">
               <label for="title">App Title</label>
@@ -101,362 +142,176 @@
                 placeholder="Enter app title"
               />
             </div>
-            
+
+            <!-- Banner Configuration -->
+            <h4>Banner Settings</h4>
             <div class="field">
-              <label for="subtitle">Subtitle</label>
+              <label for="banner_text">Banner Text</label>
               <input 
-                id="subtitle" 
+                id="banner_text" 
                 type="text" 
                 pInputText 
-                formControlName="subtitle" 
-                placeholder="Enter subtitle"
+                formControlName="banner_text" 
+                placeholder="Single banner text"
               />
             </div>
 
             <div class="field">
-              <label for="appIcon">App Icon URL</label>
+              <label for="banner_text_1">Banner Text 1</label>
               <input 
-                id="appIcon" 
+                id="banner_text_1" 
                 type="text" 
                 pInputText 
-                formControlName="appIcon" 
-                placeholder="Enter app icon URL"
+                formControlName="banner_text_1" 
+                placeholder="First line of banner"
               />
             </div>
-          </div>
-        </div>
 
-        <p-divider></p-divider>
-
-        <!-- Legacy Buttons Section -->
-        <div class="form-section">
-          <h3>Button Labels (Legacy Support)</h3>
-          <div class="p-fluid">
             <div class="field">
-              <label for="button1">Button 1</label>
+              <label for="banner_text_2">Banner Text 2</label>
               <input 
-                id="button1" 
+                id="banner_text_2" 
                 type="text" 
                 pInputText 
-                formControlName="button1" 
-                placeholder="Button 1 text"
+                formControlName="banner_text_2" 
+                placeholder="Second line of banner"
               />
             </div>
-            
+
             <div class="field">
-              <label for="button2">Button 2</label>
+              <label for="banner_icon">Banner Icon</label>
               <input 
-                id="button2" 
+                id="banner_icon" 
                 type="text" 
                 pInputText 
-                formControlName="button2" 
-                placeholder="Button 2 text"
-              />
-            </div>
-            
-            <div class="field">
-              <label for="button3">Button 3</label>
-              <input 
-                id="button3" 
-                type="text" 
-                pInputText 
-                formControlName="button3" 
-                placeholder="Button 3 text"
-              />
-            </div>
-            
-            <div class="field">
-              <label for="button4">Button 4</label>
-              <input 
-                id="button4" 
-                type="text" 
-                pInputText 
-                formControlName="button4" 
-                placeholder="Button 4 text"
-              />
-            </div>
-          </div>
-        </div>
-
-        <p-divider></p-divider>
-
-        <!-- Survey Configuration Section -->
-        <div class="form-section">
-          <h3>Survey Configuration</h3>
-          <div class="p-fluid">
-            <!-- Survey Names -->
-            <div class="field">
-              <label for="survey1Name">Survey 1 Name</label>
-              <input 
-                id="survey1Name" 
-                type="text" 
-                pInputText 
-                formControlName="survey1Name" 
-                placeholder="First survey name"
-              />
-            </div>
-            
-            <div class="field">
-              <label for="survey2Name">Survey 2 Name</label>
-              <input 
-                id="survey2Name" 
-                type="text" 
-                pInputText 
-                formControlName="survey2Name" 
-                placeholder="Second survey name"
+                formControlName="banner_icon" 
+                placeholder="/assets/home_banner.png"
               />
             </div>
 
-            <!-- Survey 1 Questions -->
-            <h4>Survey 1 Questions</h4>
-            <div class="survey-questions">
-              <div class="question-group">
-                <label for="survey1Q1">Question 1</label>
-                <input 
-                  id="survey1Q1" 
-                  type="text" 
-                  pInputText 
-                  formControlName="survey1Q1" 
-                  placeholder="Enter question text"
-                />
-                <label for="survey1Q1Options">Answer Options (separate with | - max 4 options)</label>
-                <input 
-                  id="survey1Q1Options" 
-                  type="text" 
-                  pInputText 
-                  formControlName="survey1Q1Options" 
-                  placeholder="Option 1|Option 2|Option 3|Option 4"
-                />
-              </div>
-
-              <div class="question-group">
-                <label for="survey1Q2">Question 2</label>
-                <input 
-                  id="survey1Q2" 
-                  type="text" 
-                  pInputText 
-                  formControlName="survey1Q2" 
-                  placeholder="Enter question text"
-                />
-                <label for="survey1Q2Options">Answer Options (separate with | - max 4 options)</label>
-                <input 
-                  id="survey1Q2Options" 
-                  type="text" 
-                  pInputText 
-                  formControlName="survey1Q2Options" 
-                  placeholder="Option 1|Option 2|Option 3|Option 4"
-                />
-              </div>
-
-              <div class="question-group">
-                <label for="survey1Q3">Question 3</label>
-                <input 
-                  id="survey1Q3" 
-                  type="text" 
-                  pInputText 
-                  formControlName="survey1Q3" 
-                  placeholder="Enter question text"
-                />
-                <label for="survey1Q3Options">Answer Options (separate with | - max 4 options)</label>
-                <input 
-                  id="survey1Q3Options" 
-                  type="text" 
-                  pInputText 
-                  formControlName="survey1Q3Options" 
-                  placeholder="Option 1|Option 2|Option 3|Option 4"
-                />
-              </div>
-            </div>
-
-            <!-- Survey 2 Questions -->
-            <h4>Survey 2 Questions</h4>
-            <div class="survey-questions">
-              <div class="question-group">
-                <label for="survey2Q1">Question 1</label>
-                <input 
-                  id="survey2Q1" 
-                  type="text" 
-                  pInputText 
-                  formControlName="survey2Q1" 
-                  placeholder="Enter question text"
-                />
-                <label for="survey2Q1Options">Answer Options (separate with | - max 4 options)</label>
-                <input 
-                  id="survey2Q1Options" 
-                  type="text" 
-                  pInputText 
-                  formControlName="survey2Q1Options" 
-                  placeholder="Option 1|Option 2|Option 3|Option 4"
-                />
-              </div>
-
-              <div class="question-group">
-                <label for="survey2Q2">Question 2</label>
-                <input 
-                  id="survey2Q2" 
-                  type="text" 
-                  pInputText 
-                  formControlName="survey2Q2" 
-                  placeholder="Enter question text"
-                />
-                <label for="survey2Q2Options">Answer Options (separate with | - max 4 options)</label>
-                <input 
-                  id="survey2Q2Options" 
-                  type="text" 
-                  pInputText 
-                  formControlName="survey2Q2Options" 
-                  placeholder="Option 1|Option 2|Option 3|Option 4"
-                />
-              </div>
-
-              <div class="question-group">
-                <label for="survey2Q3">Question 3</label>
-                <input 
-                  id="survey2Q3" 
-                  type="text" 
-                  pInputText 
-                  formControlName="survey2Q3" 
-                  placeholder="Enter question text"
-                />
-                <label for="survey2Q3Options">Answer Options (separate with | - max 4 options)</label>
-                <input 
-                  id="survey2Q3Options" 
-                  type="text" 
-                  pInputText 
-                  formControlName="survey2Q3Options" 
-                  placeholder="Option 1|Option 2|Option 3|Option 4"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <p-divider></p-divider>
-
-        <!-- Dynamic Elements Section -->
-        <div class="form-section">
-          <h3>App Elements</h3>
-          
-          <!-- Add Element Buttons -->
-          <div class="add-element-buttons">
-            <p-button 
-              label="Add Alert" 
-              icon="pi pi-info-circle" 
-              (onClick)="addNewElement('alert')"
-              severity="secondary"
-              size="small">
-            </p-button>
-            <p-button 
-              label="Add Sessions" 
-              icon="pi pi-calendar" 
-              (onClick)="addNewElement('sessions')"
-              severity="secondary"
-              size="small">
-            </p-button>
-            <p-button 
-              label="Add Button" 
-              icon="pi pi-plus" 
-              (onClick)="addNewElement('button')"
-              severity="secondary"
-              size="small">
-            </p-button>
-            <p-button 
-              label="Add Carousel" 
-              icon="pi pi-images" 
-              (onClick)="addNewElement('carousel')"
-              severity="secondary"
-              size="small">
-            </p-button>
-            <p-button 
-              label="Add Tiles" 
-              icon="pi pi-th-large" 
-              (onClick)="addNewElement('tiles')"
-              severity="secondary"
-              size="small">
-            </p-button>
-          </div>
-
-          <!-- Dynamic Elements Forms -->
-          <div formArrayName="elements">
-            <div *ngFor="let elementForm of elementsArray.controls; let i = index" 
-                 [formGroupName]="i" 
-                 class="element-form">
-              
-              <!-- Element Header -->
-              <div class="element-header">
-                <span class="element-type">{{ elementForm.get('type')?.value | titlecase }}</span>
-                <p-button 
-                  icon="pi pi-trash" 
-                  (onClick)="removeElement(i)"
-                  severity="danger"
-                  size="small"
-                  [text]="true">
-                </p-button>
-              </div>
-
-              <!-- Alert Element -->
-              <div *ngIf="elementForm.get('type')?.value === 'alert'" class="element-content">
-                <div class="field">
-                  <label>Alert Title</label>
-                  <input type="text" pInputText formControlName="title" placeholder="Alert title" />
-                </div>
-                <div class="field">
-                  <label>Alert Message</label>
-                  <input type="text" pInputText formControlName="message" placeholder="Alert message" />
-                </div>
-                <div class="field">
-                  <label>Icon URL</label>
-                  <input type="text" pInputText formControlName="iconUrl" placeholder="Icon URL" />
-                </div>
-                <div class="field">
-                  <label>Icon Tint</label>
-                  <p-checkbox formControlName="iconTint" [binary]="true"></p-checkbox>
-                </div>
-              </div>
-
-              <!-- Sessions Element -->
-              <div *ngIf="elementForm.get('type')?.value === 'sessions'" class="element-content">
-                <div class="field">
-                  <label>Left Text</label>
-                  <input type="text" pInputText formControlName="leftText" placeholder="Left side text" />
-                </div>
-                <div class="field">
-                  <label>Left Icon</label>
-                  <input type="text" pInputText formControlName="leftIcon" placeholder="Left icon URL" />
-                </div>
-                <div class="field">
-                  <label>Right Text</label>
-                  <input type="text" pInputText formControlName="rightText" placeholder="Right side text" />
-                </div>
-                <div class="field">
-                  <label>Right Icon</label>
-                  <input type="text" pInputText formControlName="rightIcon" placeholder="Right icon URL" />
-                </div>
-                <div class="field">
-                  <label>Right Action</label>
-                  <input type="text" pInputText formControlName="rightAction" placeholder="Action URL" />
-                </div>
-              </div>
-
-              <!-- Button Element -->
-              <div *ngIf="elementForm.get('type')?.value === 'button'" class="element-content">
+            <!-- Button Configuration -->
+            <h4>Button Configuration</h4>
+            <div class="button-grid">
+              <!-- Top-Left Button -->
+              <div class="button-config" formGroupName="button_tl">
+                <h5>Top-Left Button</h5>
                 <div class="field">
                   <label>Button Text</label>
-                  <input type="text" pInputText formControlName="actionText" placeholder="Button text" />
+                  <input type="text" pInputText formControlName="text" placeholder="Button text" />
                 </div>
                 <div class="field">
-                  <label>Action URL</label>
-                  <input type="text" pInputText formControlName="actionUrl" placeholder="Action URL" />
+                  <label>Icon</label>
+                  <input type="text" pInputText formControlName="icon" placeholder="/assets/icon.png" />
+                </div>
+                <div class="field">
+                  <label>Action</label>
+                  <input type="text" pInputText formControlName="action" placeholder="flow://flows/example" />
                 </div>
               </div>
 
-              <!-- Carousel/Tiles Element -->
-              <div *ngIf="elementForm.get('type')?.value === 'carousel' || elementForm.get('type')?.value === 'tiles'" class="element-content">
-                <p>Actions configuration for {{ elementForm.get('type')?.value }} (Advanced editing available after upload)</p>
+              <!-- Top-Right Button -->
+              <div class="button-config" formGroupName="button_tr">
+                <h5>Top-Right Button</h5>
+                <div class="field">
+                  <label>Button Text</label>
+                  <input type="text" pInputText formControlName="text" placeholder="Button text" />
+                </div>
+                <div class="field">
+                  <label>Icon</label>
+                  <input type="text" pInputText formControlName="icon" placeholder="/assets/icon.png" />
+                </div>
+                <div class="field">
+                  <label>Action</label>
+                  <input type="text" pInputText formControlName="action" placeholder="flow://flows/example" />
+                </div>
               </div>
 
+              <!-- Bottom-Left Button -->
+              <div class="button-config" formGroupName="button_bl">
+                <h5>Bottom-Left Button</h5>
+                <div class="field">
+                  <label>Button Text</label>
+                  <input type="text" pInputText formControlName="text" placeholder="Button text" />
+                </div>
+                <div class="field">
+                  <label>Icon</label>
+                  <input type="text" pInputText formControlName="icon" placeholder="/assets/icon.png" />
+                </div>
+                <div class="field">
+                  <label>Action</label>
+                  <input type="text" pInputText formControlName="action" placeholder="flow://flows/example" />
+                </div>
+              </div>
+
+              <!-- Bottom-Right Button -->
+              <div class="button-config" formGroupName="button_br">
+                <h5>Bottom-Right Button</h5>
+                <div class="field">
+                  <label>Button Text</label>
+                  <input type="text" pInputText formControlName="text" placeholder="Button text" />
+                </div>
+                <div class="field">
+                  <label>Icon</label>
+                  <input type="text" pInputText formControlName="icon" placeholder="/assets/icon.png" />
+                </div>
+                <div class="field">
+                  <label>Action</label>
+                  <input type="text" pInputText formControlName="action" placeholder="flow://flows/example" />
+                </div>
+              </div>
+
+              <!-- Left Sessions Button -->
+              <div class="button-config" formGroupName="button_ls">
+                <h5>Left Sessions Button</h5>
+                <div class="field">
+                  <label>Button Text</label>
+                  <input type="text" pInputText formControlName="text" placeholder="{0} Sessions Completed" />
+                </div>
+                <div class="field">
+                  <label>Icon</label>
+                  <input type="text" pInputText formControlName="icon" placeholder="/assets/icon.png" />
+                </div>
+              </div>
+
+              <!-- Right Sessions Button -->
+              <div class="button-config" formGroupName="button_rs">
+                <h5>Right Sessions Button</h5>
+                <div class="field">
+                  <label>Button Text</label>
+                  <input type="text" pInputText formControlName="text" placeholder="Launch Session" />
+                </div>
+                <div class="field">
+                  <label>Icon</label>
+                  <input type="text" pInputText formControlName="icon" placeholder="/assets/icon.png" />
+                </div>
+                <div class="field">
+                  <label>Action</label>
+                  <input type="text" pInputText formControlName="action" placeholder="flow://flows/sessions" />
+                </div>
+              </div>
+
+              <!-- Survey Button -->
+              <div class="button-config" formGroupName="button_surveys">
+                <h5>Survey Button</h5>
+                <div class="field">
+                  <label>Button Text</label>
+                  <input type="text" pInputText formControlName="text" placeholder="Show Surveys" />
+                </div>
+                <div class="field">
+                  <label>Action</label>
+                  <input type="text" pInputText formControlName="action" placeholder="navmodal://Survey" />
+                </div>
+              </div>
             </div>
           </div>
+        </div>
+
+        <p-divider></p-divider>
+
+        <!-- JSON Preview -->
+        <div class="form-section">
+          <h3>Protocol JSON Preview</h3>
+          <pre class="json-preview">{{ getProtocolPreview() | json }}</pre>
         </div>
 
         <!-- Save/Export Actions -->
@@ -464,19 +319,18 @@
           <div *ngIf="isGitHubConnected && appForm.get('selectedRepository')?.value" class="github-save-actions">
             <p-button 
               label="Save Changes to GitHub" 
-              icon="pi pi-upload" 
+              icon="pi pi-cloud-upload" 
               (onClick)="saveToGitHub()"
-              severity="success"
-              [disabled]="!currentFileData">
+              severity="success">
             </p-button>
           </div>
           
-          <div *ngIf="!isGitHubConnected" class="export-actions">
+          <div *ngIf="!isGitHubConnected || !appForm.get('selectedRepository')?.value" class="export-actions">
             <p-button 
-              label="Export Config" 
+              label="Export protocol.json" 
               icon="pi pi-download" 
               (onClick)="exportConfig()"
-              severity="secondary">
+              severity="info">
             </p-button>
           </div>
         </div>
