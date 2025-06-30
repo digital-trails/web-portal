@@ -20,24 +20,28 @@
 
 /* Form styling */
 .form-section {
-  margin-bottom: 24px;
+  margin-bottom: 2rem;
 }
 
 .form-section h3 {
-  margin: 0 0 16px 0;
-  color: #333;
+  color: #1e293b;
+  margin-bottom: 1.5rem;
   font-weight: 600;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 0.5rem;
 }
 
+/* Default field styling for light backgrounds */
 .field {
-  margin-bottom: 16px;
+  margin-bottom: 1.25rem;
 }
 
 .field label {
   display: block;
-  margin-bottom: 6px;
-  font-weight: 500;
-  color: #374151;
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+  color: #1e293b;
+  font-size: 0.875rem;
 }
 
 .field-group {
@@ -1607,4 +1611,186 @@
 /* Light theme adjustments for question actions */
 .phone-frame.light-theme .question-actions {
   background: #ffffff !important;
+}
+
+/* GitHub Integration Styles */
+.github-connect {
+  text-align: center;
+  padding: 1.5rem;
+  border: 2px dashed #4a90e2;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  transition: all 0.3s ease;
+}
+
+.github-connect:hover {
+  border-color: #007ad9;
+  background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+}
+
+.github-connect p {
+  margin-bottom: 1rem;
+  color: #475569;
+  font-weight: 500;
+}
+
+.github-connected {
+  padding: 1.5rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+  color: #f8fafc;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+/* Override field styling specifically for GitHub connected section */
+.github-connected .field {
+  margin-bottom: 1.25rem;
+}
+
+.github-connected .field label {
+  display: block;
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+  color: #f8fafc;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+.github-actions {
+  margin-top: 1rem;
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.github-save-actions {
+  text-align: center;
+  padding: 1rem;
+}
+
+.export-actions {
+  text-align: center;
+  padding: 1rem;
+}
+
+.w-full {
+  width: 100%;
+}
+
+/* Enhanced PrimeNG Select Styling for Dark Theme */
+::ng-deep .github-connected .p-select {
+  width: 100% !important;
+  border: 1px solid #475569 !important;
+  border-radius: 8px !important;
+  background: #1e293b !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+::ng-deep .github-connected .p-select:not(.p-disabled):hover {
+  border-color: #4a90e2 !important;
+  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2) !important;
+}
+
+::ng-deep .github-connected .p-select:not(.p-disabled).p-focus {
+  outline: 0 none !important;
+  border-color: #4a90e2 !important;
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.3) !important;
+}
+
+::ng-deep .github-connected .p-select .p-select-label {
+  padding: 0.875rem 1rem !important;
+  color: #f8fafc !important;
+  background: transparent !important;
+  font-weight: 500 !important;
+  font-size: 0.875rem !important;
+}
+
+::ng-deep .github-connected .p-select .p-select-label.p-placeholder {
+  color: #94a3b8 !important;
+  font-style: italic !important;
+}
+
+::ng-deep .github-connected .p-select .p-select-dropdown {
+  background: #334155 !important;
+  color: #f8fafc !important;
+  width: 3rem !important;
+  border-top-right-radius: 8px !important;
+  border-bottom-right-radius: 8px !important;
+  border-left: 1px solid #475569 !important;
+}
+
+::ng-deep .github-connected .p-select-overlay {
+  background: #1e293b !important;
+  border: 1px solid #475569 !important;
+  border-radius: 8px !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25) !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+::ng-deep .github-connected .p-select-items .p-select-option {
+  padding: 0.875rem 1rem !important;
+  border: 0 none !important;
+  color: #f8fafc !important;
+  background: transparent !important;
+  transition: all 0.2s ease !important;
+  font-weight: 500 !important;
+}
+
+::ng-deep .github-connected .p-select-items .p-select-option:not(.p-highlight):not(.p-disabled):hover {
+  color: #f8fafc !important;
+  background: rgba(74, 144, 226, 0.2) !important;
+}
+
+::ng-deep .github-connected .p-select-items .p-select-option.p-highlight {
+  color: #ffffff !important;
+  background: linear-gradient(135deg, #4a90e2 0%, #007ad9 100%) !important;
+}
+
+/* Input field styling for dark theme */
+::ng-deep .github-connected .p-inputtext {
+  width: 100% !important;
+  padding: 0.875rem 1rem !important;
+  border: 1px solid #475569 !important;
+  border-radius: 8px !important;
+  background: #1e293b !important;
+  color: #f8fafc !important;
+  font-weight: 500 !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+::ng-deep .github-connected .p-inputtext::placeholder {
+  color: #94a3b8 !important;
+  font-style: italic !important;
+}
+
+::ng-deep .github-connected .p-inputtext:enabled:hover {
+  border-color: #4a90e2 !important;
+  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2) !important;
+}
+
+::ng-deep .github-connected .p-inputtext:enabled:focus {
+  outline: 0 none !important;
+  border-color: #4a90e2 !important;
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.3) !important;
+}
+
+/* Button styling in GitHub section */
+::ng-deep .github-connected .p-button {
+  background: linear-gradient(135deg, #4a90e2 0%, #007ad9 100%) !important;
+  border: none !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.025em !important;
+  transition: all 0.3s ease !important;
+}
+
+::ng-deep .github-connected .p-button:hover {
+  background: linear-gradient(135deg, #007ad9 0%, #0056b3 100%) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(74, 144, 226, 0.4) !important;
 }

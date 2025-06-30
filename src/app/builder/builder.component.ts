@@ -113,6 +113,14 @@ export class BuilderComponent implements OnInit {
   appForm: FormGroup;
   uploadError: string = '';
   
+  // GitHub integration properties
+  isGitHubConnected: boolean = false;
+  repositories: any[] = [];
+  selectedRepository: string = '';
+  gitHubError: string = '';
+  filePath: string = 'src/protocol.json';
+  currentFileData: any = null;
+  
   // Current protocol data
   protocol: Protocol = {
     home: {
@@ -224,6 +232,7 @@ export class BuilderComponent implements OnInit {
     
     // Initialize home screen
     this.refreshScreens();
+    this.checkGitHubConnection();
   }
 
   // Screen management methods
@@ -412,31 +421,30 @@ export class BuilderComponent implements OnInit {
 
   createForm(): FormGroup {
     return this.fb.group({
-      title: [this.appData.title, Validators.required],
-      subtitle: [this.appData.subtitle],
-      button1: [this.appData.button1],
-      button2: [this.appData.button2],
-      button3: [this.appData.button3],
-      button4: [this.appData.button4],
-      // Survey configuration
-      survey1Name: [this.surveysData[0].name],
-      survey2Name: [this.surveysData[1].name],
-      // Survey 1 questions
-      survey1Q1: [this.surveysData[0].questions[0].question],
-      survey1Q1Options: [this.surveysData[0].questions[0].options.join('|')],
-      survey1Q2: [this.surveysData[0].questions[1].question],
-      survey1Q2Options: [this.surveysData[0].questions[1].options.join('|')],
-      survey1Q3: [this.surveysData[0].questions[2].question],
-      survey1Q3Options: [this.surveysData[0].questions[2].options.join('|')],
-      // Survey 2 questions
-      survey2Q1: [this.surveysData[1].questions[0].question],
-      survey2Q1Options: [this.surveysData[1].questions[0].options.join('|')],
-      survey2Q2: [this.surveysData[1].questions[1].question],
-      survey2Q2Options: [this.surveysData[1].questions[1].options.join('|')],
-      survey2Q3: [this.surveysData[1].questions[2].question],
-      survey2Q3Options: [this.surveysData[1].questions[2].options.join('|')],
-      // New fields for expanded functionality
+      title: ['My App'],
+      subtitle: ['App Builder Demo'],
       appIcon: [''],
+      button1: ['Button 1'],
+      button2: ['Button 2'],
+      button3: ['Button 3'],
+      button4: ['Button 4'],
+      survey1Name: ['End Of Day'],
+      survey2Name: ['Track Your Progress'],
+      survey1Q1: ['How would you rate your overall mood today?'],
+      survey1Q1Options: ['Very Poor|Poor|Good|Excellent'],
+      survey1Q2: ['How many hours did you sleep last night?'],
+      survey1Q2Options: ['Less than 6|6-8 hours|8-10 hours|More than 10'],
+      survey1Q3: ['Did you complete your daily goals?'],
+      survey1Q3Options: ['Not at all|Partially|Mostly|Completely'],
+      survey2Q1: ['How confident do you feel about your progress?'],
+      survey2Q1Options: ['Not confident|Slightly confident|Very confident|Extremely confident'],
+      survey2Q2: ['What area needs the most improvement?'],
+      survey2Q2Options: ['Sleep|Exercise|Nutrition|Mental health'],
+      survey2Q3: ['How likely are you to recommend this program?'],
+      survey2Q3Options: ['Very unlikely|Unlikely|Likely|Very likely'],
+      // GitHub integration form controls
+      selectedRepository: [''],
+      filePath: ['src/protocol.json'],
       elements: this.fb.array([])
     });
   }
@@ -696,5 +704,142 @@ export class BuilderComponent implements OnInit {
 
   onLogoutClick(): void {
     this.authService.logoutRedirect();
+  }
+
+  // GitHub Integration Methods
+  checkGitHubConnection(): void {
+    const token = sessionStorage.getItem('githubAccessToken');
+    const owner = sessionStorage.getItem('githubOwner');
+    this.isGitHubConnected = !!(token && owner);
+    
+    if (this.isGitHubConnected) {
+      this.loadRepositories();
+    }
+  }
+
+  loadRepositories(): void {
+    if (this.githubFacade.getUserRepositories) {
+      this.githubFacade.getUserRepositories().subscribe({
+        next: (repos: any[]) => {
+          this.repositories = repos;
+          this.gitHubError = '';
+        },
+        error: (error: any) => {
+          this.gitHubError = 'Failed to load repositories';
+          console.error('Error loading repositories:', error);
+        }
+      });
+    } else {
+      this.gitHubError = 'GitHub service not properly initialized';
+    }
+  }
+
+  onRepositorySelect(repoFullName: string): void {
+    const repo = this.repositories.find(repo => repo.full_name === repoFullName);
+    if (repo) {
+      this.appForm.patchValue({ selectedRepository: repoFullName });
+      sessionStorage.setItem('githubRepo', repo.name);
+      sessionStorage.setItem('githubOwner', repo.owner.login);
+      this.gitHubError = '';
+    }
+  }
+
+  loadFromGitHub(): void {
+    const selectedRepo = this.appForm.get('selectedRepository')?.value;
+    if (!selectedRepo) {
+      this.gitHubError = 'Please select a repository first';
+      return;
+    }
+
+    const repo = this.repositories.find(r => r.full_name === selectedRepo);
+    if (!repo) {
+      this.gitHubError = 'Repository not found';
+      return;
+    }
+
+    // Set session storage for the GitHub facade
+    sessionStorage.setItem('githubRepo', repo.name);
+    sessionStorage.setItem('githubOwner', repo.owner.login);
+
+    const filePath = this.appForm.get('filePath')?.value || 'src/protocol.json';
+
+    this.githubFacade.getFile(filePath).subscribe({
+      next: (fileData: any) => {
+        try {
+          // The facade already decodes the content for us
+          const protocolData = fileData.content;
+          
+          if (this.validateProtocol(protocolData)) {
+            this.protocol = protocolData;
+            this.populateFormFromProtocol();
+            this.currentFileData = fileData; // Store for later updates
+            this.gitHubError = '';
+          } else {
+            this.gitHubError = 'Invalid protocol.json format';
+          }
+        } catch (error) {
+          this.gitHubError = 'Error parsing protocol.json file';
+          console.error('Parse error:', error);
+        }
+      },
+      error: (error: any) => {
+        this.gitHubError = `Failed to load file: ${error.message || 'Unknown error'}`;
+        console.error('GitHub load error:', error);
+      }
+    });
+  }
+
+  saveToGitHub(): void {
+    const selectedRepo = this.appForm.get('selectedRepository')?.value;
+    if (!selectedRepo) {
+      this.gitHubError = 'Please select a repository first';
+      return;
+    }
+
+    const repo = this.repositories.find(r => r.full_name === selectedRepo);
+    if (!repo) {
+      this.gitHubError = 'Repository not found';
+      return;
+    }
+
+    // Update protocol from current form values
+    this.updateProtocolFromForm(this.appForm.value);
+    
+    // Set session storage for the GitHub facade
+    sessionStorage.setItem('githubRepo', repo.name);
+    sessionStorage.setItem('githubOwner', repo.owner.login);
+    
+    const filePath = this.appForm.get('filePath')?.value || 'src/protocol.json';
+    
+    // Prepare file object for the facade
+    const fileToSave = {
+      path: filePath,
+      content: this.protocol,
+      sha: this.currentFileData?.sha // Include SHA for updates
+    };
+    
+    const commitMessage = `Update protocol.json via Web Portal - ${new Date().toISOString()}`;
+
+    this.githubFacade.putFile(fileToSave, commitMessage).subscribe({
+      next: (response: any) => {
+        this.currentFileData = response.content; // Update stored file data
+        this.gitHubError = '';
+        // Show success message or feedback
+        console.log('Successfully saved to GitHub');
+      },
+      error: (error: any) => {
+        this.gitHubError = `Failed to save: ${error.message || 'Unknown error'}`;
+        console.error('GitHub save error:', error);
+      }
+    });
+  }
+
+  connectToGitHub(): void {
+    const clientId = 'Ov23liM8jdVptvkhxswe';
+    // Use the original working redirect URI that matches your GitHub OAuth app config
+    const redirectUri = encodeURIComponent(window.location.origin + '/builder/auth');
+    const scope = encodeURIComponent('repo user');
+    
+    window.location.href = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}`;
   }
 }

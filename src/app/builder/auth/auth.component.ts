@@ -17,7 +17,7 @@ export class AuthComponent implements OnInit {
 
     if (code) {
       this.http.post(
-        `https://digital-trails.org/api/v1/gh-token?client_id=Ov23lisTlJQgZC8wmGWj&code=${code}`,
+        `https://digital-trails.org/api/v1/gh-token?client_id=Ov23liM8jdVptvkhxswe&code=${code}`,
         {},
         { responseType: 'text' }
       )
@@ -25,10 +25,28 @@ export class AuthComponent implements OnInit {
         next: (data) => {
           const params = new URLSearchParams(data);
           const accessToken = params.get('access_token');
-
+          
           sessionStorage.setItem('githubAccessToken', accessToken || '');
-          sessionStorage.setItem('githubRepo', 'digital-trails'); // hardcoded test owner
-          sessionStorage.setItem('githubRepo', 'protocol-test2'); // hardcoded test repo
+          
+          // Get user info to set the owner correctly  
+          const headers = new HttpHeaders({
+            Authorization: `bearer ${accessToken}`,
+            Accept: 'application/vnd.github.v3+json'
+          });
+          
+          this.http.get('https://api.github.com/user', { headers }).subscribe({
+            next: (user: any) => {
+              sessionStorage.setItem('githubOwner', user.login);
+              console.log('GitHub user authenticated:', user.login);
+              // Redirect back to builder
+              window.location.href = '/builder';
+            },
+            error: (error) => {
+              console.error('Error fetching user info:', error);
+              // Still redirect even if user info fails
+              window.location.href = '/builder';
+            }
+          });
         },
         error: () => {
           console.error('Error fetching access token');

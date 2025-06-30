@@ -4,10 +4,68 @@
     <p-panel header="App Builder" [toggleable]="false">
       <form [formGroup]="appForm">
         
-        <!-- File Upload Section -->
+        <!-- GitHub Integration or File Upload -->
         <div class="form-section">
-          <h3>Upload Protocol.json</h3>
-          <div class="upload-container">
+          <h3>Import Configuration</h3>
+          
+          <!-- GitHub Connect (if not connected) -->
+          <div *ngIf="!isGitHubConnected" class="github-connect">
+            <p>Connect to GitHub to directly load and save protocol files from your repositories</p>
+            <p-button 
+              label="Connect to GitHub" 
+              icon="pi pi-github" 
+              (onClick)="connectToGitHub()"
+              severity="info">
+            </p-button>
+          </div>
+
+          <!-- Repository Selection -->
+          <div *ngIf="isGitHubConnected" class="github-connected">
+            <div class="field">
+              <label for="repository">Select Repository</label>
+              <p-select 
+                [options]="repositories" 
+                formControlName="selectedRepository"
+                optionLabel="full_name"
+                optionValue="full_name"
+                placeholder="Choose a repository"
+                (onChange)="onRepositorySelect($event.value)"
+                styleClass="w-full github-select"
+                [style]="{'width': '100%'}">
+              </p-select>
+            </div>
+
+            <div class="field" *ngIf="appForm.get('selectedRepository')?.value">
+              <label for="filePath">File Path</label>
+              <input 
+                id="filePath" 
+                type="text" 
+                pInputText 
+                formControlName="filePath"
+                placeholder="src/protocol.json"
+                class="w-full"
+              />
+            </div>
+
+            <div class="github-actions" *ngIf="appForm.get('selectedRepository')?.value">
+              <p-button 
+                label="Load from GitHub" 
+                icon="pi pi-download" 
+                (onClick)="loadFromGitHub()"
+                severity="info"
+                size="small">
+              </p-button>
+            </div>
+
+            <p-message 
+              *ngIf="gitHubError" 
+              severity="error" 
+              [text]="gitHubError">
+            </p-message>
+          </div>
+
+          <!-- Legacy File Upload (hidden when GitHub connected) -->
+          <div *ngIf="!isGitHubConnected" class="upload-container">
             <input 
               type="file" 
               accept=".json"
@@ -401,14 +459,26 @@
           </div>
         </div>
 
-        <!-- Export Button -->
+        <!-- Save/Export Actions -->
         <div class="form-section">
-          <p-button 
-            label="Export Config" 
-            icon="pi pi-download" 
-            (onClick)="exportConfig()"
-            severity="secondary">
-          </p-button>
+          <div *ngIf="isGitHubConnected && appForm.get('selectedRepository')?.value" class="github-save-actions">
+            <p-button 
+              label="Save Changes to GitHub" 
+              icon="pi pi-upload" 
+              (onClick)="saveToGitHub()"
+              severity="success"
+              [disabled]="!currentFileData">
+            </p-button>
+          </div>
+          
+          <div *ngIf="!isGitHubConnected" class="export-actions">
+            <p-button 
+              label="Export Config" 
+              icon="pi pi-download" 
+              (onClick)="exportConfig()"
+              severity="secondary">
+            </p-button>
+          </div>
         </div>
       </form>
     </p-panel>
