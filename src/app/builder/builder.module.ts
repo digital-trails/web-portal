@@ -21,12 +21,13 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { UserFacade } from '../store/user/user.facade';
 import { BuilderComponent } from './builder.component';
 import { BuilderRoutingModule } from './builder-routing.module';
+import { AuthComponent } from './auth/auth.component';
 import { GithubFacade } from './github.facade';
 
 @NgModule({
   declarations: [
     BuilderComponent,
-    GithubFacade
+    AuthComponent
   ],
   imports: [
     BuilderRoutingModule,
@@ -49,7 +50,8 @@ import { GithubFacade } from './github.facade';
   ],
   providers: [
     UserFacade,
-    provideHttpClient(withInterceptorsFromDi())
+    provideHttpClient(withInterceptorsFromDi()),
+    GithubFacade
   ]
 })
 export class BuilderModule { }
