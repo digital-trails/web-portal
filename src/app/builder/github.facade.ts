@@ -6,19 +6,18 @@ import { Observable, map } from 'rxjs';
   providedIn: 'root'
 })
 export class GithubFacade {
-  private filePath = "src/protocol.json";
 
   constructor(private http: HttpClient) {}
 
-  getFile(): Observable<any> {
+  getFile(filePath: string): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `bearer ${sessionStorage.getItem('githubAccessToken') || ''}`,
       Accept: 'application/vnd.github.v3+json'
     });
-    return this.http.get<any>(`https://api.github.com/repos/${sessionStorage.getItem('githubUser') || ''}/${sessionStorage.getItem('githubRepo') || ''}/contents/${this.filePath}`, { headers }).pipe(
+    return this.http.get<any>(`https://api.github.com/repos/${sessionStorage.getItem('githubOwner') || ''}/${sessionStorage.getItem('githubRepo') || ''}/contents/${filePath}`, { headers }).pipe(
       map(file => {
         if (file && file.content) {
-          file.content = atob(file.content); // Decode base64 content
+          file.content = JSON.parse(atob(file.content)); // Decode base64 content
         }
         return file;
       } )
@@ -38,7 +37,7 @@ export class GithubFacade {
       sha: file.sha
     };
 
-    this.http.put(`https://api.github.com/repos/${sessionStorage.getItem('githubUser') || ''}/${sessionStorage.getItem('githubRepo') || ''}/contents/${this.filePath}`, body, { headers })
+    this.http.put(`https://api.github.com/repos/${sessionStorage.getItem('githubOwner') || ''}/${sessionStorage.getItem('githubRepo') || ''}/contents/${file.path}`, body, { headers })
       .subscribe({
         next: (response) => {
           console.log('File updated successfully:', response)

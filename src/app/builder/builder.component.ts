@@ -22,159 +22,24 @@ export class BuilderComponent implements OnInit {
     button4: "Button 4"
   };
 
-  constructor(private fb: FormBuilder, private GithubFacade: GithubFacade) {
+  constructor(private fb: FormBuilder, private githubFacade: GithubFacade) {
     this.appForm = this.createForm();
   }
 
   ngOnInit(): void {
-    const testJSON = {
-    "icon": "/assets/home_mindtrails.png",
-    "home": {
-        "title": "MindTrails",
-        "elements": [
-            {
-                "type": "alert",
-                "title": "Alert title",
-                "message": "Alert message",
-                "icon": {
-                    "url": "/assets/home_banner.png",
-                    "tint": false
-                }
-            },
-            {
-                "type": "sessions",
-                "left": {
-                    "text": "{0} Sessions Completed",
-                    "icon": "/assets/completed.png"
-                },
-                "right": {
-                    "text": "Launch Session",
-                    "icon": "/assets/unlocked.png",
-                    "action": "flow://flows/doses"
-                }
-            },
-            {
-                "type": "button",
-                "action": {
-                    "text": "Show Survey Modal",
-                    "action": "navmodal://Survey"
-                }
-            },
-            {
-                "type": "carousel",
-                "actions": [
-                    {
-                        "text": "inputs!",
-                        "icon": "/assets/home_mindtrails.png",
-                        "action": "flow://flows/inputs",
-                        "backgroundcolor": "#1A206AFF",
-                        "markcompleted": true
-                    },
-                    {
-                        "text": "survey 1",
-                        "icon": "/assets/home_instructions.png",
-                        "action": "flow://flows/how was your day?",
-                        "backgroundcolor": "#1A00E05A",
-                        "markcompleted": true
-                    },
-                    {
-                        "text": "survey 2",
-                        "icon": "/assets/home_resources.png",
-                        "action": "flow://flows/survey2",
-                        "backgroundcolor": "#1A00C2FF",
-                        "markcompleted": true
-                    },
-                    {
-                        "text": "survey 3",
-                        "icon": "/assets/home_anxiety.png",
-                        "action": "flow://flows/survey3",
-                        "backgroundcolor": "#1A5C2FDA",
-                        "markcompleted": true
-                    }
-                ]
-            },
-            {
-                "type": "tiles",
-                "actions": [
-                    {
-                        "text": "inputs!",
-                        "icon": "/assets/home_mindtrails.png",
-                        "action": "flow://flows/inputs",
-                        "backgroundcolor": "#1A206AFF",
-                        "markcompleted": true
-                    },
-                    {
-                        "text": "survey 1",
-                        "icon": "/assets/home_instructions.png",
-                        "action": "flow://flows/how was your day?",
-                        "backgroundcolor": "#1A00E05A",
-                        "markcompleted": true
-                    },
-                    {
-                        "text": "survey 2",
-                        "icon": "/assets/home_resources.png",
-                        "action": "flow://flows/survey2",
-                        "backgroundcolor": "#1A00C2FF",
-                        "markcompleted": true
-                    },
-                    {
-                        "text": "survey 3",
-                        "icon": "/assets/home_anxiety.png",
-                        "action": "flow://flows/survey3",
-                        "backgroundcolor": "#1A5C2FDA",
-                        "markcompleted": true
-                    }
-                ]
-            }
-        ]
-    },
-    "menu": [
-        {
-            "text": "Home",
-            "icon": "/assets/menu_home.png"
-        }
-    ],
-    "triggers": [
-        {
-            "type": "timing",
-            "action": "notification",
-            "content": "flow://flows/how was your day?",
-            "frequency": "00:05:00"
+
+    this.githubFacade.getFile('src/protocol.json').subscribe({
+        next: (file) => { // MUNEER use decodedJson to populate the UI if you can
+            console.log('✅ Decoded JSON:', file.content);
+            file.content = testJSON; // Using testJSON to test
+            this.GithubFacade.updateFile(file, "testing JSON update");
         },
-        {
-            "type": "timing",
-            "action": "notification",
-            "content": "flow://flows/survey2",
-            "frequency": "01:00:00"
-        },
-        {
-            "type": "timing",
-            "action": "notification",
-            "content": "flow://flows/survey3",
-            "frequency": "1",
-            "time": "08:00"
-        }
-    ],
-    "probes": [
-        {
-            "type": "Location",
-            "optional": true,
-            "interval": "00:00:01",
-            "accuracy": 5
-        }
-    ]
-}
-this.GithubFacade.getFile().subscribe({
-    next: (file) => { // MUNEER use decodedJson to populate the UI if you can
-      console.log('✅ Decoded JSON:', file.content);
-      file.content = testJSON; // Using testJSON to test
-      this.GithubFacade.updateFile(file, "testing JSON update");
-    },
-    error: (err) => console.error('❌ Error fetching and decoding:', err)
-  });
+        error: (err) => console.error('❌ Error fetching and decoding:', err)
+    });
+
     // Subscribe to form changes for real-time updates
     this.appForm.valueChanges.subscribe((value) => {
-      this.updateAppData(value);
+        this.updateAppData(value);
     });
   }
 
