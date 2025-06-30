@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MsalService } from '@azure/msal-angular';
+import { GithubFacade } from './github.facade';
+
 
 // Protocol.json interfaces
 interface ProtocolIcon {
@@ -206,7 +208,8 @@ export class BuilderComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private authService: MsalService,
-    private router: Router
+    private router: Router,
+    private githubFacade: GithubFacade
   ) {
     this.appForm = this.createForm();
   }

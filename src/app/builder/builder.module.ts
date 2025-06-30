@@ -21,10 +21,12 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { UserFacade } from '../store/user/user.facade';
 import { BuilderComponent } from './builder.component';
 import { BuilderRoutingModule } from './builder-routing.module';
+import { GithubFacade } from './github.facade';
 
 @NgModule({
   declarations: [
-    BuilderComponent
+    BuilderComponent,
+    GithubFacade
   ],
   imports: [
     BuilderRoutingModule,
