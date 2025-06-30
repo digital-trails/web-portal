@@ -32,7 +32,6 @@ jobs:
       - name: Install Dependencies
         run: |
           npm ci
-          npm install @azure/msal-angular @azure/msal-browser
         
       - name: Build Angular App
         run: npm run build
