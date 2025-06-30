@@ -19,10 +19,15 @@ import { BuilderRoutingModule } from './builder-routing.module';
 import { AuthComponent } from './auth/auth.component';
 import { GithubFacade } from './github.facade';
 
-
+// import your BottomBarComponent here
+import { BottomBarComponent } from '../components/bottom-bar/bottom-bar.component';
 
 @NgModule({
-  declarations: [BuilderComponent, AuthComponent],
+  declarations: [
+    BuilderComponent,
+    BottomBarComponent,
+    AuthComponent
+  ],
   imports: [
     BuilderRoutingModule,
     CommonModule,

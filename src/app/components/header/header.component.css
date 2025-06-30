@@ -1,0 +1,25 @@
+.main-header {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 2rem;
+  min-height: 80px;
+  position: relative;
+}
+
+.navbar-brand {
+  position: absolute !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  margin: 0 !important;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Hide the other navbar elements that could interfere */
+.navbar-toggler,
+.navbar-collapse {
+  visibility: hidden;
+}

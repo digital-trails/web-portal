@@ -1,6 +1,7 @@
-// builder.component.ts
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { Router } from '@angular/router';
+import { MsalService } from '@azure/msal-angular';
 import { GithubFacade } from './github.facade';
 
 @Component({
@@ -22,7 +23,12 @@ export class BuilderComponent implements OnInit {
     button4: "Button 4"
   };
 
-  constructor(private fb: FormBuilder, private githubFacade: GithubFacade) {
+  constructor(
+    private fb: FormBuilder,
+    private authService: MsalService,
+    private router: Router,
+    private githubFacade: GithubFacade
+  ) {
     this.appForm = this.createForm();
   }
 
@@ -65,5 +71,26 @@ export class BuilderComponent implements OnInit {
 
   exportConfig(): void {
     console.log('Current App Data:', JSON.stringify(this.appData, null, 2));
+  }
+
+  // BottomBar button handlers
+  onHomeClick(): void {
+    console.log('Home button clicked — maybe reset form or navigate.');
+  }
+
+  onScriptsClick(): void {
+    console.log('Scripts button clicked — could trigger a search feature.');
+  }
+
+  onSensorsClick(): void {
+    console.log('Sensors button clicked — open profile settings.');
+  }
+
+  onSidebarClick(): void {
+    console.log('Sidebar button clicked — open settings modal.');
+  }
+
+  onLogoutClick(): void {
+    this.authService.logoutRedirect();
   }
 }

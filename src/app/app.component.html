@@ -1,40 +1,14 @@
-<main class="main-container">
-  <div class="sidebar-container">
-    <div class="sidebar">
-      <div class="sidebar-content" *ngIf="isLoggedIn && !!user">
-        <button class="sidebar-button" *ngIf="user.super_admin" routerLink="/console">
-          Super admin stuff
-        </button>
-        
-        <button class="sidebar-button" *ngIf="user.admin" (click)="dashboardCollapse()">
-          {{ isDashboardCollapsed ? '▶' : '▼' }} Dashboards
-        </button>
-        
-        <div class="sub-buttons" *ngIf="!isDashboardCollapsed">
-          <button 
-            class="sidebar-button sub-button" 
-            *ngFor="let name of dashboardNames"
-            [routerLink]="['/dashboard']" 
-            [queryParams]="{study: name}"
-          >
-            {{ name }}
-          </button>
-        </div>
-      </div>
-      <a
-        href="https://github.com/login/oauth/authorize?client_id=Ov23liM8jdVptvkhxswe&redirect_uri=http://localhost:4200/builder/auth&scope=repo"
+<app-header></app-header>
+
+      <!-- <a
+        href="https://github.com/login/oauth/authorize?client_id=Ov23lisTlJQgZC8wmGWj&redirect_uri=http://localhost:4200/builder/auth&scope=repo"
         class="p-button p-button-raised p-button-secondary"
       >
         Sign in with GitHub
-      </a>
+      </a> -->
 
-      <button class="sidebar-button logout-button" (click)="logout()" *ngIf="isLoggedIn">
-        Logout
-      </button>
-    </div>
-  </div>
-
-  <div class="content-area">
+<main class="main-container">
+  <div class="content-area full-width">
     <div class="hero r-6" *ngIf="!isLoggedIn">
       <div class="sign-in">
         <div class="row align-items-center ">
