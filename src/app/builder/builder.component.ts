@@ -31,8 +31,8 @@ export class BuilderComponent implements OnInit {
     this.githubFacade.getFile('src/protocol.json').subscribe({
         next: (file) => { // MUNEER use decodedJson to populate the UI if you can
             console.log('✅ Decoded JSON:', file.content);
-            file.content = testJSON; // Using testJSON to test
-            this.GithubFacade.updateFile(file, "testing JSON update");
+            file.content = ["New","Json"]; // Using testJSON to test
+            this.GithubFacade.putFile(file, "testing JSON update");
         },
         error: (err) => console.error('❌ Error fetching and decoding:', err)
     });

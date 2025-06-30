@@ -24,7 +24,7 @@ export class GithubFacade {
     );
   }
 
-  updateFile(file: any, commitMessage: string) {
+  putFile(file: any, commitMessage: string) {
     const headers = new HttpHeaders({
       Authorization: `bearer ${sessionStorage.getItem('githubAccessToken') || ''}`,
       Accept: 'application/vnd.github.v3+json'
