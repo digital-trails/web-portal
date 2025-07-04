@@ -25,8 +25,7 @@ import { GithubFacade } from './github.facade';
 
 @NgModule({
   declarations: [
-    BuilderComponent,
-    GithubFacade
+    BuilderComponent
   ],
   imports: [
     BuilderRoutingModule,
@@ -49,6 +48,7 @@ import { GithubFacade } from './github.facade';
   ],
   providers: [
     UserFacade,
+    GithubFacade,
     provideHttpClient(withInterceptorsFromDi())
   ]
 })

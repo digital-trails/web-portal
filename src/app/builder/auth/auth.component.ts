@@ -17,7 +17,7 @@ export class AuthComponent implements OnInit {
 
     if (code) {
       this.http.post(
-        `https://digital-trails.org/api/v1/gh-token?client_id=Ov23lisTlJQgZC8wmGWj&code=${code}`,
+        `https://digital-trails.org/api/v1/gh-token?client_id=Ov23liM8jdVptvkhxswe&code=${code}`,
         {},
         { responseType: 'text' }
       )
@@ -27,8 +27,8 @@ export class AuthComponent implements OnInit {
           const accessToken = params.get('access_token');
 
           sessionStorage.setItem('githubAccessToken', accessToken || '');
-          sessionStorage.setItem('githubRepo', 'digital-trails'); // hardcoded test owner
-          sessionStorage.setItem('githubRepo', 'protocol-test2'); // hardcoded test repo
+          sessionStorage.setItem('githubOwner', 'dt477'); // hardcoded test owner
+          sessionStorage.setItem('githubRepo', 'test'); // hardcoded test repo
         },
         error: () => {
           console.error('Error fetching access token');

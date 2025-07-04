@@ -215,6 +215,67 @@ export class BuilderComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // testing getReleases and getRelease methods
+    this.githubFacade.getReleases().subscribe({
+      next: (releases) => {
+        console.log('Releases:', releases);
+
+        if (releases.length > 0) {
+          // getting the first release
+          this.githubFacade.getRelease(releases[0].tag_name).subscribe({
+            next: (release) => {
+              console.log('Release details:', release);
+
+              // testing updating this release
+              const updatedRelease = {
+                ...release,
+                name: release.name + ' (Updated)',  // update the name
+                body: (release.body || '') + '\n\nUpdated release notes.',
+                prerelease: false,
+                draft: false
+              };
+
+              this.githubFacade.putRelease(updatedRelease).subscribe({
+                next: (updateResponse) => {
+                  console.log('✅ Updated release response:', updateResponse);
+
+                  // testing creating a new release
+                  const newRelease = {
+                    tag_name: 'test-new-release-' + Date.now(),
+                    name: 'Test New Release',
+                    body: 'This is a test new release created via putRelease().',
+                    draft: false,
+                    prerelease: false,
+                    target_commitish: 'main'
+                  };
+
+                  this.githubFacade.putRelease(newRelease).subscribe({
+                    next: (createResponse) => {
+                      console.log('✅ Created new release response:', createResponse);
+                    },
+                    error: (createError) => {
+                      console.error('❌ Error creating new release:', createError);
+                    }
+                  });
+
+                },
+                error: (updateError) => {
+                  console.error('❌ Error updating release:', updateError);
+                }
+              });
+            },
+            error: (releaseError) => {
+              console.error('Error fetching release details:', releaseError);
+            }
+          });
+        } else {
+          console.warn('No releases found to update or fetch.');
+        }
+      },
+      error: (error) => {
+        console.error('Error fetching releases:', error);
+      }
+    });
     // Subscribe to form changes for real-time updates
     this.appForm.valueChanges.subscribe((value) => {
       this.updateAppData(value);

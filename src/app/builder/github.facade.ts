@@ -47,4 +47,44 @@ export class GithubFacade {
           }
       });
   }
+
+  getReleases(): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `bearer ${sessionStorage.getItem('githubAccessToken') || ''}`,
+      Accept: 'application/vnd.github.v3+json'
+    });
+    return this.http.get<any>(`https://api.github.com/repos/${sessionStorage.getItem('githubOwner') || ''}/${sessionStorage.getItem('githubRepo') || ''}/releases`, { headers });
+  }
+
+  getRelease(tagName: string): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `bearer ${sessionStorage.getItem('githubAccessToken') || ''}`,
+      Accept: 'application/vnd.github.v3+json'
+    });
+    return this.http.get<any>(`https://api.github.com/repos/${sessionStorage.getItem('githubOwner') || ''}/${sessionStorage.getItem('githubRepo') || ''}/releases/tags/${tagName}`, { headers });
+  }
+
+  putRelease(release: any): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `bearer ${sessionStorage.getItem('githubAccessToken') || ''}`,
+      Accept: 'application/vnd.github.v3+json'
+    });
+    const body = {
+      tag_name: release.tag_name,
+      target_commitish: release.target_commitish || 'main',
+      name: release.name,
+      body: release.body,
+      draft: release.draft || false,
+      prerelease: release.prerelease || false
+    };
+
+    // conditional to choose to create or update a release
+    if (release.id) {
+      // Update existing release
+      return this.http.patch<any>(`https://api.github.com/repos/${sessionStorage.getItem('githubOwner') || ''}/${sessionStorage.getItem('githubRepo') || ''}/releases/${release.id}`, body, { headers });
+    } else {
+      // Create new release
+      return this.http.post<any>(`https://api.github.com/repos/${sessionStorage.getItem('githubOwner') || ''}/${sessionStorage.getItem('githubRepo') || ''}/releases`, body, { headers });
+    }
+  }
 }
