@@ -276,6 +276,26 @@ export class BuilderComponent implements OnInit {
         console.error('Error fetching releases:', error);
       }
     });
+    this.githubFacade.getBranches().subscribe({
+      next: (branches) => {
+        console.log('✅ Branches:', branches);
+
+        // Get details of first branch
+        const firstBranchName = branches[0].name;
+
+        this.githubFacade.getBranch(firstBranchName).subscribe({
+          next: (branch) => {
+            console.log('✅ Branch details:', branch);
+          },
+          error: (branchError) => {
+            console.error('❌ Error fetching branch details:', branchError);
+          }
+        });
+      },
+      error: (error) => {
+        console.error('❌ Error fetching branches:', error);
+      }
+    });
     // Subscribe to form changes for real-time updates
     this.appForm.valueChanges.subscribe((value) => {
       this.updateAppData(value);

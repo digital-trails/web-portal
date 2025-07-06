@@ -87,4 +87,20 @@ export class GithubFacade {
       return this.http.post<any>(`https://api.github.com/repos/${sessionStorage.getItem('githubOwner') || ''}/${sessionStorage.getItem('githubRepo') || ''}/releases`, body, { headers });
     }
   }
+
+  getBranches(): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `bearer ${sessionStorage.getItem('githubAccessToken') || ''}`,
+      Accept: 'application/vnd.github.v3+json'
+    });
+    return this.http.get<any>(`https://api.github.com/repos/${sessionStorage.getItem('githubOwner') || ''}/${sessionStorage.getItem('githubRepo') || ''}/branches`, { headers });
+  }
+  
+  getBranch(branchName: string): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `bearer ${sessionStorage.getItem('githubAccessToken') || ''}`,
+      Accept: 'application/vnd.github.v3+json'
+    });
+    return this.http.get<any>(`https://api.github.com/repos/${sessionStorage.getItem('githubOwner') || ''}/${sessionStorage.getItem('githubRepo') || ''}/branches/${branchName}`, { headers });
+  }
 }
