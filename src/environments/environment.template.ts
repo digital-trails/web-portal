@@ -1,11 +1,11 @@
 export const environment = {
   production: false,
   azureOpenAI: {
-    apiKey: process.env['AZURE_OPENAI_API_KEY'] || '',
-    endpoint: 'https://your-foundry-instance.openai.azure.com/',
-    model: 'gpt-35-turbo',
-    deploymentName: 'your-deployment-name-here', // Replace with your actual deployment name
+    apiKey: 'YOUR_API_KEY_HERE', // Replace with your actual Azure AI Studio API key
+    endpoint: 'https://trailsfoundry.services.ai.azure.com/models',
+    model: 'Ministral-3B',
+    deploymentName: 'Ministral-3B', // Replace with your actual deployment name
     // Foundry specific configuration
-    foundryProjectUrl: 'https://your-foundry-instance.services.ai.azure.com/api/projects/yourProject'
+    foundryProjectUrl: 'https://trailsfoundry.services.ai.azure.com/api/projects/firstProject'
   }
 }; 

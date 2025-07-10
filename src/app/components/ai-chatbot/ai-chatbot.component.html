@@ -1,0 +1,82 @@
+<!-- Floating Chat Button -->
+<div class="chat-button" (click)="toggleChat()" *ngIf="!isOpen">
+  <div class="chat-icon">🤖</div>
+  <div class="chat-label">AI Assistant</div>
+</div>
+
+<!-- Chat Interface -->
+<div class="chat-container" *ngIf="isOpen">
+  <!-- Chat Header -->
+  <div class="chat-header">
+    <div class="chat-title">
+      <span class="chat-icon">🤖</span>
+      <span>AI Assistant</span>
+    </div>
+    <div class="chat-actions">
+      <button class="chat-action-btn" (click)="clearChat()" title="Clear Chat">
+        🗑️
+      </button>
+      <button class="chat-action-btn" (click)="toggleChat()" title="Close Chat">
+        ✕
+      </button>
+    </div>
+  </div>
+
+  <!-- Chat Messages -->
+  <div class="chat-messages" #chatMessages>
+    <div 
+      *ngFor="let message of messages" 
+      class="message"
+      [ngClass]="{'user-message': message.role === 'user', 'assistant-message': message.role === 'assistant'}"
+    >
+      <div class="message-content">
+        <div class="message-text" [innerHTML]="message.content"></div>
+      </div>
+      <div class="message-time">
+        {{ message.timestamp | date:'shortTime' }}
+      </div>
+    </div>
+
+    <!-- Loading Indicator -->
+    <div *ngIf="isLoading" class="message assistant-message">
+      <div class="message-content">
+        <div class="loading-indicator">
+          <div class="loading-dots">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <span>AI is thinking...</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chat Input -->
+  <div class="chat-input-container">
+    <div class="chat-input-wrapper">
+      <input 
+        type="text" 
+        [(ngModel)]="newMessage" 
+        (keyup.enter)="sendMessage()"
+        placeholder="Ask me to build an app feature..."
+        class="chat-input"
+        [disabled]="isLoading"
+      >
+      <button 
+        (click)="sendMessage()" 
+        class="send-button"
+        [disabled]="!newMessage.trim() || isLoading"
+      >
+        <span *ngIf="!isLoading">➤</span>
+        <span *ngIf="isLoading">⏳</span>
+      </button>
+    </div>
+    
+    <!-- AI Configuration Status -->
+    <div *ngIf="!isAIConfigured()" class="ai-config-warning">
+      <span class="warning-icon">⚠️</span>
+      <span>AI not configured. Please set up your API key.</span>
+    </div>
+  </div>
+</div> 
