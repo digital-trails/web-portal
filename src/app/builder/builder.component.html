@@ -143,167 +143,409 @@
               />
             </div>
 
-            <!-- Banner Configuration -->
-            <h4>Banner Settings</h4>
-            <div class="field">
-              <label for="banner_text">Banner Text</label>
-              <input 
-                id="banner_text" 
-                type="text" 
-                pInputText 
-                formControlName="banner_text" 
-                placeholder="Single banner text"
-              />
-            </div>
-
-            <div class="field">
-              <label for="banner_text_1">Banner Text 1</label>
-              <input 
-                id="banner_text_1" 
-                type="text" 
-                pInputText 
-                formControlName="banner_text_1" 
-                placeholder="First line of banner"
-              />
-            </div>
-
-            <div class="field">
-              <label for="banner_text_2">Banner Text 2</label>
-              <input 
-                id="banner_text_2" 
-                type="text" 
-                pInputText 
-                formControlName="banner_text_2" 
-                placeholder="Second line of banner"
-              />
-            </div>
-
-            <div class="field">
-              <label for="banner_icon">Banner Icon</label>
-              <input 
-                id="banner_icon" 
-                type="text" 
-                pInputText 
-                formControlName="banner_icon" 
-                placeholder="/assets/home_banner.png"
-              />
-            </div>
-
-            <!-- Button Configuration -->
-            <h4>Button Configuration</h4>
-            <div class="button-grid">
-              <!-- Top-Left Button -->
-              <div class="button-config" formGroupName="button_tl">
-                <h5>Top-Left Button</h5>
-                <div class="field">
-                  <label>Button Text</label>
-                  <input type="text" pInputText formControlName="text" placeholder="Button text" />
-                </div>
-                <div class="field">
-                  <label>Icon</label>
-                  <input type="text" pInputText formControlName="icon" placeholder="/assets/icon.png" />
-                </div>
-                <div class="field">
-                  <label>Action</label>
-                  <input type="text" pInputText formControlName="action" placeholder="flow://flows/example" />
-                </div>
+            <!-- Dynamic Elements Section -->
+            <div formGroupName="element" class="elements-section">
+              <h4>Home Elements</h4>
+              <div class="element-controls">
+                <p-button 
+                  label="Add Alert" 
+                  icon="pi pi-plus" 
+                  (onClick)="addElement('alert')"
+                  severity="secondary"
+                  size="small">
+                </p-button>
+                <p-button 
+                  label="Add Sessions" 
+                  icon="pi pi-plus" 
+                  (onClick)="addElement('sessions')"
+                  severity="secondary"
+                  size="small">
+                </p-button>
+                <p-button 
+                  label="Add Button" 
+                  icon="pi pi-plus" 
+                  (onClick)="addElement('button')"
+                  severity="secondary"
+                  size="small">
+                </p-button>
+                <p-button 
+                  label="Add Carousel" 
+                  icon="pi pi-plus" 
+                  (onClick)="addElement('carousel')"
+                  severity="secondary"
+                  size="small">
+                </p-button>
+                <p-button 
+                  label="Add Tiles" 
+                  icon="pi pi-plus" 
+                  (onClick)="addElement('tiles')"
+                  severity="secondary"
+                  size="small">
+                </p-button>
               </div>
 
-              <!-- Top-Right Button -->
-              <div class="button-config" formGroupName="button_tr">
-                <h5>Top-Right Button</h5>
-                <div class="field">
-                  <label>Button Text</label>
-                  <input type="text" pInputText formControlName="text" placeholder="Button text" />
-                </div>
-                <div class="field">
-                  <label>Icon</label>
-                  <input type="text" pInputText formControlName="icon" placeholder="/assets/icon.png" />
-                </div>
-                <div class="field">
-                  <label>Action</label>
-                  <input type="text" pInputText formControlName="action" placeholder="flow://flows/example" />
-                </div>
-              </div>
+              <!-- Elements Accordion -->
+              <p-accordion formArrayName="elements" class="elements-accordion">
+                <p-accordionTab 
+                  *ngFor="let elementControl of elementsArray.controls; let i = index"
+                  [header]="'Element ' + (i + 1) + ': ' + elementControl.get('type')?.value">
+                  
+                  <div [formGroupName]="i" class="element-form">
+                    <!-- Alert Element -->
+                    <div *ngIf="elementControl.get('type')?.value === 'alert'" class="alert-form">
+                      <div class="field">
+                        <label>Title</label>
+                        <input type="text" pInputText formControlName="title" />
+                      </div>
+                      <div class="field">
+                        <label>Message</label>
+                        <input type="text" pInputText formControlName="message" />
+                      </div>
+                      <div formGroupName="icon" class="icon-group">
+                        <div class="field">
+                          <label>Icon URL</label>
+                          <input type="text" pInputText formControlName="url" />
+                        </div>
+                        <div class="field">
+                          <label>Tint</label>
+                          <p-checkbox formControlName="tint" [binary]="true"></p-checkbox>
+                        </div>
+                      </div>
+                    </div>
 
-              <!-- Bottom-Left Button -->
-              <div class="button-config" formGroupName="button_bl">
-                <h5>Bottom-Left Button</h5>
-                <div class="field">
-                  <label>Button Text</label>
-                  <input type="text" pInputText formControlName="text" placeholder="Button text" />
-                </div>
-                <div class="field">
-                  <label>Icon</label>
-                  <input type="text" pInputText formControlName="icon" placeholder="/assets/icon.png" />
-                </div>
-                <div class="field">
-                  <label>Action</label>
-                  <input type="text" pInputText formControlName="action" placeholder="flow://flows/example" />
-                </div>
-              </div>
+                    <!-- Sessions Element -->
+                    <div *ngIf="elementControl.get('type')?.value === 'sessions'" class="sessions-form">
+                      <div formGroupName="left" class="sessions-left">
+                        <h5>Left Side</h5>
+                        <div class="field">
+                          <label>Text</label>
+                          <input type="text" pInputText formControlName="text" />
+                        </div>
+                        <div class="field">
+                          <label>Icon</label>
+                          <input type="text" pInputText formControlName="icon" />
+                        </div>
+                      </div>
+                      <div formGroupName="right" class="sessions-right">
+                        <h5>Right Side</h5>
+                        <div class="field">
+                          <label>Text</label>
+                          <input type="text" pInputText formControlName="text" />
+                        </div>
+                        <div class="field">
+                          <label>Icon</label>
+                          <input type="text" pInputText formControlName="icon" />
+                        </div>
+                        <div class="field">
+                          <label>Action</label>
+                          <input type="text" pInputText formControlName="action" />
+                        </div>
+                      </div>
+                    </div>
 
-              <!-- Bottom-Right Button -->
-              <div class="button-config" formGroupName="button_br">
-                <h5>Bottom-Right Button</h5>
-                <div class="field">
-                  <label>Button Text</label>
-                  <input type="text" pInputText formControlName="text" placeholder="Button text" />
-                </div>
-                <div class="field">
-                  <label>Icon</label>
-                  <input type="text" pInputText formControlName="icon" placeholder="/assets/icon.png" />
-                </div>
-                <div class="field">
-                  <label>Action</label>
-                  <input type="text" pInputText formControlName="action" placeholder="flow://flows/example" />
-                </div>
-              </div>
+                    <!-- Button Element -->
+                    <div *ngIf="elementControl.get('type')?.value === 'button'" class="button-form">
+                      <div formGroupName="action">
+                        <div class="field">
+                          <label>Button Text</label>
+                          <input type="text" pInputText formControlName="text" />
+                        </div>
+                        <div class="field">
+                          <label>Action</label>
+                          <input type="text" pInputText formControlName="action" />
+                        </div>
+                      </div>
+                    </div>
 
-              <!-- Left Sessions Button -->
-              <div class="button-config" formGroupName="button_ls">
-                <h5>Left Sessions Button</h5>
-                <div class="field">
-                  <label>Button Text</label>
-                  <input type="text" pInputText formControlName="text" placeholder="{0} Sessions Completed" />
-                </div>
-                <div class="field">
-                  <label>Icon</label>
-                  <input type="text" pInputText formControlName="icon" placeholder="/assets/icon.png" />
-                </div>
-              </div>
+                    <!-- Carousel/Tiles Elements -->
+                    <div *ngIf="elementControl.get('type')?.value === 'carousel' || elementControl.get('type')?.value === 'tiles'" class="actions-form">
+                      <div class="actions-header">
+                        <h5>Actions</h5>
+                        <p-button 
+                          label="Add Action" 
+                          icon="pi pi-plus" 
+                          (onClick)="addAction(i)"
+                          size="small">
+                        </p-button>
+                      </div>
+                      
+                      <div formArrayName="actions" class="actions-list">
+                        <div *ngFor="let actionControl of getActionsArray(i).controls; let j = index" 
+                             [formGroupName]="j" class="action-item">
+                          <div class="action-header">
+                            <span>Action {{ j + 1 }}</span>
+                            <p-button 
+                              icon="pi pi-trash" 
+                              (onClick)="removeAction(i, j)"
+                              severity="danger"
+                              size="small"
+                              [text]="true">
+                            </p-button>
+                          </div>
+                          <div class="field">
+                            <label>Text</label>
+                            <input type="text" pInputText formControlName="text" />
+                          </div>
+                          <div class="field">
+                            <label>Icon</label>
+                            <input type="text" pInputText formControlName="icon" />
+                          </div>
+                          <div class="field">
+                            <label>Action</label>
+                            <input type="text" pInputText formControlName="action" />
+                          </div>
+                          <div class="field">
+                            <label>Background Color</label>
+                            <p-colorPicker formControlName="backgroundcolor"></p-colorPicker>
+                          </div>
+                          <div class="field">
+                            <label>Mark Completed</label>
+                            <p-checkbox formControlName="markcompleted" [binary]="true"></p-checkbox>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
 
-              <!-- Right Sessions Button -->
-              <div class="button-config" formGroupName="button_rs">
-                <h5>Right Sessions Button</h5>
-                <div class="field">
-                  <label>Button Text</label>
-                  <input type="text" pInputText formControlName="text" placeholder="Launch Session" />
-                </div>
-                <div class="field">
-                  <label>Icon</label>
-                  <input type="text" pInputText formControlName="icon" placeholder="/assets/icon.png" />
-                </div>
-                <div class="field">
-                  <label>Action</label>
-                  <input type="text" pInputText formControlName="action" placeholder="flow://flows/sessions" />
-                </div>
-              </div>
-
-              <!-- Survey Button -->
-              <div class="button-config" formGroupName="button_surveys">
-                <h5>Survey Button</h5>
-                <div class="field">
-                  <label>Button Text</label>
-                  <input type="text" pInputText formControlName="text" placeholder="Show Surveys" />
-                </div>
-                <div class="field">
-                  <label>Action</label>
-                  <input type="text" pInputText formControlName="action" placeholder="navmodal://Survey" />
-                </div>
-              </div>
+                    <!-- Remove Element Button -->
+                    <div class="element-actions">
+                      <p-button 
+                        label="Remove Element" 
+                        icon="pi pi-trash" 
+                        (onClick)="removeElement(i)"
+                        severity="danger"
+                        size="small">
+                      </p-button>
+                    </div>
+                  </div>
+                </p-accordionTab>
+              </p-accordion>
             </div>
           </div>
+        </div>
+
+        <p-divider></p-divider>
+
+        <!-- Menu Configuration -->
+        <div class="form-section">
+          <h3>Menu Configuration</h3>
+          <div class="menu-controls">
+            <p-button 
+              label="Add Menu Item" 
+              icon="pi pi-plus" 
+              (onClick)="addMenuItem()"
+              severity="secondary"
+              size="small">
+            </p-button>
+          </div>
+
+          <p-accordion formArrayName="menu" class="menu-accordion">
+            <p-accordionTab 
+              *ngFor="let menuControl of menuArray.controls; let i = index"
+              [header]="'Menu Item ' + (i + 1) + ': ' + menuControl.get('text')?.value">
+              
+              <div [formGroupName]="i" class="menu-form">
+                <div class="field">
+                  <label>Text</label>
+                  <input type="text" pInputText formControlName="text" />
+                </div>
+                <div class="field">
+                  <label>Icon</label>
+                  <input type="text" pInputText formControlName="icon" />
+                </div>
+                <div class="menu-actions">
+                  <p-button 
+                    label="Remove Menu Item" 
+                    icon="pi pi-trash" 
+                    (onClick)="removeMenuItem(i)"
+                    severity="danger"
+                    size="small">
+                  </p-button>
+                </div>
+              </div>
+            </p-accordionTab>
+          </p-accordion>
+        </div>
+
+        <p-divider></p-divider>
+
+        <!-- Triggers Configuration -->
+        <div class="form-section">
+          <h3>Triggers Configuration</h3>
+          <div class="trigger-controls">
+            <p-button 
+              label="Add Timing Trigger" 
+              icon="pi pi-plus" 
+              (onClick)="addTrigger('timing')"
+              severity="secondary"
+              size="small">
+            </p-button>
+            <p-button 
+              label="Add Random Trigger" 
+              icon="pi pi-plus" 
+              (onClick)="addTrigger('random')"
+              severity="secondary"
+              size="small">
+            </p-button>
+          </div>
+
+          <p-accordion formArrayName="triggers" class="triggers-accordion">
+            <p-accordionTab 
+              *ngFor="let triggerControl of triggersArray.controls; let i = index"
+              [header]="'Trigger ' + (i + 1) + ': ' + triggerControl.get('type')?.value">
+              
+              <div [formGroupName]="i" class="trigger-form">
+                <div class="field">
+                  <label>Type</label>
+                  <p-select 
+                    formControlName="type"
+                    [options]="[{label: 'Timing', value: 'timing'}, {label: 'Random', value: 'random'}]"
+                    optionLabel="label"
+                    optionValue="value">
+                  </p-select>
+                </div>
+                <div class="field">
+                  <label>Event Type</label>
+                  <input type="text" pInputText formControlName="event-type" />
+                </div>
+                
+                <!-- Timing Trigger Fields -->
+                <div *ngIf="triggerControl.get('type')?.value === 'timing'">
+                  <div class="field">
+                    <label>Frequency</label>
+                    <input type="text" pInputText formControlName="frequency" />
+                  </div>
+                  <div class="field">
+                    <label>Time</label>
+                    <input type="text" pInputText formControlName="time" />
+                  </div>
+                  <div formGroupName="action">
+                    <div class="field">
+                      <label>Action Path</label>
+                      <input type="text" pInputText formControlName="path" />
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Random Trigger Fields -->
+                <div *ngIf="triggerControl.get('type')?.value === 'random'">
+                  <div class="field">
+                    <label>Days</label>
+                    <input type="number" pInputText formControlName="days" />
+                  </div>
+                  
+                  <!-- Random Trigger Actions -->
+                  <div formArrayName="triggers" class="random-triggers">
+                    <div class="random-triggers-header">
+                      <h5>Random Trigger Actions</h5>
+                      <p-button 
+                        label="Add Random Action" 
+                        icon="pi pi-plus" 
+                        (onClick)="addRandomTriggerAction(i)"
+                        size="small">
+                      </p-button>
+                    </div>
+                    
+                    <div *ngFor="let randomTriggerControl of getRandomTriggersArray(i).controls; let j = index" 
+                         [formGroupName]="j" class="random-trigger-item">
+                      <div class="random-trigger-header">
+                        <span>Random Action {{ j + 1 }}</span>
+                        <p-button 
+                          icon="pi pi-trash" 
+                          (onClick)="removeRandomTriggerAction(i, j)"
+                          severity="danger"
+                          size="small"
+                          [text]="true">
+                        </p-button>
+                      </div>
+                      <div class="field">
+                        <label>Default Time</label>
+                        <input type="text" pInputText formControlName="default-time" />
+                      </div>
+                      <div class="field">
+                        <label>Open</label>
+                        <input type="text" pInputText formControlName="open" />
+                      </div>
+                      <div class="field">
+                        <label>Close</label>
+                        <input type="text" pInputText formControlName="close" />
+                      </div>
+                      <div formGroupName="action">
+                        <div class="field">
+                          <label>Action Path</label>
+                          <input type="text" pInputText formControlName="path" />
+                        </div>
+                        <div class="field">
+                          <label>Expiry</label>
+                          <input type="text" pInputText formControlName="expiry" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="trigger-actions">
+                  <p-button 
+                    label="Remove Trigger" 
+                    icon="pi pi-trash" 
+                    (onClick)="removeTrigger(i)"
+                    severity="danger"
+                    size="small">
+                  </p-button>
+                </div>
+              </div>
+            </p-accordionTab>
+          </p-accordion>
+        </div>
+
+        <p-divider></p-divider>
+
+        <!-- Probes Configuration -->
+        <div class="form-section">
+          <h3>Probes Configuration</h3>
+          <div class="probe-controls">
+            <p-button 
+              label="Add Probe" 
+              icon="pi pi-plus" 
+              (onClick)="addProbe('Location')"
+              severity="secondary"
+              size="small">
+            </p-button>
+          </div>
+
+          <p-accordion formArrayName="probes" class="probes-accordion">
+            <p-accordionTab 
+              *ngFor="let probeControl of probesArray.controls; let i = index"
+              [header]="'Probe ' + (i + 1) + ': ' + probeControl.get('type')?.value">
+              
+              <div [formGroupName]="i" class="probe-form">
+                <div class="field">
+                  <label>Type</label>
+                  <input type="text" pInputText formControlName="type" />
+                </div>
+                <div class="field">
+                  <label>Optional</label>
+                  <p-checkbox formControlName="optional" [binary]="true"></p-checkbox>
+                </div>
+                <div class="field">
+                  <label>Interval</label>
+                  <input type="text" pInputText formControlName="interval" />
+                </div>
+                <div class="field">
+                  <label>Accuracy</label>
+                  <input type="number" pInputText formControlName="accuracy" />
+                </div>
+                <div class="probe-actions">
+                  <p-button 
+                    label="Remove Probe" 
+                    icon="pi pi-trash" 
+                    (onClick)="removeProbe(i)"
+                    severity="danger"
+                    size="small">
+                  </p-button>
+                </div>
+              </div>
+            </p-accordionTab>
+          </p-accordion>
         </div>
 
         <p-divider></p-divider>

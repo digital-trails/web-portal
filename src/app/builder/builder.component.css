@@ -1613,271 +1613,348 @@
   background: #ffffff !important;
 }
 
-/* GitHub Integration Styles */
-.github-connect {
-  text-align: center;
-  padding: 1.5rem;
-  border: 2px dashed #4a90e2;
-  border-radius: 12px;
-  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-  transition: all 0.3s ease;
+/* Dynamic Elements Section */
+.elements-section {
+  margin-top: 20px;
 }
 
-.github-connect:hover {
-  border-color: #007ad9;
-  background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
-}
-
-.github-connect p {
-  margin-bottom: 1rem;
-  color: #475569;
-  font-weight: 500;
-}
-
-.github-connected {
-  padding: 1.5rem;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
-  color: #f8fafc;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-}
-
-/* Override field styling specifically for GitHub connected section */
-.github-connected .field {
-  margin-bottom: 1.25rem;
-}
-
-.github-connected .field label {
-  display: block;
-  margin-bottom: 0.75rem;
-  font-weight: 600;
-  color: #f8fafc;
-  font-size: 0.875rem;
-  text-transform: uppercase;
-  letter-spacing: 0.025em;
-}
-
-.github-actions {
-  margin-top: 1rem;
+.element-controls {
   display: flex;
-  gap: 0.75rem;
   flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
 }
 
-.github-save-actions {
-  text-align: center;
-  padding: 1rem;
+.element-controls p-button {
+  flex: 1;
+  min-width: 120px;
 }
 
-.export-actions {
-  text-align: center;
-  padding: 1rem;
+.elements-accordion .p-accordion-header {
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
 }
 
-.w-full {
+.elements-accordion .p-accordion-content {
+  padding: 16px;
+}
+
+.element-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.alert-form, .sessions-form, .button-form, .actions-form {
+  padding: 12px;
+  border: 1px solid #e9ecef;
+  border-radius: 4px;
+  background-color: #f8f9fa;
+}
+
+.sessions-left, .sessions-right {
+  padding: 8px;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+
+.sessions-left h5, .sessions-right h5 {
+  margin: 0 0 8px 0;
+  color: #495057;
+  font-size: 14px;
+}
+
+.icon-group {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.icon-group .field {
+  flex: 1;
+}
+
+.actions-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.actions-header h5 {
+  margin: 0;
+  color: #495057;
+}
+
+.actions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.action-item {
+  padding: 12px;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  background-color: white;
+}
+
+.action-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #495057;
+}
+
+.element-actions {
+  margin-top: 16px;
+  text-align: right;
+}
+
+/* Menu Configuration */
+.menu-controls {
+  margin-bottom: 16px;
+}
+
+.menu-accordion .p-accordion-header {
+  background-color: #e8f4fd;
+  border: 1px solid #bee5eb;
+}
+
+.menu-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.menu-actions {
+  margin-top: 16px;
+  text-align: right;
+}
+
+/* Triggers Configuration */
+.trigger-controls {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.triggers-accordion .p-accordion-header {
+  background-color: #fff3cd;
+  border: 1px solid #ffeaa7;
+}
+
+.trigger-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.random-triggers {
+  margin-top: 16px;
+  padding: 12px;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  background-color: #f8f9fa;
+}
+
+.random-triggers-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.random-triggers-header h5 {
+  margin: 0;
+  color: #495057;
+}
+
+.random-trigger-item {
+  padding: 12px;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  background-color: white;
+  margin-bottom: 8px;
+}
+
+.random-trigger-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #495057;
+}
+
+.trigger-actions {
+  margin-top: 16px;
+  text-align: right;
+}
+
+/* Probes Configuration */
+.probe-controls {
+  margin-bottom: 16px;
+}
+
+.probes-accordion .p-accordion-header {
+  background-color: #d1ecf1;
+  border: 1px solid #bee5eb;
+}
+
+.probe-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.probe-actions {
+  margin-top: 16px;
+  text-align: right;
+}
+
+/* Form Field Styling */
+.field {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 12px;
+}
+
+.field label {
+  font-weight: 500;
+  margin-bottom: 4px;
+  color: #495057;
+  font-size: 14px;
+}
+
+.field input, .field p-select {
   width: 100%;
 }
 
-/* Enhanced PrimeNG Select Styling for Dark Theme */
-::ng-deep .github-connected .p-select {
-  width: 100% !important;
-  border: 1px solid #475569 !important;
-  border-radius: 8px !important;
-  background: #1e293b !important;
-  transition: all 0.3s ease !important;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+.field p-checkbox {
+  margin-top: 4px;
 }
 
-::ng-deep .github-connected .p-select:not(.p-disabled):hover {
-  border-color: #4a90e2 !important;
-  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2) !important;
+/* Color Picker Styling */
+.field p-colorPicker {
+  width: 60px;
 }
 
-::ng-deep .github-connected .p-select:not(.p-disabled).p-focus {
-  outline: 0 none !important;
-  border-color: #4a90e2 !important;
-  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.3) !important;
+/* Responsive Design for Controls */
+@media (max-width: 768px) {
+  .element-controls {
+    flex-direction: column;
+  }
+  
+  .element-controls p-button {
+    min-width: 100%;
+  }
+  
+  .trigger-controls {
+    flex-direction: column;
+  }
+  
+  .icon-group {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .actions-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .random-triggers-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .action-header, .random-trigger-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
 }
 
-::ng-deep .github-connected .p-select .p-select-label {
-  padding: 0.875rem 1rem !important;
-  color: #f8fafc !important;
-  background: transparent !important;
-  font-weight: 500 !important;
-  font-size: 0.875rem !important;
+/* Accordion Tab Styling */
+.p-accordion .p-accordion-tab {
+  margin-bottom: 8px;
 }
 
-::ng-deep .github-connected .p-select .p-select-label.p-placeholder {
-  color: #94a3b8 !important;
-  font-style: italic !important;
+.p-accordion .p-accordion-header a {
+  padding: 12px 16px;
+  font-weight: 500;
 }
 
-::ng-deep .github-connected .p-select .p-select-dropdown {
-  background: #334155 !important;
-  color: #f8fafc !important;
-  width: 3rem !important;
-  border-top-right-radius: 8px !important;
-  border-bottom-right-radius: 8px !important;
-  border-left: 1px solid #475569 !important;
+.p-accordion .p-accordion-content {
+  padding: 16px;
 }
 
-::ng-deep .github-connected .p-select-overlay {
-  background: #1e293b !important;
-  border: 1px solid #475569 !important;
-  border-radius: 8px !important;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25) !important;
-  backdrop-filter: blur(10px) !important;
+/* Button Styling */
+p-button.p-element {
+  display: inline-block;
 }
 
-::ng-deep .github-connected .p-select-items .p-select-option {
-  padding: 0.875rem 1rem !important;
-  border: 0 none !important;
-  color: #f8fafc !important;
-  background: transparent !important;
-  transition: all 0.2s ease !important;
-  font-weight: 500 !important;
+p-button[size="small"] .p-button {
+  padding: 6px 12px;
+  font-size: 12px;
 }
 
-::ng-deep .github-connected .p-select-items .p-select-option:not(.p-highlight):not(.p-disabled):hover {
-  color: #f8fafc !important;
-  background: rgba(74, 144, 226, 0.2) !important;
+/* Form Section Spacing */
+.form-section {
+  margin-bottom: 24px;
 }
 
-::ng-deep .github-connected .p-select-items .p-select-option.p-highlight {
-  color: #ffffff !important;
-  background: linear-gradient(135deg, #4a90e2 0%, #007ad9 100%) !important;
+.form-section h3 {
+  margin-bottom: 16px;
+  color: #343a40;
+  border-bottom: 2px solid #007bff;
+  padding-bottom: 8px;
 }
 
-/* Input field styling for dark theme */
-::ng-deep .github-connected .p-inputtext {
-  width: 100% !important;
-  padding: 0.875rem 1rem !important;
-  border: 1px solid #475569 !important;
-  border-radius: 8px !important;
-  background: #1e293b !important;
-  color: #f8fafc !important;
-  font-weight: 500 !important;
-  transition: all 0.3s ease !important;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+.form-section h4 {
+  margin-bottom: 12px;
+  color: #495057;
 }
 
-::ng-deep .github-connected .p-inputtext::placeholder {
-  color: #94a3b8 !important;
-  font-style: italic !important;
-}
-
-::ng-deep .github-connected .p-inputtext:enabled:hover {
-  border-color: #4a90e2 !important;
-  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2) !important;
-}
-
-::ng-deep .github-connected .p-inputtext:enabled:focus {
-  outline: 0 none !important;
-  border-color: #4a90e2 !important;
-  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.3) !important;
-}
-
-/* Button styling in GitHub section */
-::ng-deep .github-connected .p-button {
-  background: linear-gradient(135deg, #4a90e2 0%, #007ad9 100%) !important;
-  border: none !important;
-  border-radius: 8px !important;
-  font-weight: 600 !important;
-  text-transform: uppercase !important;
-  letter-spacing: 0.025em !important;
-  transition: all 0.3s ease !important;
-}
-
-::ng-deep .github-connected .p-button:hover {
-  background: linear-gradient(135deg, #007ad9 0%, #0056b3 100%) !important;
-  transform: translateY(-1px) !important;
-  box-shadow: 0 4px 12px rgba(74, 144, 226, 0.4) !important;
-}
-
-/* Button configuration grid */
-.button-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 1.5rem;
-  margin-top: 1rem;
-}
-
-.button-config {
-  padding: 1rem;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  background: #f8fafc;
-}
-
-.button-config h5 {
-  margin: 0 0 1rem 0;
-  color: #1e293b;
-  font-weight: 600;
-  border-bottom: 1px solid #e2e8f0;
-  padding-bottom: 0.5rem;
-}
-
-/* JSON Preview */
+/* JSON Preview Styling */
 .json-preview {
-  background: #1e293b;
-  color: #f8fafc;
-  padding: 1rem;
-  border-radius: 8px;
-  font-family: 'Monaco', 'Consolas', monospace;
-  font-size: 0.875rem;
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  padding: 16px;
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
   max-height: 400px;
   overflow-y: auto;
   white-space: pre-wrap;
-  border: 1px solid #475569;
+  word-wrap: break-word;
 }
 
-/* Section headers */
-h4 {
-  color: #475569;
-  font-weight: 600;
-  margin: 1.5rem 0 1rem 0;
-  font-size: 1rem;
-  border-left: 4px solid #4a90e2;
-  padding-left: 1rem;
+/* GitHub Integration Styling */
+.github-connect, .github-connected {
+  padding: 16px;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  background-color: #f8f9fa;
+  margin-bottom: 16px;
 }
 
-/* Upload container styling */
-.upload-container {
+.github-actions {
+  margin-top: 12px;
+}
+
+.github-save-actions, .export-actions {
+  padding: 16px;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  background-color: #f8f9fa;
   text-align: center;
-  padding: 2rem;
-  border: 2px dashed #cbd5e1;
-  border-radius: 12px;
-  background: #f8fafc;
-  transition: all 0.3s ease;
 }
 
-.upload-container:hover {
-  border-color: #4a90e2;
-  background: #f1f5f9;
-}
-
-.file-input {
-  display: none;
-}
-
-.file-upload-label {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
-  background: #4a90e2;
-  color: white;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 500;
-  transition: background-color 0.3s ease;
-}
-
-.file-upload-label:hover {
-  background: #007ad9;
-}
-
-.file-upload-label i {
-  font-size: 1.1rem;
-}
+/* Existing styles preserved below */

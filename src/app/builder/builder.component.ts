@@ -468,46 +468,24 @@ export class BuilderComponent implements OnInit {
       // Home section
       home: this.fb.group({
         title: ['My App', Validators.required],
-        banner_text: [''],
-        banner_text_1: [''],
-        banner_text_2: [''],
-        banner_icon: [''],
-        // Legacy buttons
-        button_tl: this.createButtonForm(),
-        button_tr: this.createButtonForm(),
-        button_bl: this.createButtonForm(),
-        button_br: this.createButtonForm(),
-        button_ls: this.createButtonForm(),
-        button_rs: this.createButtonForm(),
-        button_surveys: this.createButtonForm(),
-        // Modern element structure
-        hasElementStructure: [false],
-        elementType: ['single'], // 'single' or 'list'
-        element: this.createElementForm(),
-        elements: this.fb.array([])
+        element: this.fb.group({
+          type: ['list'],
+          elements: this.fb.array([]) // Dynamic array of elements
+        })
       }),
       
-      // Menu section
-      menu: this.fb.group({
-        type: ['object'], // 'object' or 'array'
-        // Object-style menu
-        home: this.createMenuItemForm(),
-        unenroll: this.createMenuItemForm(),
-        log_out: this.createMenuItemForm(),
-        custom: this.fb.array([]),
-        // Array-style menu
-        items: this.fb.array([])
-      }),
+      // Menu section - dynamic array
+      menu: this.fb.array([]),
       
       // Settings
       settings: this.fb.group({
         unenroll: ['']
       }),
       
-      // Triggers
+      // Triggers - dynamic array
       triggers: this.fb.array([]),
       
-      // Probes
+      // Probes - dynamic array
       probes: this.fb.array([]),
       
       // GitHub integration form controls
@@ -559,19 +537,7 @@ export class BuilderComponent implements OnInit {
     });
   }
 
-  createActionForm(action?: any): FormGroup {
-    const form = this.fb.group({
-      text: [action?.text || '', Validators.required],
-      icon: [action?.icon || ''],
-      iconType: [typeof action?.icon === 'string' ? 'string' : 'object'],
-      iconUrl: [typeof action?.icon === 'object' ? action?.icon?.url : ''],
-      iconTint: [typeof action?.icon === 'object' ? action?.icon?.tint : false],
-      action: [action?.action || ''],
-      backgroundcolor: [action?.backgroundcolor || ''],
-      markcompleted: [action?.markcompleted || false]
-    });
-    return form;
-  }
+
 
   createGoalForm(): FormGroup {
     return this.fb.group({
@@ -611,41 +577,31 @@ export class BuilderComponent implements OnInit {
       datums_endpoint: formValue.datums_endpoint || undefined,
       sessions: formValue.sessions || undefined,
       home: {
-        title: formValue.home.title || "My App"
-      }
+        title: formValue.home?.title || "My App",
+        element: {
+          type: "list",
+          elements: formValue.home?.element?.elements || []
+        }
+      },
+      menu: formValue.menu || [],
+      triggers: formValue.triggers || [],
+      probes: formValue.probes || []
     };
 
-    // Add banner properties if they exist
-    if (formValue.home.banner_text) protocol.home.banner_text = formValue.home.banner_text;
-    if (formValue.home.banner_text_1) protocol.home.banner_text_1 = formValue.home.banner_text_1;
-    if (formValue.home.banner_text_2) protocol.home.banner_text_2 = formValue.home.banner_text_2;
-    if (formValue.home.banner_icon) protocol.home.banner_icon = formValue.home.banner_icon;
-
-    // Add buttons if they have content
-    const buttons = ['button_tl', 'button_tr', 'button_bl', 'button_br', 'button_ls', 'button_rs', 'button_surveys'];
-    buttons.forEach(buttonKey => {
-      const button = formValue.home[buttonKey];
-      if (button && (button.text || button.icon || button.action)) {
-        protocol.home[buttonKey] = {
-          text: button.text || undefined,
-          icon: button.icon || undefined,
-          action: button.action || undefined
-        };
-        // Remove undefined values
-        Object.keys(protocol.home[buttonKey]).forEach(key => {
-          if (protocol.home[buttonKey][key] === undefined) {
-            delete protocol.home[buttonKey][key];
-          }
-        });
-      }
-    });
-
-    // Remove undefined top-level properties
+    // Remove undefined properties
     Object.keys(protocol).forEach(key => {
       if (protocol[key] === undefined) {
         delete protocol[key];
       }
     });
+
+    // Clean empty arrays
+    if (protocol.menu && protocol.menu.length === 0) delete protocol.menu;
+    if (protocol.triggers && protocol.triggers.length === 0) delete protocol.triggers;
+    if (protocol.probes && protocol.probes.length === 0) delete protocol.probes;
+    if (protocol.home.element.elements.length === 0) {
+      delete protocol.home.element;
+    }
 
     return protocol;
   }
@@ -812,7 +768,7 @@ export class BuilderComponent implements OnInit {
         actionsArray.clear();
         if (element.actions) {
           element.actions.forEach((action: any) => {
-            const actionForm = this.createActionForm();
+            const actionForm = this.createActionFormDefault();
             this.populateActionForm(actionForm, action);
             actionsArray.push(actionForm);
           });
@@ -963,7 +919,7 @@ export class BuilderComponent implements OnInit {
         const carouselElement = element as ProtocolCarousel;
         elementForm = this.fb.group({
           type: ['carousel'],
-          actions: this.fb.array(carouselElement.actions?.map(action => this.createActionForm(action)) || [])
+          actions: this.fb.array(carouselElement.actions?.map(action => this.createActionFormDefault()) || [])
         });
         break;
 
@@ -971,7 +927,7 @@ export class BuilderComponent implements OnInit {
         const tilesElement = element as ProtocolTiles;
         elementForm = this.fb.group({
           type: ['tiles'],
-          actions: this.fb.array(tilesElement.actions?.map(action => this.createActionForm(action)) || [])
+          actions: this.fb.array(tilesElement.actions?.map(action => this.createActionFormDefault()) || [])
         });
         break;
 
@@ -1008,10 +964,7 @@ export class BuilderComponent implements OnInit {
     this.addElementToForm(newElement);
   }
 
-  removeElement(index: number): void {
-    // This method would need to be updated for the new form structure
-    console.log('Remove element functionality needs to be updated');
-  }
+
 
   exportConfig(): void {
     const exportData = {
@@ -1192,5 +1145,201 @@ export class BuilderComponent implements OnInit {
     const scope = encodeURIComponent('repo user');
     
     window.location.href = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}`;
+  }
+
+  // Helper methods for managing dynamic form arrays
+
+  // Home Elements Management
+  get elementsArray(): FormArray {
+    return this.appForm.get('home.element.elements') as FormArray;
+  }
+
+  addElement(type: string = 'alert'): void {
+    const elementForm = this.createElementFormByType(type);
+    this.elementsArray.push(elementForm);
+  }
+
+  removeElement(index: number): void {
+    this.elementsArray.removeAt(index);
+  }
+
+  createElementFormByType(type: string): FormGroup {
+    switch (type) {
+      case 'alert':
+        return this.fb.group({
+          type: ['alert'],
+          title: ['Alert title'],
+          message: ['Alert message'],
+          icon: this.fb.group({
+            url: ['/assets/home_banner.png'],
+            tint: [false]
+          })
+        });
+      case 'sessions':
+        return this.fb.group({
+          type: ['sessions'],
+          left: this.fb.group({
+            text: ['{0} Sessions Completed'],
+            icon: ['/assets/completed.png']
+          }),
+          right: this.fb.group({
+            text: ['Launch Session'],
+            icon: ['/assets/unlocked.png'],
+            action: ['flow://flows/doses']
+          })
+        });
+      case 'button':
+        return this.fb.group({
+          type: ['button'],
+          action: this.fb.group({
+            text: ['Show Survey Modal'],
+            action: ['navmodal://Survey']
+          })
+        });
+      case 'carousel':
+        return this.fb.group({
+          type: ['carousel'],
+          actions: this.fb.array([this.createActionFormDefault()])
+        });
+      case 'tiles':
+        return this.fb.group({
+          type: ['tiles'],
+          actions: this.fb.array([this.createActionFormDefault()])
+        });
+      default:
+        return this.fb.group({
+          type: [type],
+          title: [''],
+          message: ['']
+        });
+    }
+  }
+
+  // Actions Management (for carousel/tiles)
+  getActionsArray(elementIndex: number): FormArray {
+    return this.elementsArray.at(elementIndex).get('actions') as FormArray;
+  }
+
+  addAction(elementIndex: number): void {
+    const actionsArray = this.getActionsArray(elementIndex);
+    actionsArray.push(this.createActionFormDefault());
+  }
+
+  removeAction(elementIndex: number, actionIndex: number): void {
+    const actionsArray = this.getActionsArray(elementIndex);
+    actionsArray.removeAt(actionIndex);
+  }
+
+  createActionFormDefault(): FormGroup {
+    return this.fb.group({
+      text: ['Action Text'],
+      icon: ['/assets/home_mindtrails.png'],
+      action: ['flow://flows/example'],
+      backgroundcolor: ['#1A206AFF'],
+      markcompleted: [true]
+    });
+  }
+
+  // Menu Management
+  get menuArray(): FormArray {
+    return this.appForm.get('menu') as FormArray;
+  }
+
+  addMenuItem(): void {
+    const menuItem = this.fb.group({
+      text: ['Menu Item'],
+      icon: ['/assets/menu_home.png']
+    });
+    this.menuArray.push(menuItem);
+  }
+
+  removeMenuItem(index: number): void {
+    this.menuArray.removeAt(index);
+  }
+
+  // Triggers Management
+  get triggersArray(): FormArray {
+    return this.appForm.get('triggers') as FormArray;
+  }
+
+  addTrigger(type: string = 'timing'): void {
+    const triggerForm = this.createTriggerFormByType(type);
+    this.triggersArray.push(triggerForm);
+  }
+
+  removeTrigger(index: number): void {
+    this.triggersArray.removeAt(index);
+  }
+
+  createTriggerFormByType(type: string): FormGroup {
+    if (type === 'timing') {
+      return this.fb.group({
+        type: ['timing'],
+        'event-type': ['silentNotification'],
+        frequency: ['00:05:00'],
+        time: [''],
+        action: this.fb.group({
+          path: ['flow://flows/example']
+        })
+      });
+    } else if (type === 'random') {
+      return this.fb.group({
+        type: ['random'],
+        'event-type': ['silentNotification'],
+        days: [7],
+        triggers: this.fb.array([this.createRandomTriggerAction()])
+      });
+    }
+    return this.fb.group({
+      type: [type],
+      'event-type': ['silentNotification'],
+      frequency: ['00:05:00']
+    });
+  }
+
+  // Random Trigger Actions Management
+  getRandomTriggersArray(triggerIndex: number): FormArray {
+    return this.triggersArray.at(triggerIndex).get('triggers') as FormArray;
+  }
+
+  addRandomTriggerAction(triggerIndex: number): void {
+    const randomTriggersArray = this.getRandomTriggersArray(triggerIndex);
+    randomTriggersArray.push(this.createRandomTriggerAction());
+  }
+
+  removeRandomTriggerAction(triggerIndex: number, actionIndex: number): void {
+    const randomTriggersArray = this.getRandomTriggersArray(triggerIndex);
+    randomTriggersArray.removeAt(actionIndex);
+  }
+
+  createRandomTriggerAction(): FormGroup {
+    return this.fb.group({
+      'default-time': [''],
+      open: [''],
+      close: [''],
+      action: this.fb.group({
+        path: ['flow://flows/example'],
+        expiry: ['']
+      })
+    });
+  }
+
+  // Probes Management
+  get probesArray(): FormArray {
+    return this.appForm.get('probes') as FormArray;
+  }
+
+  addProbe(type: string = 'Location'): void {
+    const probeForm = this.fb.group({
+      type: [type],
+      optional: [true],
+      interval: ['00:00:01'],
+      accuracy: [5]
+    });
+    this.probesArray.push(probeForm);
+  }
+
+  removeProbe(index: number): void {
+    this.probesArray.removeAt(index);
   }
 }

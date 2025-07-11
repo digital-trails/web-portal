@@ -17,6 +17,7 @@ import { MessageModule } from 'primeng/message';
 import { SelectModule } from 'primeng/select';
 import { ColorPickerModule } from 'primeng/colorpicker';
 import { CheckboxModule } from 'primeng/checkbox';
+import { AccordionModule } from 'primeng/accordion';
 
 import { UserFacade } from '../store/user/user.facade';
 import { BuilderComponent } from './builder.component';
@@ -47,7 +48,8 @@ import { GithubFacade } from './github.facade';
     MessageModule,
     SelectModule,
     ColorPickerModule,
-    CheckboxModule
+    CheckboxModule,
+    AccordionModule
   ],
   providers: [
     UserFacade,
