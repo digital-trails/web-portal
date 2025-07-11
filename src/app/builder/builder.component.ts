@@ -260,6 +260,13 @@ export class BuilderComponent implements OnInit {
     this.appForm.valueChanges.subscribe((value) => {
       this.updateProtocolFromForm(value);
       this.refreshScreens();
+      // Update appData for phone preview
+      this.appData.title = value.home?.title || 'My App';
+      this.appData.subtitle = value.home?.banner_text || 'App Builder Demo';
+      this.appData.button1 = value.home?.button_tl?.text || 'Button 1';
+      this.appData.button2 = value.home?.button_tr?.text || 'Button 2';
+      this.appData.button3 = value.home?.button_bl?.text || 'Button 3';
+      this.appData.button4 = value.home?.button_br?.text || 'Button 4';
     });
     
     // Initialize home screen
@@ -552,17 +559,18 @@ export class BuilderComponent implements OnInit {
     });
   }
 
-  createActionForm(): FormGroup {
-    return this.fb.group({
-      text: ['', Validators.required],
-      icon: [''],
-      iconType: ['string'],
-      iconUrl: [''],
-      iconTint: [false],
-      action: [''],
-      backgroundcolor: [''],
-      markcompleted: [false]
+  createActionForm(action?: any): FormGroup {
+    const form = this.fb.group({
+      text: [action?.text || '', Validators.required],
+      icon: [action?.icon || ''],
+      iconType: [typeof action?.icon === 'string' ? 'string' : 'object'],
+      iconUrl: [typeof action?.icon === 'object' ? action?.icon?.url : ''],
+      iconTint: [typeof action?.icon === 'object' ? action?.icon?.tint : false],
+      action: [action?.action || ''],
+      backgroundcolor: [action?.backgroundcolor || ''],
+      markcompleted: [action?.markcompleted || false]
     });
+    return form;
   }
 
   createGoalForm(): FormGroup {

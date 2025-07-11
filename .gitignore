@@ -45,3 +45,5 @@ Thumbs.db
 
 # Proxy stuff
 proxy.conf.json
+
+src/environments/environment.ts
