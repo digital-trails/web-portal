@@ -18,7 +18,7 @@ export class BuilderNavComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private authService: MsalService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     // Check initial route
