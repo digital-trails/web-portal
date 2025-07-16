@@ -276,11 +276,11 @@ export class BuilderComponent implements OnInit {
         console.error('Error fetching releases:', error);
       }
     });
+    // testing getBranches and getBranch methods
     this.githubFacade.getBranches().subscribe({
       next: (branches) => {
         console.log('✅ Branches:', branches);
 
-        // Get details of first branch
         const firstBranchName = branches[0].name;
 
         this.githubFacade.getBranch(firstBranchName).subscribe({

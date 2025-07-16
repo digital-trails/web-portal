@@ -103,4 +103,26 @@ export class GithubFacade {
     });
     return this.http.get<any>(`https://api.github.com/repos/${sessionStorage.getItem('githubOwner') || ''}/${sessionStorage.getItem('githubRepo') || ''}/branches/${branchName}`, { headers });
   }
+
+  updateRepository(owner: string, repo: string, data: any) { // THIS NOT FOR UPDATING REPOSITORY CONTENTS/FILES, JUST FOR DATA/SETTINGS
+    const headers = new HttpHeaders({
+      Authorization: `bearer ${sessionStorage.getItem('githubAccessToken') || ''}`,
+      Accept: 'application/vnd.github.v3+json',
+    });
+
+    return this.http.patch(`https://api.github.com/repos/${owner}/${repo}`, data, {
+      headers,
+    });
+  }
+
+  createOrganizationRepository(org: string, repoData: any): Observable<any> { // org would be digital-trails probably
+    const headers = new HttpHeaders({
+      Authorization: `token ${sessionStorage.getItem('githubAccessToken') || ''}`,
+      Accept: 'application/vnd.github.v3+json',
+    });
+
+    return this.http.post(`https://api.github.com/orgs/${org}/repos`, repoData, {
+      headers,
+    });
+  }
 }
