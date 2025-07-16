@@ -125,4 +125,8 @@ export class GithubFacade {
       headers,
     });
   }
+  
+  changeRepo(repo: string): void {
+    sessionStorage.setItem('githubRepo', repo);
+  }
 }
