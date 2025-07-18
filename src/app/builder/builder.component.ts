@@ -215,6 +215,23 @@ export class BuilderComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // testing getUserRepositories method
+    this.githubFacade.getUserRepositories().subscribe({
+      next: (repos) => {
+        console.log('User Repositories:', repos);
+        if (repos.length > 0) {
+          // Automatically set the first repository as current
+          const firstRepo = repos[0];
+          this.githubFacade.changeOwnerAndRepo(firstRepo.owner.login, firstRepo.name);
+          console.log(`Changed to repository: ${firstRepo.name} owned by ${firstRepo.owner
+.login}`);
+        }
+      },
+      error: (error) => {
+        console.error('Error fetching user repositories:', error);  
+        }
+    });
+
     // testing getReleases and getRelease methods
     this.githubFacade.getReleases().subscribe({
       next: (releases) => {

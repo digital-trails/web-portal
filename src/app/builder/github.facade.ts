@@ -126,7 +126,16 @@ export class GithubFacade {
     });
   }
   
-  changeRepo(repo: string): void {
+  getUserRepositories(): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `bearer ${sessionStorage.getItem('githubAccessToken') || ''}`,
+      Accept: 'application/vnd.github.v3+json'
+    });
+    return this.http.get<any>(`https://api.github.com/users/${sessionStorage.getItem('githubOwner') || ''}/repos`, { headers });
+  }
+
+  changeOwnerAndRepo(owner: string, repo: string): void {
     sessionStorage.setItem('githubRepo', repo);
+    sessionStorage.setItem('githubOwner', owner);
   }
 }
