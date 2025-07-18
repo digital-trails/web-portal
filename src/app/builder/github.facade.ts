@@ -131,7 +131,7 @@ export class GithubFacade {
       Authorization: `bearer ${sessionStorage.getItem('githubAccessToken') || ''}`,
       Accept: 'application/vnd.github.v3+json'
     });
-    return this.http.get<any>(`https://api.github.com/users/${sessionStorage.getItem('githubOwner') || ''}/repos`, { headers });
+    return this.http.get<any>(`https://api.github.com/user/repos`, { headers });
   }
 
   changeOwnerAndRepo(owner: string, repo: string): void {
