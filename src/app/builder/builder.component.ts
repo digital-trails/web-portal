@@ -215,6 +215,15 @@ export class BuilderComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // testing getUserRepositories
+    this.githubFacade.getUserRepositories().subscribe({
+      next: (repos) => {
+        console.log('User Repositories:', repos);
+      },
+      error: (error) => {
+        console.error('Error fetching user repositories:', error);
+      }
+    });
     // Subscribe to form changes for real-time updates
     this.appForm.valueChanges.subscribe((value) => {
       this.updateAppData(value);
