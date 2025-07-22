@@ -2111,6 +2111,7 @@ p-button[size="small"] .p-button {
   border: 2px solid #e0e0e0 !important;
   border-radius: 6px !important;
   background-color: #ffffff !important;
+  width: 100% !important;
 }
 
 ::ng-deep .p-select:focus {
@@ -2122,6 +2123,56 @@ p-button[size="small"] .p-button {
   padding: 12px 16px !important;
   color: #333333 !important;
   font-size: 14px !important;
+  background-color: #ffffff !important;
+}
+
+/* Specific styling for GitHub repository select dropdown */
+::ng-deep .github-select {
+  background-color: #ffffff !important;
+  border: 2px solid #e0e0e0 !important;
+}
+
+::ng-deep .github-select .p-select-label {
+  background-color: #fdfcfc !important;
+  color: #683db9 !important;
+  opacity: 1 !important;
+}
+
+::ng-deep .github-select:not(.p-disabled):hover {
+  border-color: #2196f3 !important;
+}
+
+::ng-deep .github-select.p-focus {
+  border-color: #2196f3 !important;
+  box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1) !important;
+}
+
+/* Dropdown panel styling */
+::ng-deep .p-select-overlay {
+  background-color: #534ea0 !important;
+  border: 2px solid #4d3bad !important;
+  border-radius: 6px !important;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
+}
+
+::ng-deep .p-select-overlay .p-select-items {
+  background-color: #ffffff !important;
+}
+
+::ng-deep .p-select-overlay .p-select-item {
+  background-color: #524d99 !important;
+  color: #463397 !important;
+  padding: 12px 16px !important;
+}
+
+::ng-deep .p-select-overlay .p-select-item:hover {
+  background-color: #f5f5f5 !important;
+  color: #333333 !important;
+}
+
+::ng-deep .p-select-overlay .p-select-item.p-highlight {
+  background-color: #2196f3 !important;
+  color: #413fa0 !important;
 }
 
 ::ng-deep .p-checkbox .p-checkbox-box {
