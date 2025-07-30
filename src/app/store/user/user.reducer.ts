@@ -4,10 +4,12 @@ import { UserActions } from "./user.actions";
 
 export interface UserState {
   user?: User;
+  users?: { [studyCode: string]: User[] };
 }
 
 export const initialState: UserState = {
-  user: undefined
+  user: undefined,
+  users: undefined
 };
 
 export const UserReducer = createReducer(
@@ -16,6 +18,15 @@ export const UserReducer = createReducer(
     return {
       ...state,
       user: user
+    };
+  }),
+  on(UserActions.setUsers, (state, { studyCode, users }) => {
+    return {
+      ...state,
+      users: {
+        ...state.users,
+        [studyCode]: users
+      }
     };
   })
 );

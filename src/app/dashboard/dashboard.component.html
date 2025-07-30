@@ -1,10 +1,56 @@
-<div class="iframe-wrapper">
-  <div class="iframe-container">
-    <iframe
-      *ngIf="iframeUrl"
-      [src]="iframeUrl"
-      class="responsive-iframe"
-      allowtransparency="true">
-    </iframe>
+<div *ngIf="pageData$ | async as data">
+  <div class="tabs">
+    <button (click)="activeTab = 'dashboard'" [class.active]="activeTab === 'iframe'">Dashboard</button>
+    <button (click)="activeTab = 'users'" [class.active]="activeTab === 'users'">Users</button>
+  </div>
+
+  <div class="tab-content">
+    <div *ngIf="activeTab === 'dashboard'" class="iframe-wrapper">
+      <div class="iframe-container">
+        <iframe [src]="data.adminStudy?.iframeUrl" class="responsive-iframe" allowtransparency="true"> </iframe>
+      </div>
+    </div>
+
+
+    <div *ngIf="activeTab === 'users'">
+      <div class="d-flex flex-wrap justify-content-start gap-3">
+        <div *ngFor="let user of data.studyUsers" class="card shadow-sm" (click)="selectUser(user.id)">
+          <div class="card-body user-card">
+            <h5 class="card-title">{{ user.id?.slice(0, user.id?.indexOf('@')) }}</h5>
+            <div *ngIf="user?.user?.studies?.[studyCode] as study">
+              <p class="card-text">
+                <strong>Status:</strong> {{ study.state }}<br>
+                <strong>Last Update:</strong> {{ study.lastUpdate | date: 'medium' }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="d-flex justify-content-start mt-4">
+        <div class="card text-center shadow-sm user-card" (click)="selectUser('all participants')">
+          <div class="card-body">
+            <h5 class="card-title">All Participants</h5>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+    <div *ngIf="selectedUserId" class="message-section">
+
+      <h3>
+        Send a message to {{
+        selectedUserId.includes('@')? selectedUserId.slice(0, selectedUserId.indexOf('@')): selectedUserId
+        }}
+      </h3>
+
+      <textarea #messageInput placeholder="Type your message..."></textarea>
+      <button (click)="sendMessage(messageInput.value)">Send</button>
+      <p *ngIf="messageSent" class="confirmation">Message sent successfully!</p>
+    </div>
+
   </div>
 </div>
