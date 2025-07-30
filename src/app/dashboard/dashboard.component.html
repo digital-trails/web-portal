@@ -1,10 +1,34 @@
-<div class="iframe-wrapper">
-  <div class="iframe-container">
-    <iframe
-      *ngIf="iframeUrl"
-      [src]="iframeUrl"
-      class="responsive-iframe"
-      allowtransparency="true">
-    </iframe>
+<div class="tabs">
+  <button (click)="activeTab = 'dashboard'" [class.active]="activeTab === 'iframe'">Dashboard</button>
+  <button (click)="activeTab = 'users'" [class.active]="activeTab === 'users'">Users</button>
+</div>
+
+<div class="tab-content">
+  <div *ngIf="activeTab === 'iframe'" class="iframe-wrapper">
+    <div class="iframe-container">
+      <iframe
+        *ngIf="iframeUrl$ | async as iframeUrl"
+        [src]="iframeUrl"
+        class="responsive-iframe"
+        allowtransparency="true">
+      </iframe>
+    </div>
   </div>
+
+ <div *ngIf="activeTab === 'users'" class="user-container">
+  <div *ngIf="users$ | async as users" class="user-grid">
+    <div *ngFor="let user of users" class="user-card" (click)="selectUser(user.id)">
+      {{ user.id }}
+    </div>
+  </div>
+  <div *ngIf="activeTab === 'users'" class="user-card" (click)="selectUser('all')">All</div>
+</div>
+
+<div *ngIf="selectedUser" class="message-section">
+  <h3>Send a message to {{ selectedUser }}</h3>
+  <textarea #messageInput placeholder="Type your message..."></textarea>
+  <button (click)="sendMessage(messageInput.value)">Send</button>
+  <p *ngIf="messageSent" class="confirmation">Message sent successfully!</p>
+</div>
+
 </div>

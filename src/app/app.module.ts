@@ -23,6 +23,7 @@ import { AppComponent } from './app.component';
 import { loginRequest, msalConfig } from './auth.config';
 import { UserReducer, UserState } from './store/user/user.reducer';
 
+
 export const appState = (state: AppState) => state;
 
 export interface AppState {

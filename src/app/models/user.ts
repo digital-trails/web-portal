@@ -1,11 +1,16 @@
-
 export interface User {
-  id: string,
+  id: string;
   admin?: {
-    studies: Map<string, string>
-  },
+    studies: { [key: string]: AdminStudy };
+  };
   user?: {
-    studies: string[]
-  },
-  super_admin: boolean
+    studies: { [key: string]: any };
+  };
+  super_admin: boolean;
 }
+
+export interface AdminStudy {
+   dashboard: number;
+  repo: string;
+}
+

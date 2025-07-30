@@ -20,54 +20,45 @@ export class UserFacade {
 
         return this.store.select(UserSelectors.selectUser).pipe(
             switchMap(user => {
-                if(user) return of(user);
+                if (user) return of(user);
                 return this.httpFacade.get("https://portal.digital-trails.org/api/v2/user").pipe(
-                    switchMap(data => {
-                        const adminStudies = data?.admin ? Object.entries(data.admin.studies) : [];
-                        const dashboardObservables = adminStudies.map(([key, value]) => 
-                            this.dashboardUrl$(Number(value)).pipe(
-                                map(url => [key, url] as [string, string])
-                            )
-                        );
-                        return forkJoin(dashboardObservables).pipe(
-                            map(dashboardResults => {
-        
-                                var user: User = {
-                                    id: data.id,
-                                    super_admin: data?.super_admin || false
-                                };
-        
-                                if(data?.admin) {
-                                    user.admin = {
-                                        studies: new Map<string, string>(dashboardResults)
-                                    };
-                                }
-        
-                                if(data?.user) {
-                                    user.user = {
-                                        studies: [...data?.user.studies]
-                                    };
-                                }
-        
-                                return user;
-                            })
-                        );
-                    }),
-                    tap(user =>  {
-                        if(user) {
+                    map(data => data as User),
+                    tap(user => {
+                        if (user) {
                             this.store.dispatch(UserActions.setUser({ user }))
                         }
                     }),
-                    catchError(err => {
-                        if (err.status === 404) {
-                            return of(undefined);
-                          }
-                          return throwError(() => err)
-                    })
+                    catchError(err => throwError(() => err))
                 );
             })
         );
     }
+
+    getUsers$(studyCode: string): Observable<User[] | undefined> {
+        const body = {
+            query: `SELECT * FROM Users user WHERE user.studies.${studyCode}.protocol-state is "Running")`
+        };
+
+        return this.httpFacade.post("https://portal.digital-trails.org/api/v2/users", body, { 'Content-Type': 'application/query+json' }).pipe(
+            map(data => data.Documents as User[]),
+            catchError(err => {
+                return throwError(() => err);
+            })
+        );
+    }
+
+    sendMessage$(tag: string, message: string): Observable<boolean> {
+        const queryParams = new URLSearchParams({ tag, message }).toString();
+        const fullPath = `https://portal.digital-trails.org/api/v2/message?${queryParams}`;
+
+        return this.httpFacade.post(fullPath).pipe(
+            map(_ => true),
+            catchError(error => {
+                return of(false);
+            })
+        );
+    }
+
 
     dashboardUrl$(dashboard: number | undefined): Observable<any> {
         return this.httpFacade.get(`https://portal.digital-trails.org/api/v2/signjwt?dashboard=${dashboard}`).pipe(map(data => this.sanitizer.bypassSecurityTrustResourceUrl(data.url)));

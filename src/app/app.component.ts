@@ -50,7 +50,7 @@ export class AppComponent implements OnInit {
         if(user) {
           this.user = user;
           if(user.admin?.studies) {
-            this.dashboardNames = Array.from(user.admin.studies.keys());
+            this.dashboardNames = Object.keys(user.admin.studies);
           }
         }
       })
