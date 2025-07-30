@@ -1,16 +1,29 @@
 export interface User {
-  id: string;
+  id?: string;
   admin?: {
-    studies: { [key: string]: AdminStudy };
+    studies: { [studyCode: string]: AdminStudy };
   };
   user?: {
-    studies: { [key: string]: any };
+    studies: { [studyCode: string]: UserStudy };
   };
-  super_admin: boolean;
+  super_admin?: boolean;
 }
 
 export interface AdminStudy {
-   dashboard: number;
-  repo: string;
+   dashboard?: number;
+   repo?: string;
+   iframeUrl?: string;
 }
+
+export interface UserStudy {
+   state: ProtocolState;
+   lastUpdate: string;
+}
+
+export enum ProtocolState {
+  Running,
+  Stopped,
+  Paused
+}
+
 

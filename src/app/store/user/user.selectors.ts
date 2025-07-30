@@ -7,4 +7,9 @@ export namespace UserSelectors {
         appState,
         (state: AppState) => state.userState?.user
     );
+    export const selectUsers = (studyCode: string) =>
+        createSelector(
+            appState,
+            (state: AppState) => state.userState?.users?.[studyCode]
+        );
 }

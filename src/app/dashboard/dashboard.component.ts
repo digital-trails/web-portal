@@ -1,10 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { SafeResourceUrl } from '@angular/platform-browser';
-import { Observable, Subject, switchMap, take, takeUntil, tap } from 'rxjs';
+import { combineLatest, map, Observable, Subject, switchMap, take, takeUntil, tap } from 'rxjs';
 import { UserFacade } from '../store/user/user.facade';
 import { ActivatedRoute } from '@angular/router';
-import { User } from '../models/user';
+import { AdminStudy, User, UserStudy } from '../models/user';
 
 @Component({
   selector: 'app-dashboard',
@@ -14,42 +13,40 @@ import { User } from '../models/user';
   styleUrl: './dashboard.component.css'
 })
 export class DashboardComponent implements OnInit, OnDestroy {
-  
-  iframeUrl$?: Observable<SafeResourceUrl>;
-  users$?: Observable<User[] | undefined>;
+
+  studyCode: string = '';
+  pageData$?: Observable<{
+    adminStudy: AdminStudy | undefined;
+    studyUsers: User[] | undefined;
+  }>
   destroy$ = new Subject<void>();
   activeTab: string = 'dashboard'
-  selectedUser?: string;
+  selectedUserId?: string;
   messageSent: boolean = false;
 
   constructor(private userFacade: UserFacade, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
-
-    this.iframeUrl$ = this.route.queryParams.pipe(
+    this.pageData$ = this.route.queryParams.pipe(
       takeUntil(this.destroy$),
       switchMap(params => {
-        return this.userFacade.getUser$().pipe(
-          take(1),
-          switchMap(user => {
-            const study = user?.admin?.studies?.[params["study"]];
-            return this.userFacade.dashboardUrl$(study?.dashboard)
-          })
+        this.studyCode = params["study"];
+        return combineLatest([
+          this.userFacade.getUser$(),
+          this.userFacade.getUsers$(this.studyCode)
+        ]).pipe(
+          map(([user, users]) => ({
+            adminStudy: user?.admin?.studies?.[this.studyCode],
+            studyUsers : users
+          }))
         );
-      })
-    );
-
-    this.users$ = this.route.queryParams.pipe(
-      takeUntil(this.destroy$),
-      switchMap(params => {
-        return this.userFacade.getUsers$(params["study"]);
       })
     );
   }
 
 
-  selectUser(user: string) {
-    this.selectedUser = user;
+  selectUser(userId?: string) {
+    this.selectedUserId = userId;
   }
 
 
@@ -57,19 +54,19 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.route.queryParams.pipe(
       switchMap(params => {
         var tag: string;
-        if(this.selectedUser == 'all') {
+        if (this.selectedUserId == 'all participants') {
           tag = params["study"];
         } else {
-          tag = `${params["study"]}-${this.selectedUser}`;
+          tag = `${params["study"]}-${this.selectedUserId}`;
         }
         return this.userFacade.sendMessage$(tag, message).pipe(
           tap(isSent => {
-            if(isSent) {
+            if (isSent) {
               this.messageSent = true;
 
-            setTimeout(() => {
-                  this.messageSent = false;
-                }, 2000)
+              setTimeout(() => {
+                this.messageSent = false;
+              }, 2000)
             }
           })
         )
