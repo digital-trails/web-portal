@@ -86,7 +86,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       this.userFacade.updateOuraPAT$("post", this.selectedUserId, this.studyCode, pat).pipe(
         take(1)
       ).subscribe(success => {
-        if (success) if (success) this.showMessage('Token Updated!');
+        if (success) this.showMessage('Token Updated!');
       })
     }
   }
@@ -103,7 +103,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
       if (success) this.showMessage('Token Deleted!');
     })
   }
-
 
   showMessage(message: string) {
     this.messageText = message;
