@@ -9,11 +9,11 @@ import { from, Observable, switchMap, take } from "rxjs";
 export class HttpFacade {
     constructor(private httpClient: HttpClient, private authService: MsalService) { }
 
-    get<TProperty>(path: string): Observable<any> {
+    get<TProperty>(path: string, headers: any = {}): Observable<any> {
         return from(this.getToken()).pipe(
             take(1),
             switchMap(token => {
-                const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+                headers["Authorization"] = `Bearer ${token}`;
                 return this.httpClient.get<TProperty>(path, { headers });
             })
         );
@@ -29,7 +29,26 @@ export class HttpFacade {
         );
     }
 
+    delete(path: string, body: any = {}, headers: any = {}): Observable<any> {
+        return from(this.getToken()).pipe(
+            take(1),
+            switchMap(token => {
+                headers["Authorization"] = `Bearer ${token}`;
+                return this.httpClient.delete(path, { headers, body });
+            })
+        );
+    }
 
+
+    patch(path: string, body: any = {}, headers: any = {}): Observable<any> {
+        return from(this.getToken()).pipe(
+            take(1),
+            switchMap(token => {
+                headers["Authorization"] = `Bearer ${token}`;
+                return this.httpClient.patch(path, body, { headers });
+            })
+        );
+    }
 
     getAuth(): Observable<any> {
         var url = isDevMode() ? "http://localhost:4200/.auth/me" : "https://portal.digital-trails.org/.auth/me";

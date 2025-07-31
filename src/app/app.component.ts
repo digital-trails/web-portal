@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MsalService } from '@azure/msal-angular';
-import { take } from 'rxjs';
-import { User } from './models/user';
+import { map, Observable, take, tap } from 'rxjs';
+import { AdminStudy, User } from './models/user';
 import { UserFacade } from './store/user/user.facade';
 
 @Component({
@@ -15,8 +15,10 @@ export class AppComponent implements OnInit {
   title = 'web-portal';
   isLoggedIn = false;
   isDashboardCollapsed = true;
-  user: User | undefined = undefined;
-  dashboardNames: string[] = [];
+  pageData$?: Observable<{
+    user: User | undefined,
+    dashboardNames: string[]
+  }>
 
   constructor(
     private userFacade: UserFacade,
@@ -44,16 +46,18 @@ export class AppComponent implements OnInit {
     this.isLoggedIn = this.authService.instance.getAllAccounts().length > 0;
 
     if (this.isLoggedIn) {
-      this.userFacade.getUser$().pipe(
-        take(1)
-      ).subscribe(user => {
-        if(user) {
-          this.user = user;
-          if(user.admin?.studies) {
-            this.dashboardNames = Object.keys(user.admin.studies);
-          }
-        }
-      })
+      this.pageData$ = this.userFacade.getUser$().pipe(
+        take(1),
+        map(user => ({
+          user,
+          dashboardNames: Object.keys(user?.admin?.studies ?? [])
+        })),
+        tap(({ user, dashboardNames }) => {
+          dashboardNames.forEach(study => {
+            if (user?.admin?.studies[study].hasOura) this.userFacade.createOuraService(study); // if doc doesn't exist
+          })
+        })
+      )
     }
   }
 

@@ -1,5 +1,5 @@
 export interface User {
-  id?: string;
+  id: string;
   admin?: {
     studies: { [studyCode: string]: AdminStudy };
   };
@@ -13,6 +13,7 @@ export interface AdminStudy {
    dashboard?: number;
    repo?: string;
    iframeUrl?: string;
+   hasOura: boolean;
 }
 
 export interface UserStudy {

@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { combineLatest, map, Observable, Subject, switchMap, take, takeUntil, tap } from 'rxjs';
+import { combineLatest, map, Observable, of, Subject, switchMap, take, takeUntil, tap } from 'rxjs';
 import { UserFacade } from '../store/user/user.facade';
 import { ActivatedRoute } from '@angular/router';
-import { AdminStudy, User, UserStudy } from '../models/user';
+import { AdminStudy, User } from '../models/user';
 
 @Component({
   selector: 'app-dashboard',
@@ -13,16 +13,16 @@ import { AdminStudy, User, UserStudy } from '../models/user';
   styleUrl: './dashboard.component.css'
 })
 export class DashboardComponent implements OnInit, OnDestroy {
-
+  messageText: string = '';
   studyCode: string = '';
+  selectedUserId: string = '';
+  activeTab: string = 'dashboard'
+  destroy$ = new Subject<void>();
   pageData$?: Observable<{
     adminStudy: AdminStudy | undefined;
     studyUsers: User[] | undefined;
+    ouraTokenNames?: { [name: string]: string };
   }>
-  destroy$ = new Subject<void>();
-  activeTab: string = 'dashboard'
-  selectedUserId?: string;
-  messageSent: boolean = false;
 
   constructor(private userFacade: UserFacade, private route: ActivatedRoute) { }
 
@@ -35,18 +35,34 @@ export class DashboardComponent implements OnInit, OnDestroy {
           this.userFacade.getUser$(),
           this.userFacade.getUsers$(this.studyCode)
         ]).pipe(
-          map(([user, users]) => ({
-            adminStudy: user?.admin?.studies?.[this.studyCode],
-            studyUsers : users
-          }))
+          switchMap(([user, users]) => {
+            this.selectedUserId = '';
+            if (user?.admin?.studies[this.studyCode].hasOura) {
+              return this.userFacade.getOuraService$(this.studyCode).pipe(
+                map(ouraService => ({
+                  adminStudy: user?.admin?.studies?.[this.studyCode],
+                  studyUsers: users,
+                  ouraTokenNames: ouraService.tokens || []
+                }))
+              )
+            }
+            return of({
+              adminStudy: user?.admin?.studies?.[this.studyCode],
+              studyUsers: users
+            })
+          })
         );
       })
     );
   }
 
 
-  selectUser(userId?: string) {
+  selectUser(userId: string) {
     this.selectedUserId = userId;
+  }
+
+  simpleId(userId: string): string {
+    return userId.includes('@') ? userId.slice(0, userId.indexOf('@')) : userId;
   }
 
 
@@ -61,13 +77,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         }
         return this.userFacade.sendMessage$(tag, message).pipe(
           tap(isSent => {
-            if (isSent) {
-              this.messageSent = true;
-
-              setTimeout(() => {
-                this.messageSent = false;
-              }, 2000)
-            }
+            if (isSent) this.showMessage('Message sent successfully!');
           })
         )
       }),
@@ -75,6 +85,34 @@ export class DashboardComponent implements OnInit, OnDestroy {
     ).subscribe();
   }
 
+  assignToken(pat: string) {
+    if (pat?.length > 0) {
+      this.userFacade.updateOuraPAT$("post", this.selectedUserId, this.studyCode, pat).pipe(
+        take(1)
+      ).subscribe(success => {
+        if (success) if (success) this.showMessage('Token Updated!');
+      })
+    }
+  }
+
+  hasOuraToken(ouraTokenNames?: { [name: string]: string }): boolean {
+    if (!ouraTokenNames) return false
+    return Object.values(ouraTokenNames).includes(this.selectedUserId);
+  }
+
+  onDelete() {
+    this.userFacade.updateOuraPAT$("delete", this.selectedUserId, this.studyCode).pipe(
+      take(1)
+    ).subscribe(success => {
+      if (success) this.showMessage('Token Deleted!');
+    })
+  }
+
+
+  showMessage(message: string) {
+    this.messageText = message;
+    setTimeout(() => this.messageText = '', 2000)
+  }
 
   ngOnDestroy(): void {
     this.destroy$.next();

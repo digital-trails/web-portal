@@ -1,12 +1,15 @@
 import { Injectable } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Store } from '@ngrx/store';
-import { catchError, forkJoin, map, Observable, of, switchMap, tap, throwError } from 'rxjs';
+import { catchError, EMPTY, forkJoin, map, Observable, of, switchMap, take, tap, throwError } from 'rxjs';
 import { AppState } from '../../app.module';
 import { HttpFacade } from '../../http.facade';
 import { AdminStudy, User } from '../../models/user';
 import { UserActions } from './user.actions';
 import { UserSelectors } from './user.selectors';
+import { OuraService } from '../../models/oura-service.model';
+import { md5Hash } from '../../utils/string.util';
+import { HttpHeaders } from '@angular/common/http';
 
 
 @Injectable({
@@ -72,6 +75,75 @@ export class UserFacade {
             })
         )
     }
+
+    getOuraService$(studyCode: string): Observable<OuraService> {
+        return this.store.select(UserSelectors.selectOuraService(studyCode)).pipe(
+            switchMap(ouraService => {
+                if (ouraService) return of(ouraService);
+                var headers = {
+                    'service': "oura",
+                    'study': studyCode
+                };
+                return this.httpFacade.get<OuraService>("https://portal.digital-trails.org/api/v2/service", headers).pipe(
+                    tap(ouraService => this.store.dispatch(UserActions.setOuraService({ studyCode, ouraService }))),
+                    catchError(err => throwError(() => err))
+                );
+            })
+        )
+    }
+
+    updateOuraPAT$(method: string, userId: string, studyCode: string, pat: string = ''): Observable<boolean> {
+
+        const name: string = md5Hash(userId);
+        const body = {
+            operations: [
+                {
+                    op: method == "post" ? "set" : "remove",
+                    path: `/tokens/${name}`,
+                    value: method == "post" ? userId : undefined,
+                }
+            ]
+        };
+
+        var headers = {
+            'service': "oura",
+            'study': studyCode
+        };
+
+        return this.httpFacade.patch("https://portal.digital-trails.org/api/v2/service", body, headers).pipe(
+            switchMap(_ => this.updateSecret$(method, name, pat).pipe(
+                map(_ => true),
+                tap(_ => {
+                    return this.store.dispatch(UserActions.updateOuraPAT({ studyCode, userId, name }));
+                }),
+            )),
+            catchError(_ => of(false))
+        )
+    }
+
+    createOuraService(studyCode: string): void {
+        const body = {
+            id: "oura",
+            study: studyCode,
+            tokens: {}
+        };
+        this.httpFacade.post("https://portal.digital-trails.org/api/v2/service", body, { 'study': studyCode }).pipe(
+            take(1),
+            catchError(err => {
+                if (err.status == 409) return of([]);
+                return throwError(() => err);
+            })
+        ).subscribe();
+    }
+
+    updateSecret$(method: string, secretName: string, secretVal: string = ''): Observable<boolean> {
+        const path: string = "https://portal.digital-trails.org/api/v2/secret";
+        const body = { secretName, secretVal };
+        var func: Observable<any> = method == "post" ? this.httpFacade.post(path, body) : this.httpFacade.delete(path, body);
+
+        return func.pipe(take(1), map(_ => true), catchError(_ => of(false)));
+    }
+
 
     sendMessage$(tag: string, message: string): Observable<boolean> {
         const queryParams = new URLSearchParams({ tag, message }).toString();

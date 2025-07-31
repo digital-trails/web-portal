@@ -1,19 +1,16 @@
 <main class="main-container">
   <div class="sidebar-container">
     <div class="sidebar">
-      <div class="sidebar-content" *ngIf="isLoggedIn && !!user">
-        <button class="sidebar-button" *ngIf="user.super_admin" routerLink="/console">
-          Super admin stuff
-        </button>
-        
-        <button class="sidebar-button" *ngIf="user.admin" (click)="dashboardCollapse()">
+      <div class="sidebar-content" *ngIf="isLoggedIn">
+        <div *ngIf="pageData$ | async as data">
+        <button class="sidebar-button" *ngIf="data.user?.admin" (click)="dashboardCollapse()">
           {{ isDashboardCollapsed ? '▶' : '▼' }} Studies
         </button>
         
         <div class="sub-buttons" *ngIf="!isDashboardCollapsed">
           <button 
             class="sidebar-button sub-button" 
-            *ngFor="let name of dashboardNames"
+            *ngFor="let name of data.dashboardNames"
             [routerLink]="['/dashboard']" 
             [queryParams]="{study: name}"
           >
@@ -24,6 +21,7 @@
       <button class="sidebar-button logout-button" (click)="logout()" *ngIf="isLoggedIn">
         Logout
       </button>
+        </div>
     </div>
   </div>
 

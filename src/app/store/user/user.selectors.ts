@@ -12,4 +12,10 @@ export namespace UserSelectors {
             appState,
             (state: AppState) => state.userState?.users?.[studyCode]
         );
+
+    export const selectOuraService = (studyCode: string) =>
+        createSelector(
+            appState,
+            (state: AppState) => state.userState?.ouraServices?.[studyCode]
+        );
 }
