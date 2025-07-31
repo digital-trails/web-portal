@@ -67,22 +67,18 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
 
   sendMessage(message: string) {
-    this.route.queryParams.pipe(
-      switchMap(params => {
-        var tag: string;
-        if (this.selectedUserId == 'all participants') {
-          tag = params["study"];
-        } else {
-          tag = `${params["study"]}-${this.selectedUserId}`;
-        }
-        return this.userFacade.sendMessage$(tag, message).pipe(
-          tap(isSent => {
-            if (isSent) this.showMessage('Message sent successfully!');
-          })
-        )
-      }),
-      take(1),
-    ).subscribe();
+    var tag: string;
+    if (this.selectedUserId == 'all participants') {
+      tag = this.studyCode;
+    } else {
+      tag = `${this.studyCode}-${this.selectedUserId}`;
+    }
+    return this.userFacade.sendMessage$(tag, message).pipe(
+      tap(isSent => {
+        if (isSent) this.showMessage('Message sent successfully!');
+      })
+    )
+      .subscribe();
   }
 
   assignToken(pat: string) {
