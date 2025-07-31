@@ -95,7 +95,7 @@ export class UserFacade {
 
     updateOuraPAT$(method: string, userId: string, studyCode: string, pat: string = ''): Observable<boolean> {
 
-        const name: string = md5Hash(`${studyCode}-${userId}`);
+        const name: string = md5Hash(`${studyCode}-${userId}-oura-pat`);
         const body = {
             operations: [
                 {
