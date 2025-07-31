@@ -1,7 +1,7 @@
 <div *ngIf="pageData$ | async as data">
   <!-- Tabs -->
   <div class="tabs">
-    <button (click)="activeTab = 'dashboard'" [class.active]="activeTab === 'dashboard'">Dashboard</button>
+    <button *ngIf="data.adminStudy?.iframeUrl" (click)="activeTab = 'dashboard'" [class.active]="activeTab === 'dashboard'">Dashboard</button>
     <button (click)="activeTab = 'users'" [class.active]="activeTab === 'users'">Users</button>
   </div>
 
@@ -13,7 +13,7 @@
     </div>
 
     <div *ngIf="activeTab === 'users'" class="users-section">
-      <div class="user-list">
+      <div *ngIf="data.studyUsers?.length; else noUsers" class="user-list">
         <div *ngFor="let user of data.studyUsers" class="user-card" (click)="selectUser(user.id)">
           <h5>{{ simpleId(user.id) }}</h5>
           <div *ngIf="user?.user?.studies?.[studyCode] as study">
@@ -50,6 +50,8 @@
         <p class="confirmation">{{ messageText }}</p>
       </div>
     </div>
+
+    <ng-template #noUsers><em> No Users</em></ng-template>
 
   </div>
 </div>

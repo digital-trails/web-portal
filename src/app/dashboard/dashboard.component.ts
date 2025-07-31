@@ -16,7 +16,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   messageText: string = '';
   studyCode: string = '';
   selectedUserId: string = '';
-  activeTab: string = 'dashboard'
+  activeTab: string = 'users'
   destroy$ = new Subject<void>();
   pageData$?: Observable<{
     adminStudy: AdminStudy | undefined;

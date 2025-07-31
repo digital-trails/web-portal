@@ -29,11 +29,12 @@ export class UserFacade {
                         if (user?.admin?.studies) {
 
                             const studyEntries = Object.entries(user.admin.studies as { [key: string]: AdminStudy });
-                            const dashboardUrlObservables = studyEntries.map(([studyCode, study]) =>
-                                this.dashboardUrl$(study.dashboard).pipe(
-                                    map(url => ({ studyCode, url }))
-                                )
-                            );
+                            const dashboardUrlObservables = studyEntries
+                                .filter(([_, study]) => !!study.dashboard).map(([studyCode, study]) =>
+                                    this.dashboardUrl$(study.dashboard).pipe(
+                                        map(url => ({ studyCode, url }))
+                                    )
+                                );
 
                             return forkJoin(dashboardUrlObservables).pipe(
                                 map(results => {
