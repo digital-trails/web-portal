@@ -58,6 +58,5 @@ export const UserReducer = createReducer(
         }
       }
     };
-  })
-
+  }),
 );

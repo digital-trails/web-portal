@@ -115,7 +115,8 @@ export class UserFacade {
             switchMap(_ => this.updateSecret$(method, name, pat).pipe(
                 map(_ => true),
                 tap(_ => {
-                    return this.store.dispatch(UserActions.updateOuraPAT({ studyCode, userId, name }));
+                    const val: string | undefined = method == "post" ? userId : undefined;
+                    return this.store.dispatch(UserActions.updateOuraPAT({ studyCode, userId: val , name }));
                 }),
             )),
             catchError(_ => of(false))

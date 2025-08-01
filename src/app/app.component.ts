@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MsalService } from '@azure/msal-angular';
 import { map, Observable, take, tap } from 'rxjs';
-import { AdminStudy, User } from './models/user';
+import { User } from './models/user';
 import { UserFacade } from './store/user/user.facade';
+import { LoadingService } from './services/loading.service';
 
 @Component({
   selector: 'app-root',
@@ -23,7 +24,8 @@ export class AppComponent implements OnInit {
   constructor(
     private userFacade: UserFacade,
     private authService: MsalService,
-    private router: Router
+    private router: Router,
+    private loadingService: LoadingService
   ) { }
 
   ngOnInit(): void {
@@ -46,6 +48,7 @@ export class AppComponent implements OnInit {
     this.isLoggedIn = this.authService.instance.getAllAccounts().length > 0;
 
     if (this.isLoggedIn) {
+      this.loadingService.loadingOn();
       this.pageData$ = this.userFacade.getUser$().pipe(
         take(1),
         map(user => ({
@@ -55,6 +58,7 @@ export class AppComponent implements OnInit {
         tap(({ user, dashboardNames }) => {
           dashboardNames.forEach(study => {
             if (user?.admin?.studies[study].hasOura) this.userFacade.createOuraService(study); // if doc doesn't exist
+            this.loadingService.loadingOff();
           })
         })
       )

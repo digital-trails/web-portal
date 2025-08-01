@@ -22,6 +22,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { loginRequest, msalConfig } from './auth.config';
 import { UserReducer, UserState } from './store/user/user.reducer';
+import { LoadingComponent } from './components/loading/loading.component';
 
 
 export const appState = (state: AppState) => state;
@@ -59,7 +60,8 @@ export function initializeMSAL(msalInstance: IPublicClientApplication) {
   imports: [
     BrowserModule,
     AppRoutingModule,
-    MsalModule
+    MsalModule,
+    LoadingComponent
   ],
   providers: [
     provideHttpClient(withInterceptorsFromDi()),

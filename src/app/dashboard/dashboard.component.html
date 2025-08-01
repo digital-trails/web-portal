@@ -39,8 +39,7 @@
           <p>
             <span *ngIf="hasOuraToken(data.ouraTokenNames); else noToken" class="d-flex align-items-center gap-2">
               <em class="mb-0">Token assigned</em>
-              <!-- <button type="button" class="revoke-button btn btn-danger btn-sm" (click)="onDelete()">Revoke</button> -->
-              <!-- uncomment after creating a new vault, current key vaul has purge protection enabled so can't delete secrets -->
+              <button type="button" class="revoke-button btn btn-danger btn-sm" (click)="onDelete()">Revoke</button>
             </span>
             <ng-template #noToken><em> No token assigned</em></ng-template>
           </p>
@@ -52,6 +51,7 @@
     </div>
 
     <ng-template #noUsers><em> No Users</em></ng-template>
+    <loading-indicator />
 
   </div>
 </div>

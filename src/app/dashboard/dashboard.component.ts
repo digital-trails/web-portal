@@ -4,11 +4,13 @@ import { combineLatest, map, Observable, of, Subject, switchMap, take, takeUntil
 import { UserFacade } from '../store/user/user.facade';
 import { ActivatedRoute } from '@angular/router';
 import { AdminStudy, User } from '../models/user';
+import { LoadingService } from '../services/loading.service';
+import { LoadingComponent } from "../components/loading/loading.component";
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, LoadingComponent],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
@@ -24,12 +26,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
     ouraTokenNames?: { [name: string]: string };
   }>
 
-  constructor(private userFacade: UserFacade, private route: ActivatedRoute) { }
+  constructor(private userFacade: UserFacade, private route: ActivatedRoute, private loadingService: LoadingService) { }
 
   ngOnInit(): void {
     this.pageData$ = this.route.queryParams.pipe(
       takeUntil(this.destroy$),
       switchMap(params => {
+         this.loadingService.loadingOn();
         this.studyCode = params["study"];
         return combineLatest([
           this.userFacade.getUser$(),
@@ -39,18 +42,21 @@ export class DashboardComponent implements OnInit, OnDestroy {
             this.selectedUserId = '';
             if (user?.admin?.studies[this.studyCode].hasOura) {
               return this.userFacade.getOuraService$(this.studyCode).pipe(
-                map(ouraService => ({
-                  adminStudy: user?.admin?.studies?.[this.studyCode],
-                  studyUsers: users,
-                  ouraTokenNames: ouraService.tokens || []
-                }))
+                map(ouraService => {
+                  return {
+                    adminStudy: user?.admin?.studies?.[this.studyCode],
+                    studyUsers: users,
+                    ouraTokenNames: ouraService.tokens || []
+                  };
+                })
               )
             }
             return of({
               adminStudy: user?.admin?.studies?.[this.studyCode],
               studyUsers: users
             })
-          })
+          }),
+          tap(_ =>  this.loadingService.loadingOff())
         );
       })
     );
@@ -66,23 +72,26 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
 
-  sendMessage(message: string) {
-    var tag: string;
-    if (this.selectedUserId == 'all participants') {
-      tag = this.studyCode;
-    } else {
-      tag = `${this.studyCode}-${this.selectedUserId}`;
+  sendMessage(message: string) : void {
+    if (message?.length > 0) {
+      this.loadingService.loadingOn();
+      var tag: string;
+      if (this.selectedUserId == 'all participants') {
+        tag = this.studyCode;
+      } else {
+        tag = `${this.studyCode}-${this.selectedUserId}`;
+      }
+      this.userFacade.sendMessage$(tag, message).pipe(
+        tap(isSent => {
+          if (isSent) this.showMessage('Message sent successfully!');
+        })
+      ).subscribe();
     }
-    return this.userFacade.sendMessage$(tag, message).pipe(
-      tap(isSent => {
-        if (isSent) this.showMessage('Message sent successfully!');
-      })
-    )
-      .subscribe();
   }
 
   assignToken(pat: string) {
     if (pat?.length > 0) {
+      this.loadingService.loadingOn();
       this.userFacade.updateOuraPAT$("post", this.selectedUserId, this.studyCode, pat).pipe(
         take(1)
       ).subscribe(success => {
@@ -97,6 +106,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   onDelete() {
+    this.loadingService.loadingOn();
     this.userFacade.updateOuraPAT$("delete", this.selectedUserId, this.studyCode).pipe(
       take(1)
     ).subscribe(success => {
@@ -105,6 +115,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   showMessage(message: string) {
+    this.loadingService.loadingOff();
     this.messageText = message;
     setTimeout(() => this.messageText = '', 2000)
   }

@@ -1,3 +1,3 @@
 export interface OuraService {
-    tokens: { [name: string]: string };
+    tokens: { [name: string]: string | undefined };
 }
