@@ -34,16 +34,25 @@
               Add role assignment
             </button>
           </div>
-          <div *ngFor="let user of studyAdmins(pageData?.allUsers)">
-            <div class="d-flex align-items-center gap-3">
-              <p class="mb-0">{{ user.id }}</p>
-              <p class="mb-0" *ngIf="user.admin?.studies?.[selectedStudy]?.super_admin">
-                <em>Super Admin</em>
-              </p>
-              <a href="javascript:void(0)" (click)="removeRole(user.id)">x</a>
-            </div>
 
-          </div>  
+          <ng-container *ngIf="studyAdmins(pageData?.allUsers) as users">
+  <div *ngIf="users.length > 0; else noUsers">
+    <div *ngFor="let user of users">
+      <div class="d-flex align-items-center gap-3">
+        <p class="mb-0">{{ user.id == pageData.user?.id ? 'You' : user.id }}</p>
+        <p class="mb-0" *ngIf="user.admin?.studies?.[selectedStudy]?.super_admin">
+          <em>Super Admin</em>
+        </p>
+        <a *ngIf="user.id != pageData.user?.id" href="javascript:void(0)" (click)="removeRole(user.id)">x</a>
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+<ng-template #noUsers>
+  <em>No Users</em>
+</ng-template>
+
         </div>
 
         <div *ngSwitchCase="RoleAssignmentState.SelectingAssignment">
