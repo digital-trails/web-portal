@@ -18,7 +18,7 @@ export class AppComponent implements OnInit {
   isDashboardCollapsed = true;
   pageData$?: Observable<{
     user: User | undefined,
-    dashboardNames: string[]
+    dashboardNames: string[],
   }>
 
   constructor(
@@ -53,7 +53,7 @@ export class AppComponent implements OnInit {
         take(1),
         map(user => ({
           user,
-          dashboardNames: Object.keys(user?.admin?.studies ?? [])
+          dashboardNames: Object.keys(user?.admin?.studies ?? []),
         })),
         tap(({ user, dashboardNames }) => {
           dashboardNames.forEach(study => {

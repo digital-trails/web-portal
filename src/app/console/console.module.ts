@@ -4,6 +4,8 @@ import { NgModule } from '@angular/core';
 import { UserFacade } from '../store/user/user.facade';
 import { ConsoleComponent } from './console.component';
 import { ConsoleRoutingModule } from './console-routing.module';
+import { SimpleIdPipe } from "../pipes/simple-id.pipe";
+import { ProtocolFacade } from '../store/protocol/protocol.facade';
 
 
 
@@ -11,10 +13,12 @@ import { ConsoleRoutingModule } from './console-routing.module';
   declarations: [ConsoleComponent],
   imports: [
     ConsoleRoutingModule,
-    CommonModule
-  ],
+    CommonModule,
+    SimpleIdPipe
+],
   providers: [
     UserFacade,
+    ProtocolFacade,
     provideHttpClient(withInterceptorsFromDi())]
 })
 export class ConsoleModule { }

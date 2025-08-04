@@ -1,12 +1,12 @@
 export interface User {
   id: string;
+  super_admin: boolean;
   admin?: {
     studies: { [studyCode: string]: AdminStudy };
   };
   user?: {
     studies: { [studyCode: string]: UserStudy };
   };
-  super_admin?: boolean;
 }
 
 export interface AdminStudy {
@@ -14,6 +14,7 @@ export interface AdminStudy {
    repo?: string;
    iframeUrl?: string;
    hasOura: boolean;
+   super_admin: boolean;
 }
 
 export interface UserStudy {

@@ -9,7 +9,6 @@ import { UserActions } from './user.actions';
 import { UserSelectors } from './user.selectors';
 import { OuraService } from '../../models/oura-service.model';
 import { md5Hash } from '../../utils/string.util';
-import { HttpHeaders } from '@angular/common/http';
 
 
 @Injectable({
@@ -59,8 +58,7 @@ export class UserFacade {
         );
     }
 
-    getUsers$(studyCode: string): Observable<User[] | undefined> {
-
+    getStudyUsers$(studyCode: string): Observable<User[] | undefined> {
         const body = {
             query: `SELECT * FROM Users u WHERE IS_DEFINED(u.user.studies.${studyCode})`
         };
@@ -70,7 +68,24 @@ export class UserFacade {
                 if (users) return of(users);
                 return this.httpFacade.post("https://portal.digital-trails.org/api/v2/users", body, { 'Content-Type': 'application/query+json' }).pipe(
                     map(data => data.Documents as User[]),
-                    tap(users => this.store.dispatch(UserActions.setUsers({ studyCode, users }))),
+                    tap(users => this.store.dispatch(UserActions.setStudyUsers({ studyCode, users }))),
+                    catchError(err => throwError(() => err))
+                );
+            })
+        )
+    }
+
+    getAllUsers$(): Observable<User[] | undefined> {
+        const body = {
+            query: `SELECT * FROM Users`
+        };
+
+        return this.store.select(UserSelectors.selectAllUsers).pipe(
+            switchMap(users => {
+                if (users) return of(users);
+                return this.httpFacade.post("https://portal.digital-trails.org/api/v2/users", body, { 'Content-Type': 'application/query+json' }).pipe(
+                    map(data => data.Documents as User[]),
+                    tap(users => this.store.dispatch(UserActions.setAllUsers({ users }))),
                     catchError(err => throwError(() => err))
                 );
             })
@@ -116,7 +131,7 @@ export class UserFacade {
                 map(_ => true),
                 tap(_ => {
                     const val: string | undefined = method == "post" ? userId : undefined;
-                    return this.store.dispatch(UserActions.updateOuraPAT({ studyCode, userId: val , name }));
+                    return this.store.dispatch(UserActions.updateOuraPAT({ studyCode, userId: val, name }));
                 }),
             )),
             catchError(_ => of(false))
@@ -155,6 +170,18 @@ export class UserFacade {
             map(_ => true),
             catchError(_ => of(false))
         );
+    }
+
+    updateUser$(userId: string, op: string, path: string, value: any = undefined): Observable<boolean> {
+
+        const body = { operations: [{ op, path, value }] };
+        var headers = {'userId': userId };
+
+        return this.httpFacade.patch("https://portal.digital-trails.org/api/v2/users", body, headers).pipe(
+            map(_ => true),
+            tap(_ => this.store.dispatch(UserActions.updateUser({ path, value, userId }))),
+            catchError(_ => of(false))
+        )
     }
 
     private dashboardUrl$(dashboard: number | undefined): Observable<any> {

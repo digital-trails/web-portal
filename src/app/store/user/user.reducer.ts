@@ -2,17 +2,21 @@ import { createReducer, on } from "@ngrx/store";
 import { User } from "../../models/user";
 import { UserActions } from "./user.actions";
 import { OuraService } from "../../models/oura-service.model";
+import { cloneDeep, set } from 'lodash';
+
 
 export interface UserState {
   user?: User;
-  users?: { [studyCode: string]: User[] };
+  studyUsers?: { [studyCode: string]: User[] };
   ouraServices?: { [studyCode: string]: OuraService };
+  allUsers?: User[]
 }
 
 export const initialState: UserState = {
   user: undefined,
-  users: undefined,
-  ouraServices: undefined
+  studyUsers: undefined,
+  ouraServices: undefined,
+  allUsers: undefined
 };
 
 export const UserReducer = createReducer(
@@ -23,13 +27,19 @@ export const UserReducer = createReducer(
       user: user
     };
   }),
-  on(UserActions.setUsers, (state, { studyCode, users }) => {
+  on(UserActions.setStudyUsers, (state, { studyCode, users }) => {
     return {
       ...state,
-      users: {
-        ...state.users,
+      studyUsers: {
+        ...state.studyUsers,
         [studyCode]: users
       }
+    };
+  }),
+  on(UserActions.setAllUsers, (state, { users }) => {
+    return {
+      ...state,
+      allUsers: users
     };
   }),
   on(UserActions.setOuraService, (state, { studyCode, ouraService }) => {
@@ -59,4 +69,20 @@ export const UserReducer = createReducer(
       }
     };
   }),
+
+  on(UserActions.updateUser, (state, { path, value, userId }) => {
+    const normalizedPath = path.replace(/^\//, '').replace(/\//g, '.');
+    const updatedUsers = state.allUsers?.map(user => {
+      if (user.id !== userId) return user;
+      const updatedUser = cloneDeep(user);
+      set(updatedUser, normalizedPath, value);
+
+      return updatedUser;
+    });
+
+    return {
+      ...state,
+      allUsers: updatedUsers
+    };
+  })
 );

@@ -3,7 +3,7 @@
     <div class="sidebar">
       <div class="sidebar-content" *ngIf="isLoggedIn">
         <div *ngIf="pageData$ | async as data">
-        <button class="sidebar-button" *ngIf="data.user?.admin" (click)="dashboardCollapse()">
+        <button class="sidebar-button" *ngIf="data.user?.admin?.studies" (click)="dashboardCollapse()">
           {{ isDashboardCollapsed ? '▶' : '▼' }} Studies
         </button>
         
@@ -17,6 +17,7 @@
             {{ name }}
           </button>
         </div>
+         <button class="sidebar-button" routerLink="/console" *ngIf="data?.user?.admin?.studies">Console</button>
       </div>
       <button class="sidebar-button logout-button" (click)="logout()" *ngIf="isLoggedIn">
         Logout

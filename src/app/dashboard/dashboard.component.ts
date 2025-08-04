@@ -5,12 +5,10 @@ import { UserFacade } from '../store/user/user.facade';
 import { ActivatedRoute } from '@angular/router';
 import { AdminStudy, User } from '../models/user';
 import { LoadingService } from '../services/loading.service';
-import { LoadingComponent } from "../components/loading/loading.component";
 
 @Component({
   selector: 'app-dashboard',
-  standalone: true,
-  imports: [CommonModule, LoadingComponent],
+  standalone: false,
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
@@ -36,16 +34,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.studyCode = params["study"];
         return combineLatest([
           this.userFacade.getUser$(),
-          this.userFacade.getUsers$(this.studyCode)
+          this.userFacade.getStudyUsers$(this.studyCode)
         ]).pipe(
-          switchMap(([user, users]) => {
+          switchMap(([user, studyUsers]) => {
             this.selectedUserId = '';
             if (user?.admin?.studies[this.studyCode].hasOura) {
               return this.userFacade.getOuraService$(this.studyCode).pipe(
                 map(ouraService => {
                   return {
                     adminStudy: user?.admin?.studies?.[this.studyCode],
-                    studyUsers: users,
+                    studyUsers,
                     ouraTokenNames: ouraService.tokens || []
                   };
                 })
@@ -53,7 +51,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
             }
             return of({
               adminStudy: user?.admin?.studies?.[this.studyCode],
-              studyUsers: users
+              studyUsers
             })
           }),
           tap(_ =>  this.loadingService.loadingOff())
@@ -61,16 +59,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
       })
     );
   }
-
-
-  selectUser(userId: string) {
-    this.selectedUserId = userId;
-  }
-
-  simpleId(userId: string): string {
-    return userId.includes('@') ? userId.slice(0, userId.indexOf('@')) : userId;
-  }
-
 
   sendMessage(message: string) : void {
     if (message?.length > 0) {

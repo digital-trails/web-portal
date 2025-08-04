@@ -23,16 +23,20 @@ import { AppComponent } from './app.component';
 import { loginRequest, msalConfig } from './auth.config';
 import { UserReducer, UserState } from './store/user/user.reducer';
 import { LoadingComponent } from './components/loading/loading.component';
+import { CommonModule } from '@angular/common';
+import { ProtocolReducer, ProtocolState } from './store/protocol/protocol.reducer';
 
 
 export const appState = (state: AppState) => state;
 
 export interface AppState {
   userState?: UserState;
+  protocolState?: ProtocolState
 }
 
 export const initialState: AppState = {
   userState: undefined,
+  protocolState: undefined
 };
 
 export function MSALInstanceFactory(): IPublicClientApplication {
@@ -55,18 +59,20 @@ export function initializeMSAL(msalInstance: IPublicClientApplication) {
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     MsalModule,
+    CommonModule,
     LoadingComponent
   ],
   providers: [
     provideHttpClient(withInterceptorsFromDi()),
     provideStore({
-      userState: UserReducer
+      userState: UserReducer,
+      protocolState: ProtocolReducer
     }),
     {
       provide: MSAL_INSTANCE,
