@@ -41,7 +41,9 @@ export class ConsoleComponent implements OnInit {
         map(([user, allUsers, studyCodes]) => {
           if (!user?.super_admin) {
             studyCodes = Object.fromEntries(
-              Object.entries(studyCodes).filter(([studyCode]) => user?.admin?.studies[studyCode].super_admin)
+              Object.entries(studyCodes).filter(([studyCode]) => {
+                return user?.admin?.studies[studyCode.toLocaleLowerCase()]?.super_admin;
+              })
             );
           }
           if (user?.super_admin && !this.roles.includes('Super Admin')) this.roles.push('Super Admin');
