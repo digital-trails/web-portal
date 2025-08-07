@@ -22,13 +22,26 @@ export class GithubFacade {
       Authorization: `bearer ${sessionStorage.getItem('githubAccessToken') || ''}`,
       Accept: 'application/vnd.github.v3+json'
     });
-    return this.http.get<any>(`https://api.github.com/repos/${sessionStorage.getItem('githubOwner') || ''}/${sessionStorage.getItem('githubRepo') || ''}/contents/${filePath}`, { headers }).pipe(
+    
+    const owner = sessionStorage.getItem('githubOwner');
+    const repo = sessionStorage.getItem('githubRepo');
+    
+    if (!owner || !repo) {
+      throw new Error('GitHub repository information not found in session storage');
+    }
+    
+    return this.http.get<any>(`https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`, { headers }).pipe(
       map(file => {
         if (file && file.content) {
-          file.content = JSON.parse(atob(file.content)); // Decode base64 content
+          // Preserve the original file metadata including SHA
+          const decodedContent = JSON.parse(atob(file.content.replace(/\n/g, ''))); // Remove newlines from base64
+          return {
+            ...file, // Keep all original metadata (sha, size, etc.)
+            content: decodedContent // Replace content with parsed JSON
+          };
         }
         return file;
-      } )
+      })
     );
   }
 

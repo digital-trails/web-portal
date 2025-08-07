@@ -899,21 +899,34 @@ export class BuilderComponent implements OnInit {
       // Alert properties
       title: [''],
       message: [''],
-      iconUrl: [''],
-      iconTint: [false],
+      icon: this.fb.group({
+        url: [''],
+        tint: [false]
+      }),
       // Sessions properties
-      leftText: [''],
-      leftIcon: [''],
-      rightText: [''],
-      rightIcon: [''],
-      rightAction: [''],
+      left: this.fb.group({
+        text: [''],
+        icon: ['']
+      }),
+      right: this.fb.group({
+        text: [''],
+        icon: [''],
+        action: ['']
+      }),
       // Button properties
-      actionText: [''],
-      actionUrl: [''],
+      action: this.fb.group({
+        text: [''],
+        action: ['']
+      }),
       // Carousel/Tiles properties
       actions: this.fb.array([]),
+      position: ['left'], // Position field for tiles
       // Goals properties
-      goals: this.fb.array([])
+      goals: this.fb.array([]),
+      // Tile properties (for single tile elements)
+      text: [''],
+      backgroundcolor: [''],
+      markcompleted: [false]
     });
   }
 
@@ -1069,20 +1082,34 @@ export class BuilderComponent implements OnInit {
 
     // Handle element structure
     if (home.element || home.elements) {
-      homeGroup.patchValue({ hasElementStructure: true });
-      
-      if (home.element) {
-        homeGroup.patchValue({ elementType: 'single' });
-        this.populateElementForm(homeGroup.get('element') as FormGroup, home.element);
-      } else if (home.elements) {
-        homeGroup.patchValue({ elementType: 'list' });
-        const elementsArray = homeGroup.get('elements') as FormArray;
-        elementsArray.clear();
-        home.elements.forEach(element => {
-          const elementForm = this.createElementForm();
-          this.populateElementForm(elementForm, element);
-          elementsArray.push(elementForm);
-        });
+      if (home.element && home.element.type === 'list' && home.element.elements) {
+        // Handle element.elements structure
+        const elementGroup = homeGroup.get('element') as FormGroup;
+        if (elementGroup) {
+          const elementsArray = elementGroup.get('elements') as FormArray;
+          if (elementsArray) {
+            elementsArray.clear();
+            home.element.elements.forEach((element: any) => {
+              const elementForm = this.createElementForm();
+              this.populateElementForm(elementForm, element);
+              elementsArray.push(elementForm);
+            });
+          }
+        }
+      } else if (home.elements && Array.isArray(home.elements)) {
+        // Handle direct elements array structure
+        const elementGroup = homeGroup.get('element') as FormGroup;
+        if (elementGroup) {
+          const elementsArray = elementGroup.get('elements') as FormArray;
+          if (elementsArray) {
+            elementsArray.clear();
+            home.elements.forEach((element: any) => {
+              const elementForm = this.createElementForm();
+              this.populateElementForm(elementForm, element);
+              elementsArray.push(elementForm);
+            });
+          }
+        }
       }
     }
 
@@ -1122,47 +1149,113 @@ export class BuilderComponent implements OnInit {
       case 'alert':
         elementForm.patchValue({
           title: element.title || '',
-          message: element.message || '',
-          iconUrl: element.icon?.url || '',
-          iconTint: element.icon?.tint || false
+          message: element.message || ''
         });
+        // Handle icon structure
+        if (element.icon) {
+          const iconGroup = elementForm.get('icon') as FormGroup;
+          if (iconGroup) {
+            iconGroup.patchValue({
+              url: element.icon.url || '',
+              tint: element.icon.tint || false
+            });
+          }
+        }
         break;
       case 'sessions':
-        elementForm.patchValue({
-          leftText: element.left?.text || '',
-          leftIcon: element.left?.icon || '',
-          rightText: element.right?.text || '',
-          rightIcon: element.right?.icon || '',
-          rightAction: element.right?.action || ''
-        });
+        // Handle left structure
+        if (element.left) {
+          const leftGroup = elementForm.get('left') as FormGroup;
+          if (leftGroup) {
+            leftGroup.patchValue({
+              text: element.left.text || '',
+              icon: element.left.icon || ''
+            });
+          }
+        }
+        // Handle right structure
+        if (element.right) {
+          const rightGroup = elementForm.get('right') as FormGroup;
+          if (rightGroup) {
+            rightGroup.patchValue({
+              text: element.right.text || '',
+              icon: element.right.icon || '',
+              action: element.right.action || ''
+            });
+          }
+        }
         break;
       case 'button':
+        // Handle action structure
+        if (element.action) {
+          const actionGroup = elementForm.get('action') as FormGroup;
+          if (actionGroup) {
+            actionGroup.patchValue({
+              text: element.action.text || '',
+              action: element.action.action || ''
+            });
+          }
+        }
+        break;
+      case 'tile':
         elementForm.patchValue({
-          actionText: element.action?.text || '',
-          actionUrl: element.action?.action || ''
+          text: element.text || '',
+          backgroundcolor: element.backgroundcolor || '',
+          markcompleted: element.markcompleted || false
         });
+        // Handle icon for tile (can be string or object)
+        if (element.icon) {
+          if (typeof element.icon === 'string') {
+            const iconGroup = elementForm.get('icon') as FormGroup;
+            if (iconGroup) {
+              iconGroup.patchValue({
+                url: element.icon,
+                tint: false
+              });
+            }
+          } else {
+            const iconGroup = elementForm.get('icon') as FormGroup;
+            if (iconGroup) {
+              iconGroup.patchValue({
+                url: element.icon.url || '',
+                tint: element.icon.tint || false
+              });
+            }
+          }
+        }
         break;
       case 'carousel':
       case 'tiles':
-        const actionsArray = elementForm.get('actions') as FormArray;
-        actionsArray.clear();
-        if (element.actions) {
-          element.actions.forEach((action: any) => {
-            const actionForm = this.createActionFormDefault();
-            this.populateActionForm(actionForm, action);
-            actionsArray.push(actionForm);
+        // Handle position for tiles (optional, defaults to 'left' if not specified)
+        if (element.type === 'tiles') {
+          elementForm.patchValue({
+            position: element.position || 'left'
           });
+        }
+        
+        const actionsArray = elementForm.get('actions') as FormArray;
+        if (actionsArray) {
+          actionsArray.clear();
+          if (element.actions) {
+            element.actions.forEach((action: any) => {
+              const actionForm = this.createActionFormDefault();
+              this.populateActionForm(actionForm, action);
+              actionsArray.push(actionForm);
+            });
+          }
         }
         break;
       case 'goals':
         const goalsArray = elementForm.get('goals') as FormArray;
-        goalsArray.clear();
-        if (element.goals) {
-          element.goals.forEach((goal: any) => {
-            const goalForm = this.createGoalForm();
-            goalForm.patchValue(goal);
-            goalsArray.push(goalForm);
-          });
+        if (goalsArray) {
+          goalsArray.clear();
+          if (element.goals) {
+            element.goals.forEach((goal: any) => {
+              const goalForm = this.createGoalForm();
+              goalForm.patchValue(goal);
+              goalsArray.push(goalForm);
+            });
+          }
         }
         break;
     }
@@ -1450,14 +1543,22 @@ export class BuilderComponent implements OnInit {
     this.githubFacade.getFile(filePath).subscribe({
       next: (fileData: any) => {
         try {
-          // The facade already decodes the content for us
+          // The facade already decodes the content for us and preserves metadata
           const protocolData = fileData.content;
           
           if (this.validateProtocol(protocolData)) {
             this.protocol = protocolData;
             this.populateFormFromProtocol();
-            this.currentFileData = fileData; // Store for later updates
+            // Store complete file data including SHA for later updates
+            this.currentFileData = {
+              sha: fileData.sha,
+              path: filePath,
+              content: protocolData,
+              size: fileData.size,
+              url: fileData.url
+            };
             this.gitHubError = '';
+            console.log('Successfully loaded protocol from GitHub with SHA:', fileData.sha);
           } else {
             this.gitHubError = 'Invalid protocol.json format';
           }
@@ -1467,7 +1568,17 @@ export class BuilderComponent implements OnInit {
         }
       },
       error: (error: any) => {
-        this.gitHubError = `Failed to load file: ${error.message || 'Unknown error'}`;
+        let errorMessage = 'Unknown error';
+        
+        if (error.status === 404) {
+          errorMessage = 'File not found. Make sure the file path is correct and the file exists in the repository.';
+        } else if (error.status === 401 || error.status === 403) {
+          errorMessage = 'Authentication failed. Please reconnect to GitHub.';
+        } else if (error.message) {
+          errorMessage = error.message;
+        }
+        
+        this.gitHubError = `Failed to load file: ${errorMessage}`;
         console.error('GitHub load error:', error);
       }
     });
@@ -1495,19 +1606,63 @@ export class BuilderComponent implements OnInit {
     
     const filePath = this.appForm.get('filePath')?.value || 'src/protocol.json';
     
-    // Prepare file object for the facade
+    this.isPublishing = true;
+    
+    // If we don't have current file data with SHA, try to get it first
+    if (!this.currentFileData?.sha) {
+      console.log('No SHA found, attempting to get current file first...');
+      this.githubFacade.getFile(filePath).subscribe({
+        next: (fileData: any) => {
+          // Update current file data with the latest SHA
+          this.currentFileData = {
+            sha: fileData.sha,
+            path: filePath,
+            content: fileData.content,
+            size: fileData.size,
+            url: fileData.url
+          };
+          console.log('Retrieved current file SHA:', fileData.sha);
+          // Now proceed with the publish
+          this.performPublish(filePath);
+        },
+        error: (error: any) => {
+          if (error.status === 404) {
+            // File doesn't exist, proceed without SHA (creating new file)
+            console.log('File does not exist, creating new file...');
+            this.currentFileData = null;
+            this.performPublish(filePath);
+          } else {
+            this.handlePublishError(error);
+          }
+        }
+      });
+    } else {
+      // We have SHA, proceed with publish
+      this.performPublish(filePath);
+    }
+  }
+
+  private performPublish(filePath: string): void {
     const fileToSave = {
       path: filePath,
       content: this.protocol,
-      sha: this.currentFileData?.sha // Include SHA for updates
+      sha: this.currentFileData?.sha // Include SHA for updates, undefined for new files
     };
     
     const commitMessage = `Update protocol.json via Web Portal - ${new Date().toISOString()}`;
 
-    this.isPublishing = true; // Add loading state
     this.githubFacade.putFile(fileToSave, commitMessage).subscribe({
       next: (response: any) => {
-        this.currentFileData = response.content; // Update stored file data with new SHA
+        // Update stored file data with new SHA from response
+        if (response.content) {
+          this.currentFileData = {
+            sha: response.content.sha,
+            path: filePath,
+            content: this.protocol,
+            size: response.content.size,
+            url: response.content.url
+          };
+        }
         this.gitHubError = '';
         this.publishSuccess = true;
         this.isPublishing = false;
@@ -1515,33 +1670,36 @@ export class BuilderComponent implements OnInit {
         setTimeout(() => {
           this.publishSuccess = false;
         }, 3000);
-        console.log('Successfully published to GitHub');
+        console.log('Successfully published to GitHub with new SHA:', response.content?.sha);
       },
       error: (error: any) => {
-        let errorMessage = 'Unknown error';
-        
-        if (error.status === 422) {
-          errorMessage = 'File conflict or validation error. Try loading the file from GitHub first.';
-        } else if (error.status === 404) {
-          errorMessage = 'Repository or file path not found. Check your repository and file path.';
-        } else if (error.status === 401 || error.status === 403) {
-          errorMessage = 'Authentication failed. Please reconnect to GitHub.';
-        } else if (error.error?.message) {
-          errorMessage = error.error.message;
-        } else if (error.message) {
-          errorMessage = error.message;
-        }
-        
-        this.gitHubError = `Failed to publish: ${errorMessage}`;
-        this.isPublishing = false;
-        console.error('GitHub publish error:', error);
+        this.handlePublishError(error);
       }
     });
   }
 
+  private handlePublishError(error: any): void {
+    let errorMessage = 'Unknown error';
+    
+    if (error.status === 422) {
+      errorMessage = 'File conflict or validation error. The file may have been modified by someone else. Try loading the file from GitHub first.';
+    } else if (error.status === 404) {
+      errorMessage = 'Repository or file path not found. Check your repository and file path.';
+    } else if (error.status === 401 || error.status === 403) {
+      errorMessage = 'Authentication failed. Please reconnect to GitHub.';
+    } else if (error.error?.message) {
+      errorMessage = error.error.message;
+    } else if (error.message) {
+      errorMessage = error.message;
+    }
+    
+    this.gitHubError = `Failed to publish: ${errorMessage}`;
+    this.isPublishing = false;
+    console.error('GitHub publish error:', error);
+  }
+
   connectToGitHub(): void {
     const clientId = 'Ov23liM8jdVptvkhxswe';
-    // Use the original working redirect URI that matches your GitHub OAuth app config
     const redirectUri = encodeURIComponent(window.location.origin + '/builder/auth');
     const scope = encodeURIComponent('repo user');
     
@@ -1565,65 +1723,111 @@ export class BuilderComponent implements OnInit {
   }
 
   createElementFormByType(type: string): FormGroup {
+    const baseForm = this.createElementForm();
+    
     switch (type) {
       case 'alert':
-        return this.fb.group({
-          type: ['alert'],
-          title: ['Alert title'],
-          message: ['Alert message'],
-          icon: this.fb.group({
-            url: ['/assets/home_banner.png'],
-            tint: [false]
-          })
+        baseForm.patchValue({
+          type: 'alert',
+          title: 'Alert title',
+          message: 'Alert message'
         });
+        const alertIconGroup = baseForm.get('icon') as FormGroup;
+        if (alertIconGroup) {
+          alertIconGroup.patchValue({
+            url: 'pi pi-info-circle',
+            tint: true
+          });
+        }
+        break;
+        
       case 'sessions':
-        return this.fb.group({
-          type: ['sessions'],
-          left: this.fb.group({
-            text: ['{0} Sessions Completed'],
-            icon: ['/assets/completed.png']
-          }),
-          right: this.fb.group({
-            text: ['Launch Session'],
-            icon: ['/assets/unlocked.png'],
-            action: ['flow://flows/doses']
-          })
+        baseForm.patchValue({
+          type: 'sessions'
         });
+        const leftGroup = baseForm.get('left') as FormGroup;
+        if (leftGroup) {
+          leftGroup.patchValue({
+            text: '{0} Sessions Completed',
+            icon: 'pi pi-trophy'
+          });
+        }
+        const rightGroup = baseForm.get('right') as FormGroup;
+        if (rightGroup) {
+          rightGroup.patchValue({
+            text: 'Launch Session',
+            icon: 'pi pi-unlock',
+            action: 'flow://flows/doses'
+          });
+        }
+        break;
+        
       case 'button':
-        return this.fb.group({
-          type: ['button'],
-          action: this.fb.group({
-            text: ['Show Survey Modal'],
-            action: ['navmodal://Survey']
-          })
+        baseForm.patchValue({
+          type: 'button'
         });
+        const actionGroup = baseForm.get('action') as FormGroup;
+        if (actionGroup) {
+          actionGroup.patchValue({
+            text: 'Show Survey Modal',
+            action: 'navmodal://Survey'
+          });
+        }
+        break;
+        
       case 'carousel':
-        return this.fb.group({
-          type: ['carousel'],
-          actions: this.fb.array([this.createActionFormDefault()])
+        baseForm.patchValue({
+          type: 'carousel'
         });
+        const carouselActionsArray = baseForm.get('actions') as FormArray;
+        if (carouselActionsArray) {
+          carouselActionsArray.push(this.createActionFormDefault());
+        }
+        break;
+        
       case 'tiles':
-        return this.fb.group({
-          type: ['tiles'],
-          position: ['left'],
-          actions: this.fb.array([this.createActionFormDefault()])
+        baseForm.patchValue({
+          type: 'tiles',
+          position: 'left'
         });
+        const tilesActionsArray = baseForm.get('actions') as FormArray;
+        if (tilesActionsArray) {
+          tilesActionsArray.push(this.createActionFormDefault());
+        }
+        break;
+        
       case 'tile':
-        return this.fb.group({
-          type: ['tile'],
-          text: ['New Tile'],
-          icon: ['pi pi-square'],
-          action: ['flow://flows/default'],
-          backgroundcolor: ['#8B5CF6'],
-          markcompleted: [false]
+        baseForm.patchValue({
+          type: 'tile',
+          text: 'New Tile',
+          backgroundcolor: '#8B5CF6',
+          markcompleted: false
         });
+        const tileIconGroup = baseForm.get('icon') as FormGroup;
+        if (tileIconGroup) {
+          tileIconGroup.patchValue({
+            url: 'pi pi-square',
+            tint: false
+          });
+        }
+        const tileActionGroup = baseForm.get('action') as FormGroup;
+        if (tileActionGroup) {
+          tileActionGroup.patchValue({
+            text: 'New Tile',
+            action: 'flow://flows/default'
+          });
+        }
+        break;
+        
       default:
-        return this.fb.group({
-          type: [type],
-          title: [''],
-          message: ['']
+        baseForm.patchValue({
+          type: type,
+          title: '',
+          message: ''
         });
     }
+    
+    return baseForm;
   }
 
   // Actions Management (for carousel/tiles)
