@@ -79,7 +79,16 @@ interface ProtocolList {
   elements: ProtocolElement[];
 }
 
-type ProtocolElement = ProtocolAlert | ProtocolSessions | ProtocolButtonElement | ProtocolCarousel | ProtocolTiles | ProtocolGoals | ProtocolList;
+interface ProtocolTile {
+  type: 'tile';
+  text: string;
+  icon: string;
+  action: string;
+  backgroundcolor: string;
+  markcompleted: boolean;
+}
+
+type ProtocolElement = ProtocolAlert | ProtocolSessions | ProtocolButtonElement | ProtocolCarousel | ProtocolTiles | ProtocolTile | ProtocolGoals | ProtocolList;
 
 interface ProtocolHome {
   title: string;
@@ -94,7 +103,7 @@ interface ProtocolHome {
   button_ls?: ProtocolButton;
   button_rs?: ProtocolButton;
   button_surveys?: ProtocolButton;
-  element?: ProtocolElement;
+  element?: ProtocolList;
   elements?: ProtocolElement[];
 }
 
@@ -167,12 +176,142 @@ export class BuilderComponent implements OnInit {
   gitHubError: string = '';
   filePath: string = 'src/protocol.json';
   currentFileData: any = null;
+  isPublishing: boolean = false;
+  publishSuccess: boolean = false;
   
-  // Current protocol data
+  // Current protocol data - initialized with example data using PrimeNG icons
   protocol: Protocol = {
+    icon: "pi pi-home",
     home: {
-      title: "My App"
-    }
+      title: "MindTrails",
+      element: {
+        type: "list",
+        elements: [
+          {
+            type: "alert",
+            title: "Alert title",
+            message: "Alert message",
+            icon: {
+              url: "pi pi-info-circle",
+              tint: true
+            }
+          },
+          {
+            type: "sessions",
+            left: {
+              text: "{0} Sessions Completed",
+              icon: "pi pi-trophy"
+            },
+            right: {
+              text: "Launch Session",
+              icon: "pi pi-unlock",
+              action: "flow://flows/doses"
+            }
+          },
+          {
+            type: "button",
+            action: {
+              text: "Show Survey Modal",
+              action: "navmodal://Survey"
+            }
+          },
+          {
+            type: "carousel",
+            actions: [
+              {
+                text: "inputs!",
+                icon: "pi pi-pencil",
+                action: "flow://flows/inputs",
+                backgroundcolor: "#1A206AFF",
+                markcompleted: true
+              },
+              {
+                text: "survey 1",
+                icon: "pi pi-clipboard",
+                action: "flow://flows/how%20was%20your%20day%3f",
+                backgroundcolor: "#1A00E05A",
+                markcompleted: true
+              },
+              {
+                text: "survey 2",
+                icon: "pi pi-chart-bar",
+                action: "flow://flows/survey2",
+                backgroundcolor: "#1A00C2FF",
+                markcompleted: true
+              },
+              {
+                text: "survey 3",
+                icon: "pi pi-heart",
+                action: "flow://flows/survey3",
+                backgroundcolor: "#1A5C2FDA",
+                markcompleted: true
+              }
+            ]
+          },
+          {
+            type: "tiles",
+            actions: [
+              {
+                text: "inputs!",
+                icon: "pi pi-pencil",
+                action: "flow://flows/inputs",
+                backgroundcolor: "#1A206AFF",
+                markcompleted: true
+              },
+              {
+                text: "survey 1",
+                icon: "pi pi-clipboard",
+                action: "flow://flows/how was your day%3F",
+                backgroundcolor: "#1A00E05A",
+                markcompleted: true
+              },
+              {
+                text: "survey 2",
+                icon: "pi pi-chart-bar",
+                action: "flow://flows/survey2",
+                backgroundcolor: "#1A00C2FF",
+                markcompleted: true
+              },
+              {
+                text: "survey 3",
+                icon: "pi pi-heart",
+                action: "flow://flows/survey3",
+                backgroundcolor: "#1A5C2FDA",
+                markcompleted: true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    menu: [
+      {
+        text: "Home",
+        icon: "pi pi-home"
+      }
+    ],
+    triggers: [
+      {
+        type: "timing",
+        action: "notification",
+        content: "flow://flows/survey1",
+        frequency: "00:05:00"
+      },
+      {
+        type: "timing",
+        action: "notification",
+        frequency: "1",
+        content: "flow://flows/survey2"
+      }
+    ],
+    probes: [
+      {
+        type: "Location",
+        optional: true,
+        interval: "00:00:01",
+        accuracy: 5
+      }
+    ]
   };
   
   // Simple data structure for backward compatibility and preview
@@ -191,17 +330,26 @@ export class BuilderComponent implements OnInit {
     { value: 'sessions', label: 'Sessions' },
     { value: 'button', label: 'Button' },
     { value: 'carousel', label: 'Carousel' },
-    { value: 'tiles', label: 'Tiles' },
+    { value: 'tile', label: 'Tile' },
     { value: 'goals', label: 'Goals' }
   ];
 
   // Available action types
   actionTypes = [
-    { value: 'flow://', label: 'Flow' },
-    { value: 'page://', label: 'Page' },
-    { value: 'navpage://', label: 'Nav Page' },
-    { value: 'navmodal://', label: 'Nav Modal' },
-    { value: 'https://', label: 'External URL' }
+    { value: 'navmodal://Survey', label: 'Show Survey Modal' },
+    { value: 'flow://flows/inputs', label: 'Input Flow' },
+    { value: 'flow://flows/survey1', label: 'Survey Flow 1' },
+    { value: 'flow://flows/survey2', label: 'Survey Flow 2' },
+    { value: 'flow://flows/demographics', label: 'Demographics Flow' },
+    { value: 'flow://flows/doses', label: 'Doses Flow' },
+    { value: 'navpage://settings', label: 'Settings Page' },
+    { value: 'https://example.com', label: 'External URL' }
+  ];
+
+  // Available tiles positions
+  tilesPositions = [
+    { value: 'left', label: 'Left Side' },
+    { value: 'right', label: 'Right Side' }
   ];
 
   // Survey data (keeping for backward compatibility)
@@ -280,20 +428,21 @@ export class BuilderComponent implements OnInit {
   }
 
   refreshScreens(): void {
+    const homeElements = this.getHomeElements();
     const homeScreen: AppScreen = {
       id: 'home',
       title: this.protocol.home.title || 'Home',
       type: 'home',
       content: {
-        elements: this.protocol.home.elements || []
+        elements: homeElements
       }
     };
     
     this.screens = [homeScreen];
     
     // Generate screens for each element with action navigation
-    if (this.protocol.home.elements) {
-      this.protocol.home.elements.forEach((element, idx) => {
+    if (homeElements.length > 0) {
+      homeElements.forEach((element, idx) => {
         if ((element.type === 'carousel' || element.type === 'tiles') && 'actions' in element) {
           element.actions.forEach((action, actionIdx) => {
             if (action.action && action.action !== '#') {
@@ -358,8 +507,176 @@ export class BuilderComponent implements OnInit {
   }
 
   navigateToMenu(): void {
-    // Menu functionality can be added later
-    console.log('Menu clicked');
+    this.currentView = 'menu';
+  }
+
+  closeMenu(): void {
+    this.currentView = 'home';
+  }
+
+  getMenuItems(): ProtocolMenuItem[] {
+    if (Array.isArray(this.protocol.menu)) {
+      return this.protocol.menu;
+    }
+    return [];
+  }
+
+  getHomeElements(): ProtocolElement[] {
+    if (this.protocol.home.element && this.protocol.home.element.type === 'list') {
+      return this.protocol.home.element.elements || [];
+    }
+    if (this.protocol.home.elements) {
+      return this.protocol.home.elements;
+    }
+    return [];
+  }
+
+  // Helper methods to get specific element types for template layout (single)
+  getAlertElement(): any {
+    return this.getHomeElements().find(el => el.type === 'alert');
+  }
+
+  getSessionsElement(): any {
+    return this.getHomeElements().find(el => el.type === 'sessions');
+  }
+
+  getButtonElement(): any {
+    return this.getHomeElements().find(el => el.type === 'button');
+  }
+
+  getCarouselElement(): any {
+    return this.getHomeElements().find(el => el.type === 'carousel');
+  }
+
+  getTilesElement(): any {
+    return this.getHomeElements().find(el => el.type === 'tiles');
+  }
+
+  // Helper methods to get multiple elements of each type for layered layout
+  getAlertElements(): any[] {
+    return this.getHomeElements().filter(el => el.type === 'alert');
+  }
+
+  getSessionsElements(): any[] {
+    return this.getHomeElements().filter(el => el.type === 'sessions');
+  }
+
+  getButtonElements(): any[] {
+    return this.getHomeElements().filter(el => el.type === 'button');
+  }
+
+  getCarouselElements(): any[] {
+    return this.getHomeElements().filter(el => el.type === 'carousel');
+  }
+
+  getTilesElements(): any[] {
+    return this.getHomeElements().filter(el => el.type === 'tiles');
+  }
+
+  // Get all individual tile items from all tiles elements, flattened into a single array
+  getAllTileItems(): any[] {
+    const homeElements = this.getHomeElements();
+    const allTileItems: any[] = [];
+    
+    homeElements.forEach(element => {
+      // Handle old 'tiles' type with multiple actions
+      if (element.type === 'tiles' && element.actions && Array.isArray(element.actions)) {
+        element.actions.forEach((action: any) => {
+          allTileItems.push({
+            ...action,
+            parentElement: element // Keep reference to parent for click handling
+          });
+        });
+      }
+      // Handle new 'tile' type (single tile)
+      else if (element.type === 'tile') {
+        allTileItems.push({
+          text: element.text || 'Tile',
+          icon: element.icon || 'pi pi-square',
+          action: element.action || 'flow://flows/default',
+          backgroundcolor: element.backgroundcolor || '#8B5CF6',
+          markcompleted: element.markcompleted || false,
+          parentElement: element
+        });
+      }
+    });
+    
+    return allTileItems;
+  }
+
+  // Handle clicks on individual tile items
+  handleTileClick(tile: any, index: number): void {
+    if (tile.parentElement) {
+      if (tile.parentElement.type === 'tiles') {
+        // Handle old tiles type with actions array
+        const actionIndex = tile.parentElement.actions.findIndex((action: any) => action === tile);
+        this.handleElementClick(tile.parentElement, actionIndex);
+      } else if (tile.parentElement.type === 'tile') {
+        // Handle new single tile type
+        this.handleElementClick(tile.parentElement);
+      }
+    }
+  }
+
+  // Carousel navigation state
+  carouselScrollPositions: { [key: number]: number } = {};
+
+  // Scroll carousel left or right
+  scrollCarousel(carouselIndex: number, direction: 'left' | 'right'): void {
+    const container = document.getElementById(`carousel-${carouselIndex}`);
+    if (!container) return;
+
+    const itemWidth = 120 + 20; // item width + margin
+    const currentPosition = this.carouselScrollPositions[carouselIndex] || 0;
+    
+    let newPosition: number;
+    if (direction === 'left') {
+      newPosition = Math.max(0, currentPosition - itemWidth);
+    } else {
+      const maxScroll = this.getMaxCarouselScroll(carouselIndex);
+      newPosition = Math.min(maxScroll, currentPosition + itemWidth);
+    }
+
+    container.scrollTo({
+      left: newPosition,
+      behavior: 'smooth'
+    });
+
+    this.carouselScrollPositions[carouselIndex] = newPosition;
+  }
+
+  // Get current scroll position for a carousel
+  getCarouselScrollPosition(carouselIndex: number): number {
+    return this.carouselScrollPositions[carouselIndex] || 0;
+  }
+
+  // Get maximum scroll position for a carousel
+  getMaxCarouselScroll(carouselIndex: number): number {
+    const carousels = this.getCarouselElements();
+    if (!carousels[carouselIndex]) return 0;
+    
+    const itemCount = carousels[carouselIndex].actions?.length || 0;
+    const itemWidth = 120 + 20; // item width + margin
+    const containerWidth = 140; // visible width (shows one item)
+    
+    return Math.max(0, (itemCount * itemWidth) - containerWidth);
+  }
+
+  // Get current visible item index for carousel dots
+  getCurrentCarouselIndex(carouselIndex: number): number {
+    const position = this.getCarouselScrollPosition(carouselIndex);
+    const itemWidth = 120 + 20;
+    return Math.floor(position / itemWidth);
+  }
+
+  handleMenuClick(menuItem: any): void {
+    if (menuItem.text === 'Home') {
+      this.navigateToHome();
+    } else if (menuItem.action) {
+      // Handle other menu actions
+      console.log('Menu action:', menuItem.action);
+    }
+    this.closeMenu();
   }
 
   toggleTheme(): void {
@@ -441,21 +758,84 @@ export class BuilderComponent implements OnInit {
   // Element interaction methods
   handleElementClick(element: any, actionIndex?: number): void {
     if (element.type === 'button' && element.action?.action) {
-      const screenId = `button-${this.protocol.home.elements?.findIndex(e => e === element)}`;
-      this.navigateToScreen(screenId);
+      // Check if it's a survey modal action
+      if (element.action.action === 'navmodal://Survey') {
+        this.showSurveyModal();
+        return;
+      }
+      // Navigate to a flow screen for button actions
+      this.navigateToFlowScreen(element.action.text, element.action.action);
     }
     else if (element.type === 'sessions' && element.right?.action) {
-      const screenId = `session-${this.protocol.home.elements?.findIndex(e => e === element)}`;
-      this.navigateToScreen(screenId);
+      // Navigate to a flow screen for session actions
+      this.navigateToFlowScreen(element.right.text, element.right.action);
     }
     else if ((element.type === 'carousel' || element.type === 'tiles') && actionIndex !== undefined) {
       const action = element.actions[actionIndex];
       if (action && action.action) {
-        const elementIndex = this.protocol.home.elements?.findIndex(e => e === element) || 0;
-        const screenId = `${element.type}-${elementIndex}-${actionIndex}`;
-        this.navigateToScreen(screenId);
+        // Navigate to a flow screen for carousel/tile actions
+        this.navigateToFlowScreen(action.text, action.action);
       }
     }
+  }
+
+  navigateToFlowScreen(title: string, action: string): void {
+    // Determine the flow type from the action URL
+    if (action.startsWith('flow://flows/')) {
+      const flowName = action.replace('flow://flows/', '').replace(/%20/g, ' ').replace(/%3f/g, '?').replace(/%3F/g, '?');
+      
+      if (flowName.includes('input')) {
+        this.currentView = 'flow-inputs';
+      } else if (flowName.includes('survey') || flowName.includes('day')) {
+        this.currentView = 'flow-survey';
+      } else if (flowName.includes('demographic')) {
+        this.currentView = 'flow-demographics';
+      } else {
+        this.currentView = 'flow-generic';
+      }
+      
+      // Store the current flow info for the screen
+      this.currentFlowInfo = {
+        title: title,
+        action: action,
+        flowName: flowName
+      };
+    }
+  }
+
+  // Store current flow information
+  currentFlowInfo: any = null;
+
+  // PrimeNG Icons for dropdowns
+  primeNGIcons = [
+    { label: 'Info Circle', value: 'pi pi-info-circle' },
+    { label: 'Trophy', value: 'pi pi-trophy' },
+    { label: 'Unlock', value: 'pi pi-unlock' },
+    { label: 'Lock', value: 'pi pi-lock' },
+    { label: 'Pencil', value: 'pi pi-pencil' },
+    { label: 'Clipboard', value: 'pi pi-clipboard' },
+    { label: 'Chart Bar', value: 'pi pi-chart-bar' },
+    { label: 'Heart', value: 'pi pi-heart' },
+    { label: 'Home', value: 'pi pi-home' },
+    { label: 'User', value: 'pi pi-user' },
+    { label: 'Calendar', value: 'pi pi-calendar' },
+    { label: 'Clock', value: 'pi pi-clock' },
+    { label: 'Star', value: 'pi pi-star' },
+    { label: 'Check', value: 'pi pi-check' },
+    { label: 'Times', value: 'pi pi-times' },
+    { label: 'Plus', value: 'pi pi-plus' },
+    { label: 'Minus', value: 'pi pi-minus' },
+    { label: 'Settings', value: 'pi pi-cog' },
+    { label: 'Bell', value: 'pi pi-bell' },
+    { label: 'Comment', value: 'pi pi-comment' }
+  ];
+
+  showSurveyModal(): void {
+    this.currentView = 'survey-modal';
+  }
+
+  closeSurveyModal(): void {
+    this.currentView = 'home';
   }
 
   createForm(): FormGroup {
@@ -650,7 +1030,7 @@ export class BuilderComponent implements OnInit {
     if (data.home.elements && Array.isArray(data.home.elements)) {
       for (const element of data.home.elements) {
         if (!element.type || typeof element.type !== 'string') return false;
-        const validTypes = ['alert', 'sessions', 'button', 'carousel', 'tiles'];
+        const validTypes = ['alert', 'sessions', 'button', 'carousel', 'tiles', 'tile'];
         if (!validTypes.includes(element.type)) return false;
       }
     }
@@ -1093,7 +1473,7 @@ export class BuilderComponent implements OnInit {
     });
   }
 
-  saveToGitHub(): void {
+  publishToGitHub(): void {
     const selectedRepo = this.appForm.get('selectedRepository')?.value;
     if (!selectedRepo) {
       this.gitHubError = 'Please select a repository first';
@@ -1124,16 +1504,37 @@ export class BuilderComponent implements OnInit {
     
     const commitMessage = `Update protocol.json via Web Portal - ${new Date().toISOString()}`;
 
+    this.isPublishing = true; // Add loading state
     this.githubFacade.putFile(fileToSave, commitMessage).subscribe({
       next: (response: any) => {
-        this.currentFileData = response.content; // Update stored file data
+        this.currentFileData = response.content; // Update stored file data with new SHA
         this.gitHubError = '';
-        // Show success message or feedback
-        console.log('Successfully saved to GitHub');
+        this.publishSuccess = true;
+        this.isPublishing = false;
+        // Auto-hide success message after 3 seconds
+        setTimeout(() => {
+          this.publishSuccess = false;
+        }, 3000);
+        console.log('Successfully published to GitHub');
       },
       error: (error: any) => {
-        this.gitHubError = `Failed to save: ${error.message || 'Unknown error'}`;
-        console.error('GitHub save error:', error);
+        let errorMessage = 'Unknown error';
+        
+        if (error.status === 422) {
+          errorMessage = 'File conflict or validation error. Try loading the file from GitHub first.';
+        } else if (error.status === 404) {
+          errorMessage = 'Repository or file path not found. Check your repository and file path.';
+        } else if (error.status === 401 || error.status === 403) {
+          errorMessage = 'Authentication failed. Please reconnect to GitHub.';
+        } else if (error.error?.message) {
+          errorMessage = error.error.message;
+        } else if (error.message) {
+          errorMessage = error.message;
+        }
+        
+        this.gitHubError = `Failed to publish: ${errorMessage}`;
+        this.isPublishing = false;
+        console.error('GitHub publish error:', error);
       }
     });
   }
@@ -1204,7 +1605,17 @@ export class BuilderComponent implements OnInit {
       case 'tiles':
         return this.fb.group({
           type: ['tiles'],
+          position: ['left'],
           actions: this.fb.array([this.createActionFormDefault()])
+        });
+      case 'tile':
+        return this.fb.group({
+          type: ['tile'],
+          text: ['New Tile'],
+          icon: ['pi pi-square'],
+          action: ['flow://flows/default'],
+          backgroundcolor: ['#8B5CF6'],
+          markcompleted: [false]
         });
       default:
         return this.fb.group({

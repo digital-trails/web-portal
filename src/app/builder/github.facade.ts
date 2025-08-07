@@ -39,11 +39,15 @@ export class GithubFacade {
     });
     const base64Content = btoa(JSON.stringify(file.content, null, 2)); // Convert JSON object to base64 string
 
-    const body = {
+    const body: any = {
       message: commitMessage,
-      content: base64Content,
-      sha: file.sha
+      content: base64Content
     };
+
+    // Only include SHA if it exists (for updates), omit for new file creation
+    if (file.sha) {
+      body.sha = file.sha;
+    }
 
     return this.http.put(`https://api.github.com/repos/${sessionStorage.getItem('githubOwner') || ''}/${sessionStorage.getItem('githubRepo') || ''}/contents/${file.path}`, body, { headers });
   }
