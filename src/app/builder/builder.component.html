@@ -1,13 +1,79 @@
 <div class="builder-container">
+  <!-- GitHub Success Toast -->
+  <div *ngIf="showGitHubSuccessToast" class="github-success-toast">
+    <div class="toast-content">
+      <span class="toast-icon">✅</span>
+      <span class="toast-message">{{ gitHubToastMessage }}</span>
+    </div>
+  </div>
+
   <!-- Left side - Form Editor -->
   <div class="form-editor">
     <p-panel header="App Builder" [toggleable]="false">
       <form [formGroup]="appForm">
         
-        <!-- File Upload Section -->
+        <!-- GitHub Integration or File Upload -->
         <div class="form-section">
-          <h3>Upload Protocol.json</h3>
-          <div class="upload-container">
+          <h3>Import Configuration</h3>
+          
+          <!-- GitHub Connect (if not connected) -->
+          <div *ngIf="!isGitHubConnected" class="github-connect">
+            <p>Connect to GitHub to directly load and save protocol files from your repositories</p>
+            <p-button 
+              label="Connect to GitHub" 
+              icon="pi pi-github" 
+              (onClick)="connectToGitHub()"
+              severity="info">
+            </p-button>
+          </div>
+
+          <!-- Repository Selection -->
+          <div *ngIf="isGitHubConnected" class="github-connected">
+            <div class="field">
+              <label for="repository">Select Repository</label>
+              <p-select 
+                [options]="repositories" 
+                formControlName="selectedRepository"
+                optionLabel="full_name"
+                optionValue="full_name"
+                placeholder="Choose a repository"
+                (onChange)="onRepositorySelect($event.value)"
+                styleClass="w-full github-select"
+                [style]="{'width': '100%'}">
+              </p-select>
+            </div>
+
+            <div class="field" *ngIf="appForm.get('selectedRepository')?.value">
+              <label for="filePath">File Path</label>
+              <input 
+                id="filePath" 
+                type="text" 
+                pInputText 
+                formControlName="filePath"
+                placeholder="src/protocol.json"
+                class="w-full"
+              />
+            </div>
+
+            <div class="github-actions" *ngIf="appForm.get('selectedRepository')?.value">
+              <p-button 
+                label="Load from GitHub" 
+                icon="pi pi-download" 
+                (onClick)="loadFromGitHub()"
+                severity="info"
+                size="small">
+              </p-button>
+            </div>
+
+            <p-message 
+              *ngIf="gitHubError" 
+              severity="error" 
+              [text]="gitHubError">
+            </p-message>
+          </div>
+
+          <!-- Legacy File Upload (hidden when GitHub connected) -->
+          <div *ngIf="!isGitHubConnected" class="upload-container">
             <input 
               type="file" 
               accept=".json"
@@ -27,11 +93,11 @@
           </div>
         </div>
 
-        <p-divider></p-divider>
 
-        <!-- Basic Information -->
-        <div class="form-section">
-          <h3>Basic Information</h3>
+
+        <!-- Home Configuration -->
+        <div class="form-section" formGroupName="home">
+          <h3>Home Screen Configuration</h3>
           <div class="p-fluid">
             <div class="field">
               <label for="title">App Title</label>
@@ -42,373 +108,460 @@
                 formControlName="title" 
                 placeholder="Enter app title"
               />
-            </div>
-            
-            <div class="field">
-              <label for="subtitle">Subtitle</label>
-              <input 
-                id="subtitle" 
-                type="text" 
-                pInputText 
-                formControlName="subtitle" 
-                placeholder="Enter subtitle"
-              />
+              <small>This appears at the top of the home screen</small>
             </div>
 
-            <div class="field">
-              <label for="appIcon">App Icon URL</label>
-              <input 
-                id="appIcon" 
-                type="text" 
-                pInputText 
-                formControlName="appIcon" 
-                placeholder="Enter app icon URL"
-              />
-            </div>
-          </div>
-        </div>
-
-        <p-divider></p-divider>
-
-        <!-- Legacy Buttons Section -->
-        <div class="form-section">
-          <h3>Button Labels (Legacy Support)</h3>
-          <div class="p-fluid">
-            <div class="field">
-              <label for="button1">Button 1</label>
-              <input 
-                id="button1" 
-                type="text" 
-                pInputText 
-                formControlName="button1" 
-                placeholder="Button 1 text"
-              />
-            </div>
-            
-            <div class="field">
-              <label for="button2">Button 2</label>
-              <input 
-                id="button2" 
-                type="text" 
-                pInputText 
-                formControlName="button2" 
-                placeholder="Button 2 text"
-              />
-            </div>
-            
-            <div class="field">
-              <label for="button3">Button 3</label>
-              <input 
-                id="button3" 
-                type="text" 
-                pInputText 
-                formControlName="button3" 
-                placeholder="Button 3 text"
-              />
-            </div>
-            
-            <div class="field">
-              <label for="button4">Button 4</label>
-              <input 
-                id="button4" 
-                type="text" 
-                pInputText 
-                formControlName="button4" 
-                placeholder="Button 4 text"
-              />
-            </div>
-          </div>
-        </div>
-
-        <p-divider></p-divider>
-
-        <!-- Survey Configuration Section -->
-        <div class="form-section">
-          <h3>Survey Configuration</h3>
-          <div class="p-fluid">
-            <!-- Survey Names -->
-            <div class="field">
-              <label for="survey1Name">Survey 1 Name</label>
-              <input 
-                id="survey1Name" 
-                type="text" 
-                pInputText 
-                formControlName="survey1Name" 
-                placeholder="First survey name"
-              />
-            </div>
-            
-            <div class="field">
-              <label for="survey2Name">Survey 2 Name</label>
-              <input 
-                id="survey2Name" 
-                type="text" 
-                pInputText 
-                formControlName="survey2Name" 
-                placeholder="Second survey name"
-              />
-            </div>
-
-            <!-- Survey 1 Questions -->
-            <h4>Survey 1 Questions</h4>
-            <div class="survey-questions">
-              <div class="question-group">
-                <label for="survey1Q1">Question 1</label>
-                <input 
-                  id="survey1Q1" 
-                  type="text" 
-                  pInputText 
-                  formControlName="survey1Q1" 
-                  placeholder="Enter question text"
-                />
-                <label for="survey1Q1Options">Answer Options (separate with | - max 4 options)</label>
-                <input 
-                  id="survey1Q1Options" 
-                  type="text" 
-                  pInputText 
-                  formControlName="survey1Q1Options" 
-                  placeholder="Option 1|Option 2|Option 3|Option 4"
-                />
-              </div>
-
-              <div class="question-group">
-                <label for="survey1Q2">Question 2</label>
-                <input 
-                  id="survey1Q2" 
-                  type="text" 
-                  pInputText 
-                  formControlName="survey1Q2" 
-                  placeholder="Enter question text"
-                />
-                <label for="survey1Q2Options">Answer Options (separate with | - max 4 options)</label>
-                <input 
-                  id="survey1Q2Options" 
-                  type="text" 
-                  pInputText 
-                  formControlName="survey1Q2Options" 
-                  placeholder="Option 1|Option 2|Option 3|Option 4"
-                />
-              </div>
-
-              <div class="question-group">
-                <label for="survey1Q3">Question 3</label>
-                <input 
-                  id="survey1Q3" 
-                  type="text" 
-                  pInputText 
-                  formControlName="survey1Q3" 
-                  placeholder="Enter question text"
-                />
-                <label for="survey1Q3Options">Answer Options (separate with | - max 4 options)</label>
-                <input 
-                  id="survey1Q3Options" 
-                  type="text" 
-                  pInputText 
-                  formControlName="survey1Q3Options" 
-                  placeholder="Option 1|Option 2|Option 3|Option 4"
-                />
-              </div>
-            </div>
-
-            <!-- Survey 2 Questions -->
-            <h4>Survey 2 Questions</h4>
-            <div class="survey-questions">
-              <div class="question-group">
-                <label for="survey2Q1">Question 1</label>
-                <input 
-                  id="survey2Q1" 
-                  type="text" 
-                  pInputText 
-                  formControlName="survey2Q1" 
-                  placeholder="Enter question text"
-                />
-                <label for="survey2Q1Options">Answer Options (separate with | - max 4 options)</label>
-                <input 
-                  id="survey2Q1Options" 
-                  type="text" 
-                  pInputText 
-                  formControlName="survey2Q1Options" 
-                  placeholder="Option 1|Option 2|Option 3|Option 4"
-                />
-              </div>
-
-              <div class="question-group">
-                <label for="survey2Q2">Question 2</label>
-                <input 
-                  id="survey2Q2" 
-                  type="text" 
-                  pInputText 
-                  formControlName="survey2Q2" 
-                  placeholder="Enter question text"
-                />
-                <label for="survey2Q2Options">Answer Options (separate with | - max 4 options)</label>
-                <input 
-                  id="survey2Q2Options" 
-                  type="text" 
-                  pInputText 
-                  formControlName="survey2Q2Options" 
-                  placeholder="Option 1|Option 2|Option 3|Option 4"
-                />
-              </div>
-
-              <div class="question-group">
-                <label for="survey2Q3">Question 3</label>
-                <input 
-                  id="survey2Q3" 
-                  type="text" 
-                  pInputText 
-                  formControlName="survey2Q3" 
-                  placeholder="Enter question text"
-                />
-                <label for="survey2Q3Options">Answer Options (separate with | - max 4 options)</label>
-                <input 
-                  id="survey2Q3Options" 
-                  type="text" 
-                  pInputText 
-                  formControlName="survey2Q3Options" 
-                  placeholder="Option 1|Option 2|Option 3|Option 4"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <p-divider></p-divider>
-
-        <!-- Dynamic Elements Section -->
-        <div class="form-section">
-          <h3>App Elements</h3>
-          
-          <!-- Add Element Buttons -->
-          <div class="add-element-buttons">
-            <p-button 
-              label="Add Alert" 
-              icon="pi pi-info-circle" 
-              (onClick)="addNewElement('alert')"
-              severity="secondary"
-              size="small">
-            </p-button>
-            <p-button 
-              label="Add Sessions" 
-              icon="pi pi-calendar" 
-              (onClick)="addNewElement('sessions')"
-              severity="secondary"
-              size="small">
-            </p-button>
-            <p-button 
-              label="Add Button" 
-              icon="pi pi-plus" 
-              (onClick)="addNewElement('button')"
-              severity="secondary"
-              size="small">
-            </p-button>
-            <p-button 
-              label="Add Carousel" 
-              icon="pi pi-images" 
-              (onClick)="addNewElement('carousel')"
-              severity="secondary"
-              size="small">
-            </p-button>
-            <p-button 
-              label="Add Tiles" 
-              icon="pi pi-th-large" 
-              (onClick)="addNewElement('tiles')"
-              severity="secondary"
-              size="small">
-            </p-button>
-          </div>
-
-          <!-- Dynamic Elements Forms -->
-          <div formArrayName="elements">
-            <div *ngFor="let elementForm of elementsArray.controls; let i = index" 
-                 [formGroupName]="i" 
-                 class="element-form">
-              
-              <!-- Element Header -->
-              <div class="element-header">
-                <span class="element-type">{{ elementForm.get('type')?.value | titlecase }}</span>
+            <!-- Dynamic Elements Section -->
+            <div formGroupName="element" class="elements-section">
+              <h4>Home Elements</h4>
+              <div class="element-controls">
                 <p-button 
-                  icon="pi pi-trash" 
-                  (onClick)="removeElement(i)"
-                  severity="danger"
-                  size="small"
-                  [text]="true">
+                  label="Add Alert" 
+                  icon="pi pi-plus" 
+                  (onClick)="addElement('alert')"
+                  severity="secondary"
+                  size="small">
+                </p-button>
+                <p-button 
+                  label="Add Sessions" 
+                  icon="pi pi-plus" 
+                  (onClick)="addElement('sessions')"
+                  severity="secondary"
+                  size="small">
+                </p-button>
+                <p-button 
+                  label="Add Button" 
+                  icon="pi pi-plus" 
+                  (onClick)="addElement('button')"
+                  severity="secondary"
+                  size="small">
+                </p-button>
+                <p-button 
+                  label="Add Carousel" 
+                  icon="pi pi-plus" 
+                  (onClick)="addElement('carousel')"
+                  severity="secondary"
+                  size="small">
+                </p-button>
+                <p-button 
+                  label="Add Tiles" 
+                  icon="pi pi-plus" 
+                  (onClick)="addElement('tiles')"
+                  severity="secondary"
+                  size="small">
                 </p-button>
               </div>
 
-              <!-- Alert Element -->
-              <div *ngIf="elementForm.get('type')?.value === 'alert'" class="element-content">
-                <div class="field">
-                  <label>Alert Title</label>
-                  <input type="text" pInputText formControlName="title" placeholder="Alert title" />
-                </div>
-                <div class="field">
-                  <label>Alert Message</label>
-                  <input type="text" pInputText formControlName="message" placeholder="Alert message" />
-                </div>
-                <div class="field">
-                  <label>Icon URL</label>
-                  <input type="text" pInputText formControlName="iconUrl" placeholder="Icon URL" />
-                </div>
-                <div class="field">
-                  <label>Icon Tint</label>
-                  <p-checkbox formControlName="iconTint" [binary]="true"></p-checkbox>
-                </div>
-              </div>
+              <!-- Elements Accordion -->
+              <p-accordion formArrayName="elements" class="elements-accordion">
+                <p-accordionTab 
+                  *ngFor="let elementControl of elementsArray.controls; let i = index"
+                  [header]="'Element ' + (i + 1) + ': ' + elementControl.get('type')?.value">
+                  
+                  <div [formGroupName]="i" class="element-form">
+                    <!-- Alert Element -->
+                    <div *ngIf="elementControl.get('type')?.value === 'alert'" class="alert-form">
+                      <div class="field">
+                        <label>Alert Title</label>
+                        <input type="text" pInputText formControlName="title" placeholder="Enter alert title" />
+                        <small>The main title shown in the green alert banner</small>
+                      </div>
+                      <div class="field">
+                        <label>Alert Message</label>
+                        <textarea pInputTextarea formControlName="message" placeholder="Enter alert message" rows="3"></textarea>
+                        <small>The descriptive text below the title</small>
+                      </div>
+                      <div formGroupName="icon" class="icon-group">
+                        <div class="field">
+                          <label>PrimeNG Icon</label>
+                          <p-select 
+                            formControlName="url" 
+                            [options]="primeNGIcons" 
+                            optionLabel="label" 
+                            optionValue="value"
+                            placeholder="Select an icon">
+                          </p-select>
+                          <small>Choose an icon from PrimeNG icons</small>
+                        </div>
+                        <div class="field">
+                          <label>Tint Icon</label>
+                          <p-checkbox formControlName="tint" [binary]="true"></p-checkbox>
+                          <small>Apply color tinting to the icon</small>
+                        </div>
+                      </div>
+                    </div>
 
-              <!-- Sessions Element -->
-              <div *ngIf="elementForm.get('type')?.value === 'sessions'" class="element-content">
-                <div class="field">
-                  <label>Left Text</label>
-                  <input type="text" pInputText formControlName="leftText" placeholder="Left side text" />
-                </div>
-                <div class="field">
-                  <label>Left Icon</label>
-                  <input type="text" pInputText formControlName="leftIcon" placeholder="Left icon URL" />
-                </div>
-                <div class="field">
-                  <label>Right Text</label>
-                  <input type="text" pInputText formControlName="rightText" placeholder="Right side text" />
-                </div>
-                <div class="field">
-                  <label>Right Icon</label>
-                  <input type="text" pInputText formControlName="rightIcon" placeholder="Right icon URL" />
-                </div>
-                <div class="field">
-                  <label>Right Action</label>
-                  <input type="text" pInputText formControlName="rightAction" placeholder="Action URL" />
-                </div>
-              </div>
+                    <!-- Sessions Element -->
+                    <div *ngIf="elementControl.get('type')?.value === 'sessions'" class="sessions-form">
+                      <div formGroupName="left" class="sessions-left-config">
+                        <h5>Left Side (Completed Sessions)</h5>
+                        <div class="field">
+                          <label>Display Text</label>
+                          <input type="text" pInputText formControlName="text" placeholder="&#123;0&#125; Sessions Completed" />
+                          <small>Use &#123;0&#125; as placeholder for session count</small>
+                        </div>
+                        <div class="field">
+                          <label>Icon</label>
+                          <p-select 
+                            formControlName="icon" 
+                            [options]="primeNGIcons" 
+                            optionLabel="label" 
+                            optionValue="value"
+                            placeholder="Select an icon">
+                          </p-select>
+                          <small>Icon for completed sessions (typically trophy)</small>
+                        </div>
+                      </div>
+                      <div formGroupName="right" class="sessions-right-config">
+                        <h5>Right Side (Launch Button)</h5>
+                        <div class="field">
+                          <label>Button Text</label>
+                          <input type="text" pInputText formControlName="text" placeholder="Launch Session" />
+                          <small>Text shown on the launch button</small>
+                        </div>
+                        <div class="field">
+                          <label>Button Icon</label>
+                          <p-select 
+                            formControlName="icon" 
+                            [options]="primeNGIcons" 
+                            optionLabel="label" 
+                            optionValue="value"
+                            placeholder="Select an icon">
+                          </p-select>
+                          <small>Icon for launch button (typically unlock)</small>
+                        </div>
+                        <div class="field">
+                          <label>Action URL</label>
+                          <input type="text" pInputText formControlName="action" placeholder="flow://flows/doses" />
+                          <small>Where to navigate when button is clicked</small>
+                        </div>
+                      </div>
+                    </div>
 
-              <!-- Button Element -->
-              <div *ngIf="elementForm.get('type')?.value === 'button'" class="element-content">
-                <div class="field">
-                  <label>Button Text</label>
-                  <input type="text" pInputText formControlName="actionText" placeholder="Button text" />
-                </div>
-                <div class="field">
-                  <label>Action URL</label>
-                  <input type="text" pInputText formControlName="actionUrl" placeholder="Action URL" />
-                </div>
-              </div>
+                    <!-- Button Element -->
+                    <div *ngIf="elementControl.get('type')?.value === 'button'" class="button-form">
+                      <div formGroupName="action">
+                        <div class="field">
+                          <label>Button Text</label>
+                          <input type="text" pInputText formControlName="text" placeholder="Show Survey Modal" />
+                          <small>Text displayed on the button</small>
+                        </div>
+                        <div class="field">
+                          <label>Action Type</label>
+                          <p-select 
+                            formControlName="action" 
+                            [options]="actionTypes" 
+                            optionLabel="label" 
+                            optionValue="value"
+                            placeholder="Select action type">
+                          </p-select>
+                          <small>What happens when the button is clicked</small>
+                        </div>
+                      </div>
+                    </div>
 
-              <!-- Carousel/Tiles Element -->
-              <div *ngIf="elementForm.get('type')?.value === 'carousel' || elementForm.get('type')?.value === 'tiles'" class="element-content">
-                <p>Actions configuration for {{ elementForm.get('type')?.value }} (Advanced editing available after upload)</p>
-              </div>
+                    <!-- Single Tile Element -->
+                    <div *ngIf="elementControl.get('type')?.value === 'tile'" class="tile-form">
+                      <div class="field">
+                        <label>Tile Text</label>
+                        <input type="text" pInputText formControlName="text" placeholder="New Tile" />
+                        <small>Text displayed on the tile</small>
+                      </div>
+                      <div class="field">
+                        <label>Icon</label>
+                        <p-select 
+                          formControlName="icon" 
+                          [options]="primeNGIcons" 
+                          optionLabel="label" 
+                          optionValue="value"
+                          placeholder="Select an icon">
+                        </p-select>
+                        <small>Icon displayed on the tile</small>
+                      </div>
+                      <div class="field">
+                        <label>Action</label>
+                        <p-select 
+                          formControlName="action" 
+                          [options]="actionTypes" 
+                          optionLabel="label" 
+                          optionValue="value"
+                          placeholder="Select action">
+                        </p-select>
+                        <small>What happens when tile is clicked</small>
+                      </div>
+                      <div class="field">
+                        <label>Background Color</label>
+                        <p-colorPicker formControlName="backgroundcolor"></p-colorPicker>
+                        <small>Background color of the tile</small>
+                      </div>
+                      <div class="field">
+                        <label>Show Completion Checkmark</label>
+                        <p-checkbox formControlName="markcompleted" [binary]="true"></p-checkbox>
+                        <small>Display a checkmark when completed</small>
+                      </div>
+                    </div>
 
+                    <!-- Tiles Position Configuration -->
+                    <div *ngIf="elementControl.get('type')?.value === 'tiles'" class="tiles-position-form">
+                      <div class="field">
+                        <label>Tiles Position</label>
+                        <p-select 
+                          formControlName="position" 
+                          [options]="tilesPositions" 
+                          optionLabel="label" 
+                          optionValue="value"
+                          placeholder="Select position">
+                        </p-select>
+                        <small>Choose whether tiles appear on left or right side</small>
+                      </div>
+                    </div>
+
+                    <!-- Carousel/Tiles Elements -->
+                    <div *ngIf="elementControl.get('type')?.value === 'carousel' || elementControl.get('type')?.value === 'tiles'" class="actions-form">
+                      <div class="actions-header">
+                        <h5>Actions</h5>
+                        <p-button 
+                          label="Add Action" 
+                          icon="pi pi-plus" 
+                          (onClick)="addAction(i)"
+                          size="small">
+                        </p-button>
+                      </div>
+                      
+                      <div formArrayName="actions" class="actions-list">
+                        <div *ngFor="let actionControl of getActionsArray(i).controls; let j = index" 
+                             [formGroupName]="j" class="action-item">
+                          <div class="action-header">
+                            <span>Action {{ j + 1 }}</span>
+                            <p-button 
+                              icon="pi pi-trash" 
+                              (onClick)="removeAction(i, j)"
+                              severity="danger"
+                              size="small"
+                              [text]="true">
+                            </p-button>
+                          </div>
+                          <div class="field">
+                            <label>Item Text</label>
+                            <input type="text" pInputText formControlName="text" placeholder="inputs!" />
+                            <small>Text displayed on the item</small>
+                          </div>
+                          <div class="field">
+                            <label>Icon</label>
+                            <p-select 
+                              formControlName="icon" 
+                              [options]="primeNGIcons" 
+                              optionLabel="label" 
+                              optionValue="value"
+                              placeholder="Select an icon">
+                            </p-select>
+                            <small>Icon displayed on the item</small>
+                          </div>
+                          <div class="field">
+                            <label>Action</label>
+                            <p-select 
+                              formControlName="action" 
+                              [options]="actionTypes" 
+                              optionLabel="label" 
+                              optionValue="value"
+                              placeholder="Select action">
+                            </p-select>
+                            <small>What happens when item is clicked</small>
+                          </div>
+                          <div class="field">
+                            <label>Background Color</label>
+                            <p-colorPicker formControlName="backgroundcolor"></p-colorPicker>
+                            <small>Background color of the item</small>
+                          </div>
+                          <div class="field">
+                            <label>Show Completion Checkmark</label>
+                            <p-checkbox formControlName="markcompleted" [binary]="true"></p-checkbox>
+                            <small>Display a checkmark when completed</small>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Remove Element Button -->
+                    <div class="element-actions">
+                      <p-button 
+                        label="Remove Element" 
+                        icon="pi pi-trash" 
+                        (onClick)="removeElement(i)"
+                        severity="danger"
+                        size="small">
+                      </p-button>
+                    </div>
+                  </div>
+                </p-accordionTab>
+              </p-accordion>
             </div>
           </div>
         </div>
 
-        <!-- Export Button -->
+
+
+        <!-- Notifications Configuration -->
         <div class="form-section">
-          <p-button 
-            label="Export Config" 
-            icon="pi pi-download" 
-            (onClick)="exportConfig()"
-            severity="secondary">
-          </p-button>
+          <h3>Notifications Configuration</h3>
+          <div class="trigger-controls">
+            <p-button 
+              label="Add Timing Trigger" 
+              icon="pi pi-plus" 
+              (onClick)="addTrigger('timing')"
+              severity="secondary"
+              size="small">
+            </p-button>
+            <p-button 
+              label="Add Random Trigger" 
+              icon="pi pi-plus" 
+              (onClick)="addTrigger('random')"
+              severity="secondary"
+              size="small">
+            </p-button>
+          </div>
+
+          <p-accordion formArrayName="triggers" class="triggers-accordion">
+            <p-accordionTab 
+              *ngFor="let triggerControl of triggersArray.controls; let i = index"
+              [header]="'Trigger ' + (i + 1) + ': ' + triggerControl.get('type')?.value">
+              
+              <div [formGroupName]="i" class="trigger-form">
+                <div class="field">
+                  <label>Type</label>
+                  <p-select 
+                    formControlName="type"
+                    [options]="[{label: 'Timing', value: 'timing'}, {label: 'Random', value: 'random'}]"
+                    optionLabel="label"
+                    optionValue="value">
+                  </p-select>
+                </div>
+                <div class="field">
+                  <label>Event Type</label>
+                  <input type="text" pInputText formControlName="event-type" />
+                </div>
+                
+                <!-- Timing Trigger Fields -->
+                <div *ngIf="triggerControl.get('type')?.value === 'timing'">
+                  <div class="field">
+                    <label>Frequency</label>
+                    <input type="text" pInputText formControlName="frequency" />
+                  </div>
+                  <div class="field">
+                    <label>Time</label>
+                    <input type="text" pInputText formControlName="time" />
+                  </div>
+                  <div formGroupName="action">
+                    <div class="field">
+                      <label>Action Path</label>
+                      <input type="text" pInputText formControlName="path" />
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Random Trigger Fields -->
+                <div *ngIf="triggerControl.get('type')?.value === 'random'">
+                  <div class="field">
+                    <label>Days</label>
+                    <input type="number" pInputText formControlName="days" />
+                  </div>
+                  
+                  <!-- Random Trigger Actions -->
+                  <div formArrayName="triggers" class="random-triggers">
+                    <div class="random-triggers-header">
+                      <h5>Random Trigger Actions</h5>
+                      <p-button 
+                        label="Add Random Action" 
+                        icon="pi pi-plus" 
+                        (onClick)="addRandomTriggerAction(i)"
+                        size="small">
+                      </p-button>
+                    </div>
+                    
+                    <div *ngFor="let randomTriggerControl of getRandomTriggersArray(i).controls; let j = index" 
+                         [formGroupName]="j" class="random-trigger-item">
+                      <div class="random-trigger-header">
+                        <span>Random Action {{ j + 1 }}</span>
+                        <p-button 
+                          icon="pi pi-trash" 
+                          (onClick)="removeRandomTriggerAction(i, j)"
+                          severity="danger"
+                          size="small"
+                          [text]="true">
+                        </p-button>
+                      </div>
+                      <div class="field">
+                        <label>Default Time</label>
+                        <input type="text" pInputText formControlName="default-time" />
+                      </div>
+                      <div class="field">
+                        <label>Open</label>
+                        <input type="text" pInputText formControlName="open" />
+                      </div>
+                      <div class="field">
+                        <label>Close</label>
+                        <input type="text" pInputText formControlName="close" />
+                      </div>
+                      <div formGroupName="action">
+                        <div class="field">
+                          <label>Action Path</label>
+                          <input type="text" pInputText formControlName="path" />
+                        </div>
+                        <div class="field">
+                          <label>Expiry</label>
+                          <input type="text" pInputText formControlName="expiry" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="trigger-actions">
+                  <p-button 
+                    label="Remove Trigger" 
+                    icon="pi pi-trash" 
+                    (onClick)="removeTrigger(i)"
+                    severity="danger"
+                    size="small">
+                  </p-button>
+                </div>
+              </div>
+            </p-accordionTab>
+          </p-accordion>
+        </div>
+
+
+
+        <!-- JSON Preview -->
+        <div class="form-section">
+          <h3>Protocol JSON Preview</h3>
+          <pre class="json-preview">{{ getProtocolPreview() | json }}</pre>
+        </div>
+
+        <!-- Save/Export Actions -->
+        <div class="form-section">
+          <div *ngIf="isGitHubConnected && appForm.get('selectedRepository')?.value" class="github-save-actions">
+            <p-button 
+              label="Publish to GitHub" 
+              icon="pi pi-send" 
+              (onClick)="publishToGitHub()"
+              severity="success"
+              [loading]="isPublishing"
+              [disabled]="isPublishing"
+              class="publish-button">
+            </p-button>
+          </div>
+          
+          <!-- Success Message -->
+          <div *ngIf="publishSuccess" class="publish-success-message">
+            <p-message severity="success" text="Successfully published to GitHub!"></p-message>
+          </div>
+          
+          <!-- Error Message -->
+          <div *ngIf="gitHubError" class="github-error-message">
+            <p-message severity="error" [text]="gitHubError"></p-message>
+          </div>
+
         </div>
       </form>
     </p-panel>
@@ -421,54 +574,201 @@
       <div class="phone-frame" [class.light-theme]="!isDarkTheme">
 
 
+        <!-- Hamburger Menu -->
+        <div *ngIf="currentView === 'menu'" class="menu-overlay" (click)="closeMenu()">
+          <div class="menu-content" (click)="$event.stopPropagation()">
+            <div class="menu-header">
+              <h3>Menu</h3>
+              <button class="close-btn" (click)="closeMenu()">✕</button>
+            </div>
+            <div class="menu-body">
+              <div class="menu-item" *ngFor="let item of getMenuItems()" (click)="handleMenuClick(item)">
+                <i *ngIf="item.icon" [class]="item.icon + ' menu-item-icon'"></i>
+                <span class="menu-item-text">{{ item.text }}</span>
+                <span class="menu-item-arrow">></span>
+              </div>
+              <div class="menu-item" (click)="navigateToSettings()">
+                <i class="pi pi-cog menu-item-icon"></i>
+                <span class="menu-item-text">Settings</span>
+                <span class="menu-item-arrow">></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Survey Modal (Inside Phone) -->
+        <div *ngIf="currentView === 'survey-modal'" class="phone-survey-modal-overlay" (click)="closeSurveyModal()">
+          <div class="phone-survey-modal-content" (click)="$event.stopPropagation()">
+            <div class="phone-survey-modal-header">
+              <h3>Surveys</h3>
+              <button class="close-btn" (click)="closeSurveyModal()">✕</button>
+            </div>
+            <div class="phone-survey-modal-body">
+              <div class="phone-survey-modal-item" *ngFor="let survey of surveysData">
+                <div class="phone-survey-modal-info">
+                  <span class="phone-survey-modal-name">{{ survey.name }}</span>
+                  <span class="phone-survey-modal-status">Opens today at 2:05 PM</span>
+                </div>
+                <span class="phone-survey-modal-icon">🔒</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- Main Content Area -->
         <div class="phone-content">
           <!-- Screen Navigator - Home Screen -->
           <div *ngIf="currentView === 'home'" class="screen-home">
-            <!-- Alert/Status Bar -->
-            <div class="alert-element">
-              <div class="alert-header">
-                <span class="alert-title">Running {{ appData.title }}</span>
-                <span class="hexagon-icon">⬡</span>
+            <!-- App Title Header -->
+            <div class="app-title-header">
+              <h2 class="app-title-text">{{ protocol.home.title || 'MindTrails' }}</h2>
+            </div>
+
+            <!-- Layered Template Layout -->
+            <div class="home-content">
+              <!-- 1. Alert Elements (Always First) -->
+              <div class="alerts-layer">
+                <div *ngFor="let alert of getAlertElements(); let i = index" class="alert-section">
+                  <div class="alert-element">
+                    <div class="alert-header">
+                      <i *ngIf="alert.icon?.url" [class]="alert.icon?.url + ' alert-icon'"></i>
+                      <span class="alert-title">{{ alert.title }}</span>
+                      <span class="hexagon-icon">⬡</span>
+                    </div>
+                    <p class="alert-message">{{ alert.message }}</p>
+                  </div>
+                </div>
               </div>
-              <p class="alert-message">{{ appData.subtitle }}</p>
+
+              <!-- 2. Sessions Elements (Always Second) -->
+              <div class="sessions-layer">
+                <div *ngFor="let session of getSessionsElements(); let i = index" class="sessions-section">
+                  <div class="sessions-container">
+                    <div class="sessions-left-box">
+                      <i *ngIf="session.left?.icon" [class]="session.left.icon + ' sessions-icon'"></i>
+                      <span class="sessions-text">{{ session.left.text.replace('{0}', '0') }}</span>
+                    </div>
+                    <div class="sessions-right-box">
+                      <button class="sessions-launch-btn" (click)="handleElementClick(session)">
+                        <i *ngIf="session.right?.icon" [class]="session.right.icon + ' sessions-icon'"></i>
+                        <span>{{ session.right.text }}</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 3. Button Elements (Always Third) -->
+              <div class="buttons-layer">
+                <div *ngFor="let button of getButtonElements(); let i = index" class="button-section">
+                  <button class="protocol-button" (click)="handleElementClick(button)">
+                    {{ button.action.text }}
+                  </button>
+                </div>
+              </div>
+
+              <!-- 4. Carousel Elements (Always Fourth) -->
+              <div class="carousels-layer">
+                <div *ngFor="let carousel of getCarouselElements(); let i = index" class="carousel-section">
+                  <div class="carousel-wrapper">
+                    <button class="carousel-arrow carousel-arrow-left" 
+                            (click)="scrollCarousel(i, 'left')"
+                            [disabled]="getCarouselScrollPosition(i) <= 0">
+                      <i class="pi pi-chevron-left"></i>
+                    </button>
+                    
+                    <div class="carousel-container" [id]="'carousel-' + i">
+                      <div *ngFor="let action of carousel.actions; let j = index" 
+                           class="carousel-item"
+                           [style.background-color]="action.backgroundcolor"
+                           (click)="handleElementClick(carousel, j)">
+                        <i *ngIf="action.icon" [class]="action.icon + ' carousel-icon'"></i>
+                        <span class="carousel-text">{{ action.text }}</span>
+                        <div *ngIf="action.markcompleted" class="completion-indicator">✓</div>
+                      </div>
+                    </div>
+                    
+                    <button class="carousel-arrow carousel-arrow-right" 
+                            (click)="scrollCarousel(i, 'right')"
+                            [disabled]="getCarouselScrollPosition(i) >= getMaxCarouselScroll(i)">
+                      <i class="pi pi-chevron-right"></i>
+                    </button>
+                  </div>
+                  
+                  <div class="carousel-dots">
+                    <span *ngFor="let action of carousel.actions; let k = index" 
+                          class="carousel-dot"
+                          [class.active]="k === getCurrentCarouselIndex(i)"></span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 5. Tiles Elements (Always Last) -->
+              <div class="tiles-layer">
+                <div class="tiles-container">
+                  <div class="tiles-grid-smart">
+                    <div *ngFor="let tile of getAllTileItems(); let i = index" 
+                         class="tile-item-smart"
+                         [style.background-color]="tile.backgroundcolor"
+                         (click)="handleTileClick(tile, i)">
+                      <i *ngIf="tile.icon" [class]="tile.icon + ' tile-icon'"></i>
+                      <span class="tile-text">{{ tile.text }}</span>
+                      <div *ngIf="tile.markcompleted" class="completion-indicator">✓</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            <!-- Top Tiles -->
-            <div class="top-tiles">
-              <button class="app-button tile-neutral">
-                <span class="tile-text">0 Sessions Completed</span>
-              </button>
-              
-              <button class="app-button tile-launch">
-                <span class="tile-text">Launch Session</span>
-              </button>
-            </div>
+            <!-- Fallback for old structure -->
+            <div *ngIf="getHomeElements().length === 0" class="fallback-elements">
+              <!-- Alert/Status Bar -->
+              <div class="alert-element">
+                <div class="alert-header">
+                  <span class="alert-title">Running {{ appData.title }}</span>
+                  <span class="hexagon-icon">⬡</span>
+                </div>
+                <p class="alert-message">{{ appData.subtitle }}</p>
+              </div>
 
-            <!-- Show Surveys Button -->
-            <div class="surveys-section">
-              <button class="surveys-btn" (click)="navigateToSurveys()">Show Surveys</button>
-            </div>
+              <!-- Top Tiles -->
+              <div class="top-tiles">
+                <button class="app-button tile-neutral">
+                  <span class="tile-text">0 Sessions Completed</span>
+                </button>
+                
+                <button class="app-button tile-launch">
+                  <span class="tile-text">Launch Session</span>
+                </button>
+              </div>
 
-            <!-- Bottom Tiles -->
-            <div class="bottom-tiles">
-              <button class="app-button tile-blue">
-                <span class="tile-text">{{ appData.button1 }}</span>
-              </button>
-              
-              <button class="app-button tile-green">
-                <span class="tile-text">{{ appData.button2 }}</span>
-              </button>
-              
-              <button class="app-button tile-teal">
-                <span class="tile-text">{{ appData.button3 }}</span>
-              </button>
-              
-              <button class="app-button tile-purple">
-                <span class="tile-text">{{ appData.button4 }}</span>
-              </button>
+              <!-- Show Surveys Button -->
+              <div class="surveys-section">
+                <button class="surveys-btn" (click)="navigateToSurveys()">Show Surveys</button>
+              </div>
+
+              <!-- Bottom Tiles -->
+              <div class="bottom-tiles">
+                <button class="app-button tile-blue">
+                  <span class="tile-text">{{ appData.button1 }}</span>
+                </button>
+                
+                <button class="app-button tile-green">
+                  <span class="tile-text">{{ appData.button2 }}</span>
+                </button>
+                
+                <button class="app-button tile-teal">
+                  <span class="tile-text">{{ appData.button3 }}</span>
+                </button>
+                
+                <button class="app-button tile-purple">
+                  <span class="tile-text">{{ appData.button4 }}</span>
+                </button>
+              </div>
             </div>
           </div>
+
+
 
           <!-- Surveys Screen -->
           <div *ngIf="currentView === 'surveys'" class="screen-surveys">
@@ -607,20 +907,145 @@
             </div>
           </div>
 
-          <!-- Button Screen -->
-          <div *ngIf="currentScreen.type === 'button'" class="screen-button">
-            <div class="button-content">
-              <h3 class="button-title">{{ currentScreen.title }}</h3>
+          <!-- Flow Screens -->
+          <div *ngIf="currentView === 'flow-inputs'" class="screen-flow">
+            <div class="flow-content">
+              <div class="flow-header">
+                <button class="back-btn" (click)="navigateToHome()">
+                  <i class="pi pi-arrow-left"></i>
+                  Back
+                </button>
+                <h3 class="flow-title">{{ currentFlowInfo?.title || 'Inputs' }}</h3>
+              </div>
               
-              <p class="button-description">
-                This is a button action screen for: {{ currentScreen.title }}.
-                <br>
-                Action URL: {{ currentScreen.content?.action?.action }}
-              </p>
+              <div class="flow-body">
+                <div class="input-field">
+                  <label>Name</label>
+                  <input type="text" placeholder="Enter your name" class="flow-input">
+                </div>
+                <div class="input-field">
+                  <label>Email</label>
+                  <input type="email" placeholder="Enter your email" class="flow-input">
+                </div>
+                <div class="input-field">
+                  <label>Age</label>
+                  <input type="number" placeholder="Enter your age" class="flow-input">
+                </div>
+              </div>
+              
+              <div class="flow-actions">
+                <button class="flow-btn primary" (click)="navigateToHome()">
+                  Submit
+                </button>
+              </div>
+            </div>
+          </div>
 
-              <div class="button-buttons">
-                <button class="button-button primary" (click)="navigateToHome()">
-                  Back to Home
+          <div *ngIf="currentView === 'flow-survey'" class="screen-flow">
+            <div class="flow-content">
+              <div class="flow-header">
+                <button class="back-btn" (click)="navigateToHome()">
+                  <i class="pi pi-arrow-left"></i>
+                  Back
+                </button>
+                <h3 class="flow-title">{{ currentFlowInfo?.title || 'Survey' }}</h3>
+              </div>
+              
+              <div class="flow-body">
+                <div class="question-section">
+                  <h4>How was your day?</h4>
+                  <div class="rating-options">
+                    <button class="rating-btn">😔 Poor</button>
+                    <button class="rating-btn">😐 Okay</button>
+                    <button class="rating-btn">😊 Good</button>
+                    <button class="rating-btn">😄 Great</button>
+                  </div>
+                </div>
+                
+                <div class="question-section">
+                  <h4>Any additional comments?</h4>
+                  <textarea placeholder="Share your thoughts..." class="flow-textarea"></textarea>
+                </div>
+              </div>
+              
+              <div class="flow-actions">
+                <button class="flow-btn primary" (click)="navigateToHome()">
+                  Complete Survey
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="currentView === 'flow-demographics'" class="screen-flow">
+            <div class="flow-content">
+              <div class="flow-header">
+                <button class="back-btn" (click)="navigateToHome()">
+                  <i class="pi pi-arrow-left"></i>
+                  Back
+                </button>
+                <h3 class="flow-title">Demographics</h3>
+              </div>
+              
+              <div class="flow-body">
+                <div class="input-field">
+                  <label>Birth Year</label>
+                  <select class="flow-select">
+                    <option>Select year...</option>
+                    <option>1990</option>
+                    <option>1991</option>
+                    <option>1992</option>
+                  </select>
+                </div>
+                <div class="input-field">
+                  <label>Gender</label>
+                  <select class="flow-select">
+                    <option>Select gender...</option>
+                    <option>Male</option>
+                    <option>Female</option>
+                    <option>Other</option>
+                  </select>
+                </div>
+                <div class="input-field">
+                  <label>Location</label>
+                  <select class="flow-select">
+                    <option>Select location...</option>
+                    <option>Mars</option>
+                    <option>Venus</option>
+                    <option>Mercury</option>
+                  </select>
+                </div>
+              </div>
+              
+              <div class="flow-actions">
+                <button class="flow-btn primary" (click)="navigateToHome()">
+                  Save Demographics
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="currentView === 'flow-generic'" class="screen-flow">
+            <div class="flow-content">
+              <div class="flow-header">
+                <button class="back-btn" (click)="navigateToHome()">
+                  <i class="pi pi-arrow-left"></i>
+                  Back
+                </button>
+                <h3 class="flow-title">{{ currentFlowInfo?.title || 'Flow' }}</h3>
+              </div>
+              
+              <div class="flow-body">
+                <div class="flow-info">
+                  <i class="pi pi-info-circle flow-info-icon"></i>
+                  <p>This is a generic flow screen for:</p>
+                  <h4>{{ currentFlowInfo?.flowName }}</h4>
+                  <p class="flow-description">Action: {{ currentFlowInfo?.action }}</p>
+                </div>
+              </div>
+              
+              <div class="flow-actions">
+                <button class="flow-btn primary" (click)="navigateToHome()">
+                  Complete
                 </button>
               </div>
             </div>
@@ -646,52 +1071,7 @@
         </div>
       </div>
 
-      <!-- Screen Indicator -->
-      <div class="screen-indicator" *ngIf="screens.length > 1">
-        <div class="screen-info">
-          <span class="current-screen">{{ currentScreenIndex + 1 }}</span>
-          <span class="total-screens">/{{ screens.length }}</span>
-        </div>
-      </div>
-      
-      <!-- Preview Controls -->
-      <div class="preview-controls">
-        <p-button 
-          icon="pi pi-arrow-left" 
-          [disabled]="currentScreenIndex === 0"
-          (onClick)="navigateBack()"
-          severity="secondary"
-          size="small"
-          tooltipPosition="top"
-          pTooltip="Previous Screen">
-        </p-button>
-        
-        <p-button 
-          icon="pi pi-home" 
-          [disabled]="currentScreenIndex === 0"
-          (onClick)="navigateToHome()"
-          severity="secondary"
-          size="small"
-          tooltipPosition="top"
-          pTooltip="Home Screen">
-        </p-button>
-        
-        <p-button 
-          label="Next" 
-          icon="pi pi-images"
-          (onClick)="currentScreenIndex = (currentScreenIndex + 1) % screens.length" 
-          severity="info"
-          size="small"
-          [disabled]="screens.length <= 1"
-          tooltipPosition="top"
-          pTooltip="Cycle through available screens">
-        </p-button>
-      </div>
-      
-      <!-- Control Instructions -->
-      <div class="control-instructions" *ngIf="screens.length > 1">
-        <span class="instruction-text">Cycle through available screens</span>
-      </div>
+
 
     </div>
   </div>
