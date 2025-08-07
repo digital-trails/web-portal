@@ -483,7 +483,7 @@ export class BuilderComponent implements OnInit {
       });
     }
     
-    // If we're on a screen that no longer exists, go back to home
+    // If on a screen that no longer exists, go back to home
     if (!this.screens[this.currentScreenIndex]) {
       this.currentScreenIndex = 0;
       this.navigationHistory = [];
@@ -678,7 +678,7 @@ export class BuilderComponent implements OnInit {
       this.navigateToHome();
     } else if (menuItem.action) {
       // Handle other menu actions
-      console.log('Menu action:', menuItem.action);
+      // TODO: Implement specific menu actions based on menuItem.action
     }
     this.closeMenu();
   }
@@ -1472,15 +1472,15 @@ export class BuilderComponent implements OnInit {
   }
 
   onScriptsClick(): void {
-    console.log('Scripts button clicked — could trigger a search feature.');
+    // TODO: Implement scripts/search functionality
   }
 
   onSensorsClick(): void {
-    console.log('Sensors button clicked — open profile settings.');
+    // TODO: Implement sensors/profile settings functionality
   }
 
   onSidebarClick(): void {
-    console.log('Sidebar button clicked — open settings modal.');
+    // TODO: Implement sidebar/settings modal functionality
   }
 
   onLogoutClick(): void {
@@ -1571,8 +1571,6 @@ export class BuilderComponent implements OnInit {
             setTimeout(() => {
               this.showGitHubSuccessToast = false;
             }, 3000);
-            
-            console.log('Successfully loaded protocol from GitHub with SHA:', fileData.sha);
           } else {
             this.gitHubError = 'Invalid protocol.json format';
           }
@@ -1624,7 +1622,6 @@ export class BuilderComponent implements OnInit {
     
     // If we don't have current file data with SHA, try to get it first
     if (!this.currentFileData?.sha) {
-      console.log('No SHA found, attempting to get current file first...');
       this.githubFacade.getFile(filePath).subscribe({
         next: (fileData: any) => {
           // Update current file data with the latest SHA
@@ -1635,14 +1632,12 @@ export class BuilderComponent implements OnInit {
             size: fileData.size,
             url: fileData.url
           };
-          console.log('Retrieved current file SHA:', fileData.sha);
           // Now proceed with the publish
           this.performPublish(filePath);
         },
         error: (error: any) => {
           if (error.status === 404) {
             // File doesn't exist, proceed without SHA (creating new file)
-            console.log('File does not exist, creating new file...');
             this.currentFileData = null;
             this.performPublish(filePath);
           } else {
@@ -1690,7 +1685,6 @@ export class BuilderComponent implements OnInit {
           this.publishSuccess = false;
           this.showGitHubSuccessToast = false;
         }, 3000);
-        console.log('Successfully published to GitHub with new SHA:', response.content?.sha);
       },
       error: (error: any) => {
         this.handlePublishError(error);
