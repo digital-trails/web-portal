@@ -384,6 +384,10 @@ export class BuilderComponent implements OnInit {
   surveyAnswers: { [questionId: number]: string } = {};
   showSuccessToast: boolean = false;
   
+  // GitHub toast system
+  showGitHubSuccessToast: boolean = false;
+  gitHubToastMessage: string = '';
+  
   settingsItems = [
     { label: 'Theme', type: 'toggle', value: true },
     { label: 'Notifications', type: 'toggle', value: false },
@@ -1558,6 +1562,16 @@ export class BuilderComponent implements OnInit {
               url: fileData.url
             };
             this.gitHubError = '';
+            
+            // Show GitHub load success toast
+            this.gitHubToastMessage = 'Successfully loaded protocol from GitHub!';
+            this.showGitHubSuccessToast = true;
+            
+            // Auto-hide toast after 3 seconds
+            setTimeout(() => {
+              this.showGitHubSuccessToast = false;
+            }, 3000);
+            
             console.log('Successfully loaded protocol from GitHub with SHA:', fileData.sha);
           } else {
             this.gitHubError = 'Invalid protocol.json format';
@@ -1666,9 +1680,15 @@ export class BuilderComponent implements OnInit {
         this.gitHubError = '';
         this.publishSuccess = true;
         this.isPublishing = false;
-        // Auto-hide success message after 3 seconds
+        
+        // Show GitHub success toast
+        this.gitHubToastMessage = 'Successfully published to GitHub!';
+        this.showGitHubSuccessToast = true;
+        
+        // Auto-hide success message and toast after 3 seconds
         setTimeout(() => {
           this.publishSuccess = false;
+          this.showGitHubSuccessToast = false;
         }, 3000);
         console.log('Successfully published to GitHub with new SHA:', response.content?.sha);
       },

@@ -1800,6 +1800,21 @@
   animation: slideDown 0.3s ease;
 }
 
+/* GitHub Success Toast */
+.github-success-toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #10B981;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  z-index: 1001;
+  animation: slideInRight 0.3s ease;
+  min-width: 300px;
+}
+
 .toast-content {
   display: flex;
   align-items: center;
@@ -1823,6 +1838,17 @@
   to {
     opacity: 1;
     transform: translateX(-50%) translateY(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
   }
 }
 

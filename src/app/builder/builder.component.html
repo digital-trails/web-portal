@@ -1,4 +1,12 @@
 <div class="builder-container">
+  <!-- GitHub Success Toast -->
+  <div *ngIf="showGitHubSuccessToast" class="github-success-toast">
+    <div class="toast-content">
+      <span class="toast-icon">✅</span>
+      <span class="toast-message">{{ gitHubToastMessage }}</span>
+    </div>
+  </div>
+
   <!-- Left side - Form Editor -->
   <div class="form-editor">
     <p-panel header="App Builder" [toggleable]="false">
