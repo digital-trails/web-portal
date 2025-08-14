@@ -46,6 +46,9 @@ Thumbs.db
 .env.local
 .env.*.local
 
+# Proxy stuff
+proxy.conf.json
+
 # API Keys and secrets
 **/environment.ts
 !**/environment.template.ts
