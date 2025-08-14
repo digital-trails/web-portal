@@ -41,6 +41,12 @@ testem.log
 .DS_Store
 Thumbs.db
 
+# Environment variables
 .env
-.environment.ts
-src/environments/environment.ts
+.env.local
+.env.*.local
+
+# API Keys and secrets
+**/environment.ts
+!**/environment.template.ts
+!**/environment.prod.ts
