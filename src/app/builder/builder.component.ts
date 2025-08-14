@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MsalService } from '@azure/msal-angular';
 import { GithubFacade } from './github.facade';
+import { AiBuilderService, ProtocolUpdateRequest } from '../services/ai-builder.service';
+import { Subscription } from 'rxjs';
 
 // Enhanced interfaces for comprehensive protocol support
 interface ProtocolIcon {
@@ -165,7 +167,7 @@ interface AppScreen {
   templateUrl: './builder.component.html',
   styleUrls: ['./builder.component.css']
 })
-export class BuilderComponent implements OnInit {
+export class BuilderComponent implements OnInit, OnDestroy {
   appForm: FormGroup;
   uploadError: string = '';
   
@@ -388,6 +390,9 @@ export class BuilderComponent implements OnInit {
   showGitHubSuccessToast: boolean = false;
   gitHubToastMessage: string = '';
   
+  // AI Builder integration
+  private aiBuilderSubscription?: Subscription;
+  
   settingsItems = [
     { label: 'Theme', type: 'toggle', value: true },
     { label: 'Notifications', type: 'toggle', value: false },
@@ -402,7 +407,8 @@ export class BuilderComponent implements OnInit {
     private fb: FormBuilder,
     private authService: MsalService,
     private router: Router,
-    private githubFacade: GithubFacade
+    private githubFacade: GithubFacade,
+    private aiBuilderService: AiBuilderService
   ) {
     this.appForm = this.createForm();
   }
@@ -419,11 +425,30 @@ export class BuilderComponent implements OnInit {
       this.appData.button2 = value.home?.button_tr?.text || 'Button 2';
       this.appData.button3 = value.home?.button_bl?.text || 'Button 3';
       this.appData.button4 = value.home?.button_br?.text || 'Button 4';
+      
+      // Share the current protocol with the AI service
+      this.aiBuilderService.setCurrentProtocol(this.getProtocolPreview());
+    });
+
+    // Subscribe to AI-driven protocol updates
+    this.aiBuilderSubscription = this.aiBuilderService.updateRequest$.subscribe(request => {
+      if (request) {
+        this.handleAIProtocolUpdate(request);
+      }
     });
     
     // Initialize home screen
     this.refreshScreens();
     this.checkGitHubConnection();
+
+    // Initialize AI service with current protocol
+    this.aiBuilderService.setCurrentProtocol(this.getProtocolPreview());
+  }
+
+  ngOnDestroy(): void {
+    if (this.aiBuilderSubscription) {
+      this.aiBuilderSubscription.unsubscribe();
+    }
   }
 
   // Screen management methods
@@ -1970,5 +1995,183 @@ export class BuilderComponent implements OnInit {
 
   removeProbe(index: number): void {
     this.probesArray.removeAt(index);
+  }
+
+  handleAIProtocolUpdate(request: ProtocolUpdateRequest): void {
+    try {
+      console.log('Handling AI protocol update:', request);
+      
+      switch (request.operation) {
+        case 'replace':
+          // Replace the entire protocol
+          if (request.data) {
+            this.protocol = request.data;
+            this.populateFormFromProtocol();
+            this.showUpdateMessage(`✨ ${request.explanation || 'AI updated the entire app!'}`);
+          }
+          break;
+          
+        case 'add':
+          // Add a new element to the home elements array
+          if (request.data && request.elementType) {
+            this.addElementToFormFromAI(request.data);
+            this.showUpdateMessage(`➕ ${request.explanation || `Added new ${request.elementType}!`}`);
+          }
+          break;
+          
+        case 'modify':
+          // Modify a specific property
+          if (request.target && request.data !== undefined) {
+            this.modifyProtocolProperty(request.target, request.data);
+            this.showUpdateMessage(`✏️ ${request.explanation || 'Updated app property!'}`);
+          }
+          break;
+          
+        case 'delete':
+          // Delete an element (can be implemented later)
+          this.showUpdateMessage(`🗑️ ${request.explanation || 'Deleted element!'}`);
+          break;
+      }
+      
+      // Force update the preview
+      this.updateProtocolFromForm(this.appForm.value);
+      this.refreshScreens();
+      
+    } catch (error) {
+      console.error('Error handling AI protocol update:', error);
+      this.showUpdateMessage('❌ Error updating app. Please try again.');
+    }
+  }
+
+  private addElementToFormFromAI(elementData: any): void {
+    const elementsArray = this.appForm.get('home.element.elements') as FormArray;
+    if (elementsArray) {
+      const elementForm = this.createElementFormFromAI(elementData.type, elementData);
+      elementsArray.push(elementForm);
+    }
+  }
+
+  private modifyProtocolProperty(target: string, value: any): void {
+    const control = this.appForm.get(target);
+    if (control) {
+      control.setValue(value);
+    }
+  }
+
+  private showUpdateMessage(message: string): void {
+    // Create a temporary message display (you can enhance this with proper toast notifications)
+    console.log('AI Update:', message);
+    
+    // Add a temporary visual feedback
+    this.gitHubToastMessage = message;
+    this.showGitHubSuccessToast = true;
+    
+    // Hide after 3 seconds
+    setTimeout(() => {
+      this.showGitHubSuccessToast = false;
+    }, 3000);
+  }
+
+  private createElementFormFromAI(type: string, data: any = null): FormGroup {
+    switch (type) {
+      case 'alert':
+        return this.fb.group({
+          type: [type],
+          title: [data?.title || 'New Alert'],
+          message: [data?.message || 'Alert message'],
+          icon: this.fb.group({
+            url: [data?.icon?.url || 'pi pi-info-circle'],
+            tint: [data?.icon?.tint || true]
+          })
+        });
+        
+      case 'button':
+        return this.fb.group({
+          type: [type],
+          action: this.fb.group({
+            text: [data?.action?.text || 'New Button'],
+            action: [data?.action?.action || 'navmodal://Survey']
+          })
+        });
+        
+      case 'sessions':
+        return this.fb.group({
+          type: [type],
+          left: this.fb.group({
+            text: [data?.left?.text || '{0} Sessions Completed'],
+            icon: [data?.left?.icon || 'pi pi-trophy']
+          }),
+          right: this.fb.group({
+            text: [data?.right?.text || 'Launch Session'],
+            icon: [data?.right?.icon || 'pi pi-unlock'],
+            action: [data?.right?.action || 'flow://flows/doses']
+          })
+        });
+        
+      case 'carousel':
+        const carouselItems = this.fb.array([]);
+        if (data?.items && Array.isArray(data.items)) {
+          data.items.forEach((item: any) => {
+            carouselItems.push(this.fb.group({
+              text: [item.text || 'New Item'],
+              icon: [item.icon || 'pi pi-star'],
+              action: [item.action || 'flow://flows/inputs'],
+              backgroundcolor: [item.backgroundcolor || '#4CAF50']
+            }) as any);
+          });
+        } else {
+          // Add default item
+          carouselItems.push(this.fb.group({
+            text: ['New Item'],
+            icon: ['pi pi-star'],
+            action: ['flow://flows/inputs'],
+            backgroundcolor: ['#4CAF50']
+          }) as any);
+        }
+        return this.fb.group({
+          type: [type],
+          items: carouselItems
+        });
+        
+      case 'tile':
+        return this.fb.group({
+          type: [type],
+          text: [data?.text || 'New Tile'],
+          icon: [data?.icon || 'pi pi-home'],
+          action: [data?.action || 'navpage://settings'],
+          backgroundcolor: [data?.backgroundcolor || '#2196F3'],
+          markcompleted: [data?.markcompleted || false]
+        });
+        
+      case 'goals':
+        const goals = this.fb.array([]);
+        if (data?.goals && Array.isArray(data.goals)) {
+          data.goals.forEach((goal: any) => {
+            goals.push(this.fb.group({
+              text: [goal.text || 'New Goal'],
+              description: [goal.description || 'Goal description'],
+              target: [goal.target || 10],
+              current: [goal.current || 0]
+            }) as any);
+          });
+        } else {
+          // Add default goal
+          goals.push(this.fb.group({
+            text: ['New Goal'],
+            description: ['Goal description'],
+            target: [10],
+            current: [0]
+          }) as any);
+        }
+        return this.fb.group({
+          type: [type],
+          goals: goals
+        });
+        
+      default:
+        return this.fb.group({
+          type: [type]
+        });
+    }
   }
 }
