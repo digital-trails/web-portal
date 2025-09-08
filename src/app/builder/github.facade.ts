@@ -128,16 +128,16 @@ export class GithubFacade {
   }
 
   getUserRepositories(): Observable<any> {
-    const headers = new HttpHeaders({
-      Authorization: `bearer ${sessionStorage.getItem('githubAccessToken') || ''}`,
-      Accept: 'application/vnd.github.v3+json'
-    });
+    //    const headers = new HttpHeaders({
+    //      Authorization: `bearer ${sessionStorage.getItem('githubAccessToken') || ''}`,
+    //      Accept: 'application/vnd.github.v3+json'
+    //    });
 
-    const params = {
-      affiliation: 'owner,collaborator,organization_member', // All possible affiliations
-    };
+    //    const params = {
+    //      affiliation: 'owner,collaborator,organization_member', // All possible affiliations
+    //    };
 
-    return this.http.get<any>(`https://api.github.com/user/repos`, { headers, params });
+    return this.httpFacade.get<any>("https://portal.digital-trails.org/api/v2/user/studies");
   }
 
   changeOwnerAndRepo(owner: string, repo: string): void {
