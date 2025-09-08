@@ -25,7 +25,7 @@ export class UserFacade {
 
                 return this.httpFacade.get<User>("https://portal.digital-trails.org/api/v2/user").pipe(
                     switchMap(user => {
-                        if (user?.admin?.studies) {
+                        if (user?.admin?.studies && Object.keys(user.admin.studies).length > 0) {
 
                             const studyEntries = Object.entries(user.admin.studies as { [key: string]: AdminStudy });
                             const dashboardUrlObservables = studyEntries

@@ -58,8 +58,8 @@ export class AppComponent implements OnInit {
         tap(({ user, dashboardNames }) => {
           dashboardNames.forEach(study => {
             if (user?.admin?.studies[study].hasOura) this.userFacade.createOuraService(study); // if doc doesn't exist
-            this.loadingService.loadingOff();
-          })
+          });
+          this.loadingService.loadingOff();
         })
       )
     }

@@ -17,7 +17,7 @@
             {{ name }}
           </button>
         </div>
-         <button class="sidebar-button" routerLink="/console" *ngIf="data?.user?.admin?.studies">Console</button>
+         <button class="sidebar-button" routerLink="/console" *ngIf="data?.user?.admin?.studies || data?.user?.super_admin">Console</button>
       </div>
       <button class="sidebar-button logout-button" (click)="logout()" *ngIf="isLoggedIn">
         Logout
