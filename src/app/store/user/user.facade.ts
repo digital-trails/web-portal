@@ -35,6 +35,8 @@ export class UserFacade {
                                     )
                                 );
 
+                            if(dashboardUrlObservables.length == 0) return of(user);
+
                             return forkJoin(dashboardUrlObservables).pipe(
                                 map(results => {
                                     results.forEach(({ studyCode, url }) => {
