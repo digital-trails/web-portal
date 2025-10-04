@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { NgModule } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 // PrimeNG Imports
 import { ButtonModule } from 'primeng/button';
@@ -14,13 +14,15 @@ import { TooltipModule } from 'primeng/tooltip';
 import { TabViewModule } from 'primeng/tabview';
 import { FileUploadModule } from 'primeng/fileupload';
 import { MessageModule } from 'primeng/message';
-import { DropdownModule } from 'primeng/dropdown';
+import { SelectModule } from 'primeng/select';
 import { ColorPickerModule } from 'primeng/colorpicker';
 import { CheckboxModule } from 'primeng/checkbox';
+import { AccordionModule } from 'primeng/accordion';
 
 import { UserFacade } from '../store/user/user.facade';
 import { BuilderComponent } from './builder.component';
 import { BuilderRoutingModule } from './builder-routing.module';
+import { AiChatbotComponent } from '../components/ai-chatbot/ai-chatbot.component';
 import { AuthComponent } from './auth/auth.component';
 import { GithubFacade } from './github.facade';
 
@@ -33,6 +35,8 @@ import { GithubFacade } from './github.facade';
     BuilderRoutingModule,
     CommonModule,
     ReactiveFormsModule,
+    FormsModule,
+    AiChatbotComponent,
     // PrimeNG Modules
     ButtonModule,
     CardModule,
@@ -44,9 +48,10 @@ import { GithubFacade } from './github.facade';
     TabViewModule,
     FileUploadModule,
     MessageModule,
-    DropdownModule,
+    SelectModule,
     ColorPickerModule,
-    CheckboxModule
+    CheckboxModule,
+    AccordionModule
   ],
   providers: [
     UserFacade,

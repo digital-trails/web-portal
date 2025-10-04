@@ -41,22 +41,18 @@ export class BuilderNavComponent implements OnInit, OnDestroy {
   private checkCurrentRoute(): void {
     this.currentRoute = this.router.url;
     this.isBuilderPage = this.router.url.includes('/builder');
-    console.log('Current route:', this.currentRoute, 'Is builder page:', this.isBuilderPage);
   }
 
   onScriptsClick(): void {
-    console.log('Scripts button clicked — could trigger a search feature.');
-    // Add your scripts functionality here
+    // TODO: Implement scripts/search functionality
   }
 
   onSensorsClick(): void {
-    console.log('Sensors button clicked — open profile settings.');
-    // Add your sensors functionality here
+    // TODO: Implement sensors/profile settings functionality
   }
 
   onSidebarClick(): void {
-    console.log('Sidebar button clicked — open settings modal.');
-    // Add your sidebar functionality here
+    // TODO: Implement sidebar/settings modal functionality
   }
 
   onLogoutClick(): void {
