@@ -5,6 +5,7 @@ import { MsalService } from '@azure/msal-angular';
 import { GithubFacade } from './github.facade';
 import { AiBuilderService, ProtocolUpdateRequest } from '../services/ai-builder.service';
 import { Subscription } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 // Enhanced interfaces for comprehensive protocol support
 interface ProtocolIcon {
@@ -332,8 +333,7 @@ export class BuilderComponent implements OnInit, OnDestroy {
     { value: 'sessions', label: 'Sessions' },
     { value: 'button', label: 'Button' },
     { value: 'carousel', label: 'Carousel' },
-    { value: 'tile', label: 'Tile' },
-    { value: 'goals', label: 'Goals' }
+    { value: 'tile', label: 'Tile' }
   ];
 
   // Available action types
@@ -1738,9 +1738,13 @@ export class BuilderComponent implements OnInit, OnDestroy {
   }
 
   connectToGitHub(): void {
-    const clientId = 'Ov23liM8jdVptvkhxswe';
+    const clientId = environment.github.clientId || 'Ov23liM8jdVptvkhxswe'; // Fallback for compatibility
     const redirectUri = encodeURIComponent(window.location.origin + '/builder/auth');
     const scope = encodeURIComponent('repo user');
+    
+    if (!environment.github.clientId) {
+      console.warn('GitHub Client ID not set in environment variables. Using fallback.');
+    }
     
     window.location.href = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}`;
   }
@@ -2045,10 +2049,9 @@ export class BuilderComponent implements OnInit, OnDestroy {
 
   private addElementToFormFromAI(elementData: any): void {
     const elementsArray = this.appForm.get('home.element.elements') as FormArray;
-    if (elementsArray) {
-      const elementForm = this.createElementFormFromAI(elementData.type, elementData);
-      elementsArray.push(elementForm);
-    }
+    const elementForm = this.createElementForm();
+    this.populateElementForm(elementForm, elementData);
+    elementsArray.push(elementForm);
   }
 
   private modifyProtocolProperty(target: string, value: any): void {
@@ -2066,112 +2069,9 @@ export class BuilderComponent implements OnInit, OnDestroy {
     this.gitHubToastMessage = message;
     this.showGitHubSuccessToast = true;
     
-    // Hide after 3 seconds
+    // Auto-hide toast after 3 seconds
     setTimeout(() => {
       this.showGitHubSuccessToast = false;
     }, 3000);
-  }
-
-  private createElementFormFromAI(type: string, data: any = null): FormGroup {
-    switch (type) {
-      case 'alert':
-        return this.fb.group({
-          type: [type],
-          title: [data?.title || 'New Alert'],
-          message: [data?.message || 'Alert message'],
-          icon: this.fb.group({
-            url: [data?.icon?.url || 'pi pi-info-circle'],
-            tint: [data?.icon?.tint || true]
-          })
-        });
-        
-      case 'button':
-        return this.fb.group({
-          type: [type],
-          action: this.fb.group({
-            text: [data?.action?.text || 'New Button'],
-            action: [data?.action?.action || 'navmodal://Survey']
-          })
-        });
-        
-      case 'sessions':
-        return this.fb.group({
-          type: [type],
-          left: this.fb.group({
-            text: [data?.left?.text || '{0} Sessions Completed'],
-            icon: [data?.left?.icon || 'pi pi-trophy']
-          }),
-          right: this.fb.group({
-            text: [data?.right?.text || 'Launch Session'],
-            icon: [data?.right?.icon || 'pi pi-unlock'],
-            action: [data?.right?.action || 'flow://flows/doses']
-          })
-        });
-        
-      case 'carousel':
-        const carouselItems = this.fb.array([]);
-        if (data?.items && Array.isArray(data.items)) {
-          data.items.forEach((item: any) => {
-            carouselItems.push(this.fb.group({
-              text: [item.text || 'New Item'],
-              icon: [item.icon || 'pi pi-star'],
-              action: [item.action || 'flow://flows/inputs'],
-              backgroundcolor: [item.backgroundcolor || '#4CAF50']
-            }) as any);
-          });
-        } else {
-          // Add default item
-          carouselItems.push(this.fb.group({
-            text: ['New Item'],
-            icon: ['pi pi-star'],
-            action: ['flow://flows/inputs'],
-            backgroundcolor: ['#4CAF50']
-          }) as any);
-        }
-        return this.fb.group({
-          type: [type],
-          items: carouselItems
-        });
-        
-      case 'tile':
-        return this.fb.group({
-          type: [type],
-          text: [data?.text || 'New Tile'],
-          icon: [data?.icon || 'pi pi-home'],
-          action: [data?.action || 'navpage://settings'],
-          backgroundcolor: [data?.backgroundcolor || '#2196F3'],
-          markcompleted: [data?.markcompleted || false]
-        });
-        
-      case 'goals':
-        const goals = this.fb.array([]);
-        if (data?.goals && Array.isArray(data.goals)) {
-          data.goals.forEach((goal: any) => {
-            goals.push(this.fb.group({
-              text: [goal.text || 'New Goal'],
-              description: [goal.description || 'Goal description'],
-              target: [goal.target || 10],
-              current: [goal.current || 0]
-            }) as any);
-          });
-        } else {
-          // Add default goal
-          goals.push(this.fb.group({
-            text: ['New Goal'],
-            description: ['Goal description'],
-            target: [10],
-            current: [0]
-          }) as any);
-        }
-        return this.fb.group({
-          type: [type],
-          goals: goals
-        });
-        
-      default:
-        return this.fb.group({
-          type: [type]
-        });
-    }
   }
 }

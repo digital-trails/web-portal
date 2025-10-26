@@ -182,6 +182,15 @@ ${icons.map(icon => `- ${icon.value} (${icon.label})`).join('\n')}
 - Pink: #E91E63
 - Indigo: #3F51B5
 
+## AVAILABLE ELEMENT TYPES (ONLY USE THESE):
+1. **alert** - Notifications and messages
+2. **sessions** - Progress tracking display
+3. **button** - Interactive action buttons
+4. **carousel** - Horizontal scrolling list
+5. **tile** - Individual action tiles
+
+**CRITICAL**: Do NOT use any other element types (like "goals", "list", etc.). Only use the 5 types listed above.
+
 ## INTELLIGENCE GUIDELINES:
 
 ### For Complete App Creation:
@@ -192,8 +201,7 @@ When user says "Create a [type] app" or describes an app concept:
    - Alert for daily motivation/tips
    - Sessions for progress tracking 
    - Carousel for main feature categories
-   - Tiles for quick actions
-   - Goals for tracking objectives
+   - Tile for individual quick actions
 3. **Choose Relevant Icons**: Match icons to the app's purpose
 4. **Create Meaningful Actions**: Use appropriate flow paths like 'flow://flows/[feature]'
 5. **Apply Consistent Theming**: Use colors that match the app's domain
@@ -306,8 +314,7 @@ Include only the specific component/modification needed, but still wrap in JSON 
       button: 'Interactive buttons that trigger actions when tapped',
       sessions: 'Progress tracking with left/right sections for completed sessions',
       carousel: 'Horizontal scrolling list of items with icons and actions',
-      tile: 'Single interactive tiles with icons, text, and completion tracking',
-      goals: 'Goal tracking with progress bars and targets'
+      tile: 'Single interactive tiles with icons, text, and completion tracking'
     };
     return descriptions[type] || 'App component';
   }
@@ -394,7 +401,22 @@ Include only the specific component/modification needed, but still wrap in JSON 
       
       if (match) {
         const jsonString = match[1] || match[0];
-        return JSON.parse(jsonString);
+        let parsed = JSON.parse(jsonString);
+        
+        // SAFETY CHECK: Strip out "properties" wrappers if AI generated them incorrectly
+        if (parsed && parsed.home && parsed.home.element && parsed.home.element.elements) {
+          parsed.home.element.elements = parsed.home.element.elements.map((element: any) => {
+            if (element.properties) {
+              // Merge properties object into the element itself
+              console.warn('AI generated incorrect structure with "properties" wrapper, fixing...');
+              const { properties, ...rest } = element;
+              return { ...rest, ...properties };
+            }
+            return element;
+          });
+        }
+        
+        return parsed;
       }
       
       return null;

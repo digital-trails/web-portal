@@ -222,21 +222,6 @@ export class AiBuilderService {
             markcompleted: false
           }
         },
-        {
-          type: "goals",
-          purpose: "Goal tracking with progress bars",
-          example: {
-            type: "goals",
-            goals: [
-              {
-                type: "steps",
-                occurence: 1,
-                starting: 0,
-                percentile: 1.0
-              }
-            ]
-          }
-        }
       ]
     };
   }
