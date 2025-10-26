@@ -157,81 +157,84 @@ export class AiBuilderService {
         {
           type: "alert",
           purpose: "Display notifications or messages",
-          properties: {
-            type: "'alert'",
-            title: "string (alert title)",
-            message: "string (alert message)", 
+          example: {
+            type: "alert",
+            title: "Alert Title",
+            message: "Alert message text",
             icon: {
-              url: "string (PrimeNG icon)",
-              tint: "boolean (apply tint effect)"
+              url: "pi pi-info-circle",
+              tint: true
             }
           }
         },
         {
           type: "sessions",
           purpose: "Display progress tracking with left/right sections",
-          properties: {
-            type: "'sessions'",
+          example: {
+            type: "sessions",
             left: {
-              text: "string (progress text, use {0} for dynamic count)",
-              icon: "string (PrimeNG icon)"
+              text: "{0} Sessions Completed",
+              icon: "pi pi-trophy"
             },
             right: {
-              text: "string (action button text)",
-              icon: "string (PrimeNG icon)",
-              action: "string (action path)"
+              text: "Launch Session",
+              icon: "pi pi-unlock",
+              action: "flow://flows/doses"
             }
           }
         },
         {
           type: "button",
           purpose: "Interactive button that triggers actions",
-          properties: {
-            type: "'button'",
+          example: {
+            type: "button",
             action: {
-              text: "string (button text)",
-              action: "string (action path)"
+              text: "Button Text",
+              action: "navmodal://Survey"
             }
           }
         },
         {
           type: "carousel",
           purpose: "Horizontal scrolling list of interactive items",
-          properties: {
-            type: "'carousel'",
-            items: "array of carousel item objects",
-            itemStructure: {
-              text: "string (item label)",
-              icon: "string (PrimeNG icon)",
-              action: "string (action path)", 
-              backgroundcolor: "string (hex color like '#FF5722')"
-            }
+          example: {
+            type: "carousel",
+            actions: [
+              {
+                text: "Item Text",
+                icon: "pi pi-star",
+                action: "flow://flows/example",
+                backgroundcolor: "#4CAF50",
+                markcompleted: true
+              }
+            ]
           }
         },
         {
           type: "tile",
           purpose: "Single interactive tile with completion tracking",
-          properties: {
-            type: "'tile'",
-            text: "string (tile label)",
-            icon: "string (PrimeNG icon)",
-            action: "string (action path)",
-            backgroundcolor: "string (hex color)",
-            markcompleted: "boolean (show completion checkmark)"
+          example: {
+            type: "tile",
+            text: "Tile Label",
+            icon: "pi pi-home",
+            action: "flow://flows/example",
+            backgroundcolor: "#2196F3",
+            markcompleted: false
           }
         },
         {
           type: "goals",
           purpose: "Goal tracking with progress bars",
-          properties: {
-            type: "'goals'",
-            goals: "array of goal objects",
-            goalStructure: {
-              text: "string (goal name)",
-              description: "string (goal description)",
-              target: "number (goal target)",
-              current: "number (current progress)"
-            }
+          example: {
+            type: "goals",
+            goals: [
+              {
+                type: "steps",
+                occurence: 1,
+                starting: 0,
+                percentile: 1.0
+              }
+            ]
           }
         }
       ]

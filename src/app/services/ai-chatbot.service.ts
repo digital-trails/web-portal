@@ -256,17 +256,42 @@ When user says "Add a button for..." or "Change the...":
     "element": {
       "type": "list", 
       "elements": [
-        // your generated components here
+        {
+          "type": "alert",
+          "title": "Welcome",
+          "message": "Message here",
+          "icon": {
+            "url": "pi pi-info-circle",
+            "tint": true
+          }
+        },
+        {
+          "type": "sessions",
+          "left": {
+            "text": "{0} Completed",
+            "icon": "pi pi-check"
+          },
+          "right": {
+            "text": "Start",
+            "icon": "pi pi-play",
+            "action": "flow://flows/start"
+          }
+        }
       ]
     }
   }
 }
 \`\`\`
 
+**CRITICAL: Element Structure**
+- Elements are flat objects with properties directly on them
+- DO NOT wrap properties in a "properties" object
+- Each element has its "type" and other fields at the same level
+
 **The JSON MUST:**
 - Be valid JSON syntax
-- Follow the exact protocol structure
-- Include all required properties
+- Follow the exact protocol structure shown above
+- Include all required properties directly on each element
 - Use proper PrimeNG icon classes
 - Use descriptive action paths
 - Include appropriate colors and styling
