@@ -10,6 +10,9 @@ html {
 	 * content doesn't shift between pages */
 	overflow-y: scroll;
 }
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
 
 /* Basic PrimeNG styling overrides since we can't import the theme CSS */
 .p-component {

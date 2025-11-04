@@ -3,6 +3,75 @@
   min-height: calc(100vh - 120px);
 }
 
+.sidebar-container {
+  width: 250px;
+  flex-shrink: 0;
+}
+
+.sidebar {
+  position: sticky;
+  top: 20px;
+  height: calc(100vh);
+  overflow-y: auto;
+  background-color:#9119f610;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.sidebar-content {
+  flex: 1;
+}
+
+.sidebar-button {
+  display: block;
+  width: 100%;
+  padding: 10px 15px;
+  margin-bottom: 8px;
+  border: none;
+  background-color: #e9ecef;
+  color: #212529;
+  text-align: left;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+
+.static-button {
+  background-color: #212529;
+  color: white;
+}
+
+.sub-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-left: 20px;
+}
+
+.sub-button {
+  background-color: #212529;
+  color: #f1f1f1;
+  cursor: pointer;
+}
+
+.sub-button:hover {
+  background-color: #ddd;
+}
+
+.logout-button {
+  background-color: #d63031;
+  color: white;
+  margin-top: auto;
+  margin-bottom: 0;
+}
+
+.logout-button:hover {
+  background-color: #ff7675;
+}
+
 .content-area {
   flex: 1;
   padding: 0 20px;

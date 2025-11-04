@@ -8,7 +8,34 @@
       </a>
 
 <main class="main-container">
-  <div class="content-area full-width">
+  <div class="sidebar-container">
+    <div class="sidebar">
+      <div class="sidebar-content" *ngIf="isLoggedIn">
+        <div *ngIf="pageData$ | async as data">
+        <button class="sidebar-button" *ngIf="data.user?.admin?.studies" (click)="dashboardCollapse()">
+          {{ isDashboardCollapsed ? '▶' : '▼' }} Studies
+        </button>
+        
+        <div class="sub-buttons" *ngIf="!isDashboardCollapsed">
+          <button 
+            class="sidebar-button sub-button" 
+            *ngFor="let name of data.dashboardNames"
+            [routerLink]="['/dashboard']" 
+            [queryParams]="{study: name}"
+          >
+            {{ name }}
+          </button>
+        </div>
+         <button class="sidebar-button" routerLink="/console" *ngIf="data?.user?.admin?.studies || data?.user?.super_admin">Console</button>
+      </div>
+      <button class="sidebar-button logout-button" (click)="logout()" *ngIf="isLoggedIn">
+        Logout
+      </button>
+        </div>
+    </div>
+  </div>
+
+  <div class="content-area">
     <div class="hero r-6" *ngIf="!isLoggedIn">
       <div class="sign-in">
         <div class="row align-items-center ">
@@ -28,5 +55,6 @@
       </div>
     </div>
     <router-outlet></router-outlet>
+    <loading-indicator />
   </div>
 </main>

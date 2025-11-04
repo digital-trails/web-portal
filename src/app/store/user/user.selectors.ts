@@ -7,4 +7,19 @@ export namespace UserSelectors {
         appState,
         (state: AppState) => state.userState?.user
     );
+    export const selectUsers = (studyCode: string) =>
+        createSelector(
+            appState,
+            (state: AppState) => state.userState?.studyUsers?.[studyCode]
+        );
+
+    export const selectOuraService = (studyCode: string) =>
+        createSelector(
+            appState,
+            (state: AppState) => state.userState?.ouraServices?.[studyCode]
+        );
+    export const selectAllUsers = createSelector(
+        appState,
+        (state: AppState) => state.userState?.allUsers
+    );
 }

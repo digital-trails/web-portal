@@ -1,16 +1,91 @@
-<!-- console.component.html -->
-<div class="console-container">
-    <div class="sidebar">
-      <h3 class="sidebar-header">Admin Console</h3>
-      <nav class="sidebar-nav">
-        <button class="nav-button active" routerLink="/users">
-          <i class="fas fa-users"></i> User Management
-        </button>
-        <button class="nav-button">
-          <i class="fas fa-chart-bar"></i> Analytics
-        </button>
-      </nav>
-    </div>
-  
-
+<div *ngIf="pageData$ | async as pageData" class="console-container">
+  <div class="tabs">
+    <button (click)="activeTab = 'studies'" [class.active]="activeTab === 'studies'">Studies</button>
   </div>
+
+  <div *ngIf="activeTab === 'studies'" class="study-section">
+
+    <div class="study-list">
+      <div *ngFor="let study of pageData?.studyCodes | keyvalue" class="study-card"
+        (click)="selectedStudy = study.key.toLocaleLowerCase()">
+        <p><strong>Name:</strong> {{ study.value.name }}</p>
+        <p><strong>Enrollment code:</strong> {{ study.key }}</p>
+      </div>
+    </div>
+
+    <div *ngIf="selectedStudy" class="study-details">
+
+      <div class="d-flex justify-content-between align-items-center">
+        <p><strong>Enrollment code:</strong> {{ selectedStudy }}</p>
+
+        <button type="button" class="btn btn-danger" *ngIf="roleAssignment.state != RoleAssignmentState.NotStarted"
+          (click)="roleAssignment.state = RoleAssignmentState.NotStarted">
+          ✖ Cancel
+        </button>
+      </div>
+
+
+      <div [ngSwitch]="roleAssignment.state">
+        <div *ngSwitchCase="RoleAssignmentState.NotStarted">
+          <div class="d-flex justify-content-between align-items-center">
+            <h4>Admins</h4>
+            <button type="submit" class="btn btn-success"
+              (click)="roleAssignment.state = RoleAssignmentState.SelectingAssignment">
+              Add role assignment
+            </button>
+          </div>
+
+          <ng-container *ngIf="studyAdmins(pageData?.allUsers) as users">
+  <div *ngIf="users.length > 0; else noUsers">
+    <div *ngFor="let user of users">
+      <div class="d-flex align-items-center gap-3">
+        <p class="mb-0">{{ user.id == pageData.user?.id ? 'You' : user.id }}</p>
+        <p class="mb-0" *ngIf="user.admin?.studies?.[selectedStudy]?.super_admin">
+          <em>Super Admin</em>
+        </p>
+        <a *ngIf="user.id != pageData.user?.id" href="javascript:void(0)" (click)="removeRole(user.id)">x</a>
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+<ng-template #noUsers>
+  <em>No Users</em>
+</ng-template>
+
+        </div>
+
+        <div *ngSwitchCase="RoleAssignmentState.SelectingAssignment">
+          <h4>Select Role</h4>
+          <div *ngFor="let role of roles">
+            <a href="javascript:void(0)"
+              (click)="roleAssignment.selectedRole= role; roleAssignment.state = RoleAssignmentState.SelectingUser">{{
+              role
+              }}</a>
+          </div>
+        </div>
+
+        <div *ngSwitchCase="RoleAssignmentState.SelectingUser">
+          <h4>Select User for {{roleAssignment.selectedRole}}</h4>
+          <div *ngFor="let user of pageData?.allUsers">
+            <a href="javascript:void(0)"
+              (click)="roleAssignment.state= RoleAssignmentState.Finalize; roleAssignment.selectedUser = user.id">{{
+              user.id}}</a>
+          </div>
+        </div>
+
+        <div *ngSwitchCase="RoleAssignmentState.Finalize">
+          <h4>Confirm</h4>
+          <p><strong>Role:</strong> {{ roleAssignment.selectedRole }}</p>
+          <p><strong>User:</strong> {{ roleAssignment.selectedUser }}</p>
+
+          <button type="submit" class="btn btn-success" (click)="assignRole()">Assign</button>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+</div>
