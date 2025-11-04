@@ -33,6 +33,11 @@ jobs:
         run: |
           npm ci
         
+      - name: Debug Prints
+        run: |
+          pwd
+          ls .
+
       - name: Build Angular App
         run: npm run build
         
