@@ -10,7 +10,6 @@ import { UserSelectors } from './user.selectors';
 import { OuraService } from '../../models/oura-service.model';
 import { md5Hash } from '../../utils/string.util';
 
-
 @Injectable({
     providedIn: 'root'
 })
@@ -25,29 +24,6 @@ export class UserFacade {
 
                 return this.httpFacade.get<User>("https://portal.digital-trails.org/api/v2/user").pipe(
                     switchMap(user => {
-                        if (user?.admin?.studies && Object.keys(user.admin.studies).length > 0) {
-
-                            const studyEntries = Object.entries(user.admin.studies as { [key: string]: AdminStudy });
-                            const dashboardUrlObservables = studyEntries
-                                .filter(([_, study]) => !!study.dashboard).map(([studyCode, study]) =>
-                                    this.dashboardUrl$(study.dashboard).pipe(
-                                        map(url => ({ studyCode, url }))
-                                    )
-                                );
-
-                            if(dashboardUrlObservables.length == 0) return of(user);
-
-                            return forkJoin(dashboardUrlObservables).pipe(
-                                map(results => {
-                                    results.forEach(({ studyCode, url }) => {
-                                        const study = user.admin?.studies[studyCode];
-                                        study.iframeUrl = url;
-                                    });
-                                    return user;
-                                })
-                            );
-                        }
-
                         return of(user);
                     }),
                     tap(user => this.store.dispatch(UserActions.setUser({ user }))),
@@ -163,7 +139,6 @@ export class UserFacade {
         return func.pipe(take(1), map(_ => true), catchError(_ => of(false)));
     }
 
-
     sendMessage$(tag: string, message: string): Observable<boolean> {
         const queryParams = new URLSearchParams({ tag, message }).toString();
         const fullPath = `https://portal.digital-trails.org/api/v2/message?${queryParams}`;
@@ -177,16 +152,11 @@ export class UserFacade {
     updateUser$(userId: string, op: string, path: string, value: any = undefined): Observable<boolean> {
 
         const body = { operations: [{ op, path, value }] };
-        var headers = {'userId': userId };
 
-        return this.httpFacade.patch("https://portal.digital-trails.org/api/v2/users", body, headers).pipe(
+        return this.httpFacade.patch(`https://portal.digital-trails.org/api/v2/users?userid=${userId}`, body).pipe(
             map(_ => true),
             tap(_ => this.store.dispatch(UserActions.updateUser({ path, value, userId }))),
             catchError(_ => of(false))
         )
-    }
-
-    private dashboardUrl$(dashboard: number | undefined): Observable<any> {
-        return this.httpFacade.get(`https://portal.digital-trails.org/api/v2/signjwt?dashboard=${dashboard}`).pipe(map(data => this.sanitizer.bypassSecurityTrustResourceUrl(data.url)));
     }
 }
