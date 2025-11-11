@@ -19,12 +19,12 @@ export class HttpFacade {
         );
     }
 
-    post(path: string, body: any = {}, headers: any = {}): Observable<any> {
+    post<TProperty>(path: string, body: any = {}, headers: any = {}): Observable<any> {
         return from(this.getToken()).pipe(
             take(1),
             switchMap(token => {
                 headers["Authorization"] = `Bearer ${token}`;
-                return this.httpClient.post(path, body, { headers });
+                return this.httpClient.post<TProperty>(path, body, { headers });
             })
         );
     }
