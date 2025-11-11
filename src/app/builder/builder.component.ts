@@ -5,7 +5,6 @@ import { MsalService } from '@azure/msal-angular';
 import { GithubFacade } from './github.facade';
 import { AiBuilderService, ProtocolUpdateRequest } from '../services/ai-builder.service';
 import { Subscription } from 'rxjs';
-import { environment } from '../../environments/environment';
 
 // Enhanced interfaces for comprehensive protocol support
 interface ProtocolIcon {
@@ -439,7 +438,6 @@ export class BuilderComponent implements OnInit, OnDestroy {
     
     // Initialize home screen
     this.refreshScreens();
-    this.checkGitHubConnection();
 
     // Initialize AI service with current protocol
     this.aiBuilderService.setCurrentProtocol(this.getProtocolPreview());
@@ -1512,17 +1510,6 @@ export class BuilderComponent implements OnInit, OnDestroy {
     this.authService.logoutRedirect();
   }
 
-  // GitHub Integration Methods
-  checkGitHubConnection(): void {
-    const token = sessionStorage.getItem('githubAccessToken');
-    const owner = sessionStorage.getItem('githubOwner');
-    this.isGitHubConnected = !!(token && owner);
-    
-    if (this.isGitHubConnected) {
-      this.loadRepositories();
-    }
-  }
-
   loadRepositories(): void {
     if (this.githubFacade.getUserRepositories) {
       this.githubFacade.getUserRepositories().subscribe({
@@ -1545,7 +1532,6 @@ export class BuilderComponent implements OnInit, OnDestroy {
     if (repo) {
       this.appForm.patchValue({ selectedRepository: repoFullName });
       sessionStorage.setItem('githubRepo', repo.name);
-      sessionStorage.setItem('githubOwner', repo.owner.login);
       this.gitHubError = '';
     }
   }
@@ -1565,7 +1551,6 @@ export class BuilderComponent implements OnInit, OnDestroy {
 
     // Set session storage for the GitHub facade
     sessionStorage.setItem('githubRepo', repo.name);
-    sessionStorage.setItem('githubOwner', repo.owner.login);
 
     const filePath = this.appForm.get('filePath')?.value || 'src/protocol.json';
 
@@ -1639,7 +1624,6 @@ export class BuilderComponent implements OnInit, OnDestroy {
     
     // Set session storage for the GitHub facade
     sessionStorage.setItem('githubRepo', repo.name);
-    sessionStorage.setItem('githubOwner', repo.owner.login);
     
     const filePath = this.appForm.get('filePath')?.value || 'src/protocol.json';
     
@@ -1735,18 +1719,6 @@ export class BuilderComponent implements OnInit, OnDestroy {
     this.gitHubError = `Failed to publish: ${errorMessage}`;
     this.isPublishing = false;
     console.error('GitHub publish error:', error);
-  }
-
-  connectToGitHub(): void {
-    const clientId = environment.github.clientId || 'Ov23liM8jdVptvkhxswe'; // Fallback for compatibility
-    const redirectUri = encodeURIComponent(window.location.origin + '/builder/auth');
-    const scope = encodeURIComponent('repo user');
-    
-    if (!environment.github.clientId) {
-      console.warn('GitHub Client ID not set in environment variables. Using fallback.');
-    }
-    
-    window.location.href = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}`;
   }
 
   // Helper methods for managing dynamic form arrays

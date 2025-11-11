@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { environment } from '../../environments/environment';
 import { AiBuilderService, ProtocolUpdateRequest } from './ai-builder.service';
+import { HttpFacade } from '../http.facade';
 
 export interface ChatMessage {
   role: 'user' | 'assistant' | 'system';
@@ -27,7 +27,7 @@ export class AiChatbotService {
   public messages$ = this.messagesSubject.asObservable();
 
   constructor(
-    private http: HttpClient, 
+    private httpFacade: HttpFacade, 
     private aiBuilderService: AiBuilderService
   ) {
     // Initialize with enhanced system message
@@ -76,20 +76,10 @@ export class AiChatbotService {
   }
 
   private async callAIAPI(userMessage: string): Promise<string> {
-    const apiKey = environment.azureOpenAI.apiKey;
-    const endpoint = environment.azureOpenAI.endpoint;
-    const modelName = environment.azureOpenAI.model;
 
-    if (!apiKey || !endpoint || !modelName) {
-      throw new Error('AI configuration is missing. Please check your environment variables.');
-    }
+    const url = "https://digital-trails.org/api/agents/builder";
 
-    const url = `${endpoint}/openai/deployments/${modelName}/chat/completions?api-version=2024-02-15-preview`;
-
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'api-key': apiKey
-    });
+    const headers = new HttpHeaders({'Content-Type': 'application/json',});
 
     // Get current protocol context
     const currentProtocol = this.aiBuilderService.getCurrentProtocol();
@@ -109,14 +99,13 @@ export class AiChatbotService {
       max_tokens: 2048,
       temperature: 0.7,
       top_p: 0.9,
-      model: modelName
     };
 
     console.log('Making AI API request to:', url);
     console.log('Request body:', JSON.stringify(body, null, 2));
 
     try {
-      const response = await this.http.post<AIResponse>(url, body, { headers }).toPromise();
+      const response = await this.httpFacade.post<AIResponse>(url, body, { headers }).toPromise();
       console.log('AI API response:', response);
       
       if (response && response.choices && response.choices.length > 0) {
@@ -146,9 +135,7 @@ export class AiChatbotService {
   }
 
   isAIConfigured(): boolean {
-    return !!(environment.azureOpenAI.apiKey && 
-              environment.azureOpenAI.endpoint && 
-              environment.azureOpenAI.model);
+    return true;
   }
 
   private getSystemPrompt(): string {

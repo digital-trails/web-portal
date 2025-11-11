@@ -16,17 +16,6 @@
         <div class="form-section">
           <h3>Import Configuration</h3>
           
-          <!-- GitHub Connect (if not connected) -->
-          <div *ngIf="!isGitHubConnected" class="github-connect">
-            <p>Connect to GitHub to directly load and save protocol files from your repositories</p>
-            <p-button 
-              label="Connect to GitHub" 
-              icon="pi pi-github" 
-              (onClick)="connectToGitHub()"
-              severity="info">
-            </p-button>
-          </div>
-
           <!-- Repository Selection -->
           <div *ngIf="isGitHubConnected" class="github-connected">
             <div class="field">
