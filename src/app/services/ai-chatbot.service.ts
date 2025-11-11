@@ -77,7 +77,7 @@ export class AiChatbotService {
 
   private async callAIAPI(userMessage: string): Promise<string> {
 
-    const url = "https://staging.portal.digital-trails.org/api/agents/builder";
+    const url = "https://api.digital-trails.org/api/agents/builder";
     const headers = new HttpHeaders({'Content-Type': 'application/json',});
 
     // Get current protocol context

@@ -17,7 +17,7 @@ export class UserFacade {
 
     constructor(private httpFacade: HttpFacade, private store: Store<AppState>, private sanitizer: DomSanitizer) { }
 
-    domain: string = "https://staging.portal.digital-trails.org";
+    domain: string = "https://api.digital-trails.org";
 
     getUser$(): Observable<User | undefined> {
         return this.store.select(UserSelectors.selectUser).pipe(

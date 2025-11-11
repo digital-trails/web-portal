@@ -13,7 +13,7 @@ export class GithubFacade {
     private http: HttpClient
   ) {}
 
-  domain: string = "https://staging.portal.digital-trails.org";
+  domain: string = "https://api.digital-trails.org";
 
   getUserRepositories(): Observable<any[]> {
     const headers = new HttpHeaders({
