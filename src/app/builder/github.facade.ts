@@ -13,11 +13,13 @@ export class GithubFacade {
     private http: HttpClient
   ) {}
 
+  domain: string = "https://staging.portal.digital-trails.org";
+
   getUserRepositories(): Observable<any[]> {
     const headers = new HttpHeaders({
       Accept: 'application/vnd.github.v3+json'
     });
-    return this.httpFacade.get<any[]>('https://digital-trails.org/api/user/protocols', { headers });
+    return this.httpFacade.get<any[]>(`${this.domain}/api/user/protocols`, { headers });
   }
 
   getFile(filePath: string): Observable<any> {
@@ -31,7 +33,7 @@ export class GithubFacade {
       throw new Error('GitHub repository information not found in session storage');
     }
     
-    return this.http.get<any>(`https://digital-trails.org/api/protocols/${repo}/contents/${filePath}`, { headers }).pipe(
+    return this.http.get<any>(`${this.domain}/api/protocols/${repo}/contents/${filePath}`, { headers }).pipe(
       map(file => {
         if (file && file.content) {
           // Preserve the original file metadata including SHA
@@ -66,6 +68,6 @@ export class GithubFacade {
     const repo = sessionStorage.getItem('githubRepo');
     const filePath = file.path;
 
-    return this.http.put(`https://digital-trails.org/api/protocols/${repo}/contents/${filePath}`, body, { headers });
+    return this.http.put(`${this.domain}/api/protocols/${repo}/contents/${filePath}`, body, { headers });
   }
 }
