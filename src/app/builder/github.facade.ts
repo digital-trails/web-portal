@@ -16,24 +16,17 @@ export class GithubFacade {
   domain: string = "https://api.digital-trails.org";
 
   getUserRepositories(): Observable<any[]> {
-    const headers = new HttpHeaders({
-      Accept: 'application/vnd.github.v3+json'
-    });
-    return this.httpFacade.get<any[]>(`${this.domain}/api/user/protocols`, { headers });
+    return this.httpFacade.get<any[]>(`${this.domain}/protocols`);
   }
 
   getFile(filePath: string): Observable<any> {
-    const headers = new HttpHeaders({
-      Accept: 'application/vnd.github.v3+json'
-    });
-    
     const repo = sessionStorage.getItem('githubRepo');
-    
+
     if (!repo) {
       throw new Error('GitHub repository information not found in session storage');
     }
-    
-    return this.http.get<any>(`${this.domain}/api/protocols/${repo}/contents/${filePath}`, { headers }).pipe(
+
+    return this.http.get<any>(`${this.domain}/protocols/${repo}/contents/${filePath}`).pipe(
       map(file => {
         if (file && file.content) {
           // Preserve the original file metadata including SHA
@@ -49,10 +42,6 @@ export class GithubFacade {
   }
 
   putFile(file: any, commitMessage: string): Observable<any> {
-    const headers = new HttpHeaders({
-      Accept: 'application/vnd.github.v3+json'
-    });
-    
     const base64Content = btoa(JSON.stringify(file.content, null, 2)); // Convert JSON object to base64 string
 
     const body: any = {
@@ -66,8 +55,7 @@ export class GithubFacade {
     }
 
     const repo = sessionStorage.getItem('githubRepo');
-    const filePath = file.path;
 
-    return this.http.put(`${this.domain}/api/protocols/${repo}/contents/${filePath}`, body, { headers });
+    return this.http.put(`${this.domain}/protocols/${repo}/contents/${file.path}`, body);
   }
 }

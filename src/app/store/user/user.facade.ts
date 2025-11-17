@@ -24,7 +24,7 @@ export class UserFacade {
             switchMap(user => {
                 if (user) return of(user);
 
-                return this.httpFacade.get<User>(`${this.domain}/api/v2/user`).pipe(
+                return this.httpFacade.get<User>(`${this.domain}/v2/user`).pipe(
                     switchMap(user => {
                         return of(user);
                     }),
@@ -46,7 +46,7 @@ export class UserFacade {
         return this.store.select(UserSelectors.selectUsers(studyCode)).pipe(
             switchMap(users => {
                 if (users) return of(users);
-                return this.httpFacade.post(`${this.domain}/api/v2/users`, body, { 'Content-Type': 'application/query+json' }).pipe(
+                return this.httpFacade.post(`${this.domain}/v2/users`, body, { 'Content-Type': 'application/query+json' }).pipe(
                     map(data => data.Documents as User[]),
                     tap(users => this.store.dispatch(UserActions.setStudyUsers({ studyCode, users }))),
                     catchError(err => throwError(() => err))
@@ -63,7 +63,7 @@ export class UserFacade {
         return this.store.select(UserSelectors.selectAllUsers).pipe(
             switchMap(users => {
                 if (users) return of(users);
-                return this.httpFacade.post(`${this.domain}/api/v2/users`, body, { 'Content-Type': 'application/query+json' }).pipe(
+                return this.httpFacade.post(`${this.domain}/v2/users`, body, { 'Content-Type': 'application/query+json' }).pipe(
                     map(data => data.Documents as User[]),
                     tap(users => this.store.dispatch(UserActions.setAllUsers({ users }))),
                     catchError(err => throwError(() => err))
@@ -80,7 +80,7 @@ export class UserFacade {
                     'service': "oura",
                     'study': studyCode
                 };
-                return this.httpFacade.get<OuraService>(`${this.domain}/api/v2/service`, headers).pipe(
+                return this.httpFacade.get<OuraService>(`${this.domain}/v2/service`, headers).pipe(
                     tap(ouraService => this.store.dispatch(UserActions.setOuraService({ studyCode, ouraService }))),
                     catchError(err => throwError(() => err))
                 );
@@ -106,7 +106,7 @@ export class UserFacade {
             'study': studyCode
         };
 
-        return this.httpFacade.patch(`${this.domain}/api/v2/service`, body, headers).pipe(
+        return this.httpFacade.patch(`${this.domain}/v2/service`, body, headers).pipe(
             switchMap(_ => this.updateSecret$(method, name, pat).pipe(
                 map(_ => true),
                 tap(_ => {
@@ -124,7 +124,7 @@ export class UserFacade {
             study: studyCode,
             tokens: {}
         };
-        this.httpFacade.post(`${this.domain}/api/v2/service`, body, { 'study': studyCode }).pipe(
+        this.httpFacade.post(`${this.domain}/v2/service`, body, { 'study': studyCode }).pipe(
             take(1),
             catchError(err => {
                 if (err.status == 409) return of([]);
@@ -134,7 +134,7 @@ export class UserFacade {
     }
 
     updateSecret$(method: string, secretName: string, secretVal: string = ''): Observable<boolean> {
-        const path: string = `${this.domain}/api/v2/secret`;
+        const path: string = `${this.domain}/v2/secret`;
         const body = { secretName, secretVal };
         var func: Observable<any> = method == "post" ? this.httpFacade.post(path, body) : this.httpFacade.delete(path, body);
 
@@ -143,7 +143,7 @@ export class UserFacade {
 
     sendMessage$(tag: string, message: string): Observable<boolean> {
         const queryParams = new URLSearchParams({ tag, message }).toString();
-        const fullPath = `${this.domain}/api/v2/message?${queryParams}`;
+        const fullPath = `${this.domain}/v2/message?${queryParams}`;
 
         return this.httpFacade.post(fullPath).pipe(
             map(_ => true),
@@ -155,7 +155,7 @@ export class UserFacade {
 
         const body = { operations: [{ op, path, value }] };
 
-        return this.httpFacade.patch(`${this.domain}/api/v2/users?userid=${userId}`, body).pipe(
+        return this.httpFacade.patch(`${this.domain}/v2/users?userid=${userId}`, body).pipe(
             map(_ => true),
             tap(_ => this.store.dispatch(UserActions.updateUser({ path, value, userId }))),
             catchError(_ => of(false))
