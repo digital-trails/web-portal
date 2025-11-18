@@ -180,6 +180,7 @@ export class BuilderComponent implements OnInit, OnDestroy {
   currentFileData: any = null;
   isPublishing: boolean = false;
   publishSuccess: boolean = false;
+  isLoadingRepositories: boolean = false;
   
   // Current protocol data - initialized with example data using PrimeNG icons
   protocol: Protocol = {
@@ -1510,6 +1511,25 @@ export class BuilderComponent implements OnInit, OnDestroy {
     this.authService.logoutRedirect();
   }
 
+  connectToGitHub(): void {
+    this.isLoadingRepositories = true;
+    this.gitHubError = '';
+    
+    this.githubFacade.getUserRepositories().subscribe({
+      next: (repos: any[]) => {
+        this.repositories = repos;
+        this.isGitHubConnected = true;
+        this.gitHubError = '';
+        this.isLoadingRepositories = false;
+      },
+      error: (error: any) => {
+        this.gitHubError = 'Failed to connect to GitHub. Please try again.';
+        this.isLoadingRepositories = false;
+        console.error('Error loading repositories:', error);
+      }
+    });
+  }
+
   loadRepositories(): void {
     if (this.githubFacade.getUserRepositories) {
       this.githubFacade.getUserRepositories().subscribe({
@@ -1533,6 +1553,8 @@ export class BuilderComponent implements OnInit, OnDestroy {
       this.appForm.patchValue({ selectedRepository: repoFullName });
       sessionStorage.setItem('githubRepo', repo.name);
       this.gitHubError = '';
+      // Auto-load the protocol.json file when repository is selected
+      this.loadFromGitHub();
     }
   }
 
@@ -1552,7 +1574,8 @@ export class BuilderComponent implements OnInit, OnDestroy {
     // Set session storage for the GitHub facade
     sessionStorage.setItem('githubRepo', repo.name);
 
-    const filePath = this.appForm.get('filePath')?.value || 'src/protocol.json';
+    // Always use src/protocol.json as the file path
+    const filePath = 'src/protocol.json';
 
     this.githubFacade.getFile(filePath).subscribe({
       next: (fileData: any) => {
@@ -1606,7 +1629,7 @@ export class BuilderComponent implements OnInit, OnDestroy {
     });
   }
 
-  publishToGitHub(): void {
+  saveToGitHub(): void {
     const selectedRepo = this.appForm.get('selectedRepository')?.value;
     if (!selectedRepo) {
       this.gitHubError = 'Please select a repository first';
@@ -1619,13 +1642,14 @@ export class BuilderComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // Update protocol from current form values
+    // Update protocol from current form values to capture all changes
     this.updateProtocolFromForm(this.appForm.value);
     
     // Set session storage for the GitHub facade
     sessionStorage.setItem('githubRepo', repo.name);
     
-    const filePath = this.appForm.get('filePath')?.value || 'src/protocol.json';
+    // Always use src/protocol.json as the file path
+    const filePath = 'src/protocol.json';
     
     this.isPublishing = true;
     
@@ -1641,33 +1665,42 @@ export class BuilderComponent implements OnInit, OnDestroy {
             size: fileData.size,
             url: fileData.url
           };
-          // Now proceed with the publish
-          this.performPublish(filePath);
+          // Now proceed with the save
+          this.performSave(filePath);
         },
         error: (error: any) => {
           if (error.status === 404) {
             // File doesn't exist, proceed without SHA (creating new file)
             this.currentFileData = null;
-            this.performPublish(filePath);
+            this.performSave(filePath);
           } else {
             this.handlePublishError(error);
           }
         }
       });
     } else {
-      // We have SHA, proceed with publish
-      this.performPublish(filePath);
+      // We have SHA, proceed with save
+      this.performSave(filePath);
     }
   }
 
-  private performPublish(filePath: string): void {
+  publishToGitHub(): void {
+    // Alias for saveToGitHub for backward compatibility
+    this.saveToGitHub();
+  }
+
+  private performSave(filePath: string): void {
+    // Ensure we have the latest protocol from the form before saving
+    this.updateProtocolFromForm(this.appForm.value);
+    
     const fileToSave = {
       path: filePath,
-      content: this.protocol,
+      content: this.protocol, // This contains all the changes from the form
       sha: this.currentFileData?.sha // Include SHA for updates, undefined for new files
     };
     
-    const commitMessage = `Update protocol.json via Web Portal - ${new Date().toISOString()}`;
+    // Generic commit message as requested
+    const commitMessage = 'Update protocol.json';
 
     this.githubFacade.putFile(fileToSave, commitMessage).subscribe({
       next: (response: any) => {
@@ -1686,7 +1719,7 @@ export class BuilderComponent implements OnInit, OnDestroy {
         this.isPublishing = false;
         
         // Show GitHub success toast
-        this.gitHubToastMessage = 'Successfully published to GitHub!';
+        this.gitHubToastMessage = 'Successfully saved to GitHub!';
         this.showGitHubSuccessToast = true;
         
         // Auto-hide success message and toast after 3 seconds
@@ -1699,6 +1732,11 @@ export class BuilderComponent implements OnInit, OnDestroy {
         this.handlePublishError(error);
       }
     });
+  }
+
+  private performPublish(filePath: string): void {
+    // Alias for performSave for backward compatibility
+    this.performSave(filePath);
   }
 
   private handlePublishError(error: any): void {
@@ -2047,3 +2085,4 @@ export class BuilderComponent implements OnInit, OnDestroy {
     }, 3000);
   }
 }
+
