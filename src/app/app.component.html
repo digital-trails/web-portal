@@ -9,8 +9,7 @@
       </div>
 
       <div class="study-list" *ngIf="data?.dashboardNames && data.dashboardNames.length > 0">
-        <button class="study-item" *ngFor="let name of data.dashboardNames" [routerLink]="['/dashboard']"
-          [queryParams]="{study: name}" routerLinkActive="active">
+        <button class="study-item" *ngFor="let name of data.dashboardNames" [routerLink]="['/dashboard/' + name]" routerLinkActive="active">
           {{ name }}
         </button>
       </div>

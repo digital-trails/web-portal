@@ -1,5 +1,11 @@
-<div *ngIf="iframeUrl$ | async as data" class="iframe-wrapper">
+<div class="iframe-wrapper">
   <div class="iframe-container">
-    <iframe [src]="data" allowfullscreen class="streamlit-iframe"></iframe>
+    <iframe 
+      *ngFor="let entry of loadedUrls | keyvalue"
+      [src]="entry.value" 
+      [hidden]="entry.key !== currentStudy"
+      allowfullscreen 
+      class="streamlit-iframe">
+    </iframe>
   </div>
 </div>

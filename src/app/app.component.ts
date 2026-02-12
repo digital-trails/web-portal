@@ -74,9 +74,4 @@ export class AppComponent implements OnInit {
   logout(): void {
     this.authService.logoutRedirect();
   }
-
-  selectDashboard(name: string) {
-    this.router.navigate(['/dashboard'], { queryParams: { study: name } });
-  }
 }
-``
