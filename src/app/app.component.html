@@ -1,33 +1,27 @@
 <main class="main-container">
 
-  <div class="sidebar">
-    <div class="sidebar-content" *ngIf="isLoggedIn">
+  <div class="sidebar" *ngIf="isLoggedIn">
+    <div class="menu-header">MENU</div>
 
-      <!-- Menu Header -->
-      <div class="menu-header">MENU</div>
-
-      <!-- Studies Section -->
-      <div *ngIf="pageData$ | async as data">
-        <div class="section-header">
-          Studies
-        </div>
-
-        <div class="study-list" *ngIf="data?.dashboardNames && data.dashboardNames.length > 0">
-          <button class="study-item" *ngFor="let name of data.dashboardNames" [routerLink]="['/dashboard']"
-            [queryParams]="{study: name}" routerLinkActive="active">
-            {{ name }}
-          </button>
-        </div>
-
-        <div class="no-studies" *ngIf="!data?.dashboardNames || data.dashboardNames.length === 0">
-          <p>No studies available</p>
-        </div>
+    <div *ngIf="pageData$ | async as data">
+      <div class="section-header">
+        Studies
       </div>
 
-      <div class="section-header logout-section" (click)="logout()">
-        Logout
-      </div>  
+      <div class="study-list" *ngIf="data?.dashboardNames && data.dashboardNames.length > 0">
+        <button class="study-item" *ngFor="let name of data.dashboardNames" [routerLink]="['/dashboard']"
+          [queryParams]="{study: name}" routerLinkActive="active">
+          {{ name }}
+        </button>
+      </div>
 
+      <div class="no-studies" *ngIf="!data?.dashboardNames || data.dashboardNames.length === 0">
+        <p>No studies available</p>
+      </div>
+    </div>
+
+    <div class="section-header logout-section" (click)="logout()">
+      Logout
     </div>
   </div>
 
