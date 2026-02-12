@@ -9,12 +9,12 @@ import { from, Observable, switchMap, take } from "rxjs";
 export class HttpFacade {
     constructor(private httpClient: HttpClient, private authService: MsalService) { }
 
-    get<TProperty>(path: string, headers: any = {}, hasAuth: boolean = true): Observable<any> {
+    get<TProperty>(path: string, headers: any = {}, hasAuth: boolean = true, responseType: string = 'json'): Observable<any> {
         return from(this.getToken()).pipe(
             take(1),
             switchMap(token => {
                 if(hasAuth) headers["Authorization"] = `Bearer ${token}`;
-                return this.httpClient.get<TProperty>(path, { headers });
+                return this.httpClient.get<TProperty>(path, { headers, responseType: responseType as any });
             })
         );
     }
@@ -50,7 +50,7 @@ export class HttpFacade {
         );
     }
 
-    private async getToken(): Promise<string> {
+    public async getToken(): Promise<string> {
         try {
             const accounts = this.authService.instance.getAllAccounts();
             if (accounts.length === 0) {

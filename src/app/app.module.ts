@@ -25,13 +25,15 @@ import { UserReducer, UserState } from './store/user/user.reducer';
 import { LoadingComponent } from './components/loading/loading.component';
 import { CommonModule } from '@angular/common';
 import { ProtocolReducer, ProtocolState } from './store/protocol/protocol.reducer';
+import { StudyReducer, StudyState } from './store/study/study.reducer';
 
 
 export const appState = (state: AppState) => state;
 
 export interface AppState {
   userState?: UserState;
-  protocolState?: ProtocolState
+  protocolState?: ProtocolState;
+  studyState?: StudyState;
 }
 
 export const initialState: AppState = {
@@ -72,7 +74,8 @@ export function initializeMSAL(msalInstance: IPublicClientApplication) {
     provideHttpClient(withInterceptorsFromDi()),
     provideStore({
       userState: UserReducer,
-      protocolState: ProtocolReducer
+      protocolState: ProtocolReducer,
+      studyState: StudyReducer
     }),
     {
       provide: MSAL_INSTANCE,

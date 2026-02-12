@@ -1,28 +1,33 @@
 <main class="main-container">
-  <div class="sidebar-container">
-    <div class="sidebar">
-      <div class="sidebar-content" *ngIf="isLoggedIn">
-        <div *ngIf="pageData$ | async as data">
-        <button class="sidebar-button" *ngIf="data.user?.admin?.studies" (click)="dashboardCollapse()">
-          {{ isDashboardCollapsed ? '▶' : '▼' }} Studies
-        </button>
-        
-        <div class="sub-buttons" *ngIf="!isDashboardCollapsed">
-          <button 
-            class="sidebar-button sub-button" 
-            *ngFor="let name of data.dashboardNames"
-            [routerLink]="['/dashboard']" 
-            [queryParams]="{study: name}"
-          >
+
+  <div class="sidebar">
+    <div class="sidebar-content" *ngIf="isLoggedIn">
+
+      <!-- Menu Header -->
+      <div class="menu-header">MENU</div>
+
+      <!-- Studies Section -->
+      <div *ngIf="pageData$ | async as data">
+        <div class="section-header">
+          Studies
+        </div>
+
+        <div class="study-list" *ngIf="data?.dashboardNames && data.dashboardNames.length > 0">
+          <button class="study-item" *ngFor="let name of data.dashboardNames" [routerLink]="['/dashboard']"
+            [queryParams]="{study: name}" routerLinkActive="active">
             {{ name }}
           </button>
         </div>
-         <button class="sidebar-button" routerLink="/console" *ngIf="data?.user?.admin?.studies || data?.user?.super_admin">Console</button>
-      </div>
-      <button class="sidebar-button logout-button" (click)="logout()" *ngIf="isLoggedIn">
-        Logout
-      </button>
+
+        <div class="no-studies" *ngIf="!data?.dashboardNames || data.dashboardNames.length === 0">
+          <p>No studies available</p>
         </div>
+      </div>
+
+      <div class="section-header logout-section" (click)="logout()">
+        Logout
+      </div>  
+
     </div>
   </div>
 
@@ -38,7 +43,7 @@
             </div>
             <a routerLink="/dashboard" class="btn btn-primary btn-lg mt-3">Sign In</a>
           </div>
-  
+
           <div class="col-md-6 text-center d-none d-md-block">
             <img src="logo.svg" alt="Digital Trails Logo" height="300">
           </div>

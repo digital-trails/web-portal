@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MsalService } from '@azure/msal-angular';
 import { map, Observable, take, tap } from 'rxjs';
-import { User } from './models/user';
 import { UserFacade } from './store/user/user.facade';
 import { LoadingService } from './services/loading.service';
 
@@ -17,7 +16,6 @@ export class AppComponent implements OnInit {
   isLoggedIn = false;
   isDashboardCollapsed = true;
   pageData$?: Observable<{
-    user: User | undefined,
     dashboardNames: string[],
   }>
 
@@ -49,18 +47,12 @@ export class AppComponent implements OnInit {
 
     if (this.isLoggedIn) {
       this.loadingService.loadingOn();
-      this.pageData$ = this.userFacade.getUser$().pipe(
+      this.pageData$ = this.userFacade.getAdminRoles$().pipe(
         take(1),
-        map(user => ({
-          user,
-          dashboardNames: Object.keys(user?.admin?.studies ?? []),
+        map(roles => ({
+          dashboardNames: Object.keys(roles),
         })),
-        tap(({ user, dashboardNames }) => {
-          dashboardNames.forEach(study => {
-            if (user?.admin?.studies[study].hasOura) this.userFacade.createOuraService(study); // if doc doesn't exist
-          });
-          this.loadingService.loadingOff();
-        })
+        tap(_ => this.loadingService.loadingOff())
       )
     }
   }
