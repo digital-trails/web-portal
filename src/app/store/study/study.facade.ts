@@ -7,6 +7,7 @@ import { catchError, from, map, Observable, of, switchMap, take, tap, throwError
 import { StudyActions } from './study.actions';
 import { StudySelectors } from './study.selectors';
 import { StudyMeta } from '../../models/study-meta';
+import { isDevMode } from '@angular/core';
 
 @Injectable({
     providedIn: 'root'
@@ -35,10 +36,15 @@ export class StudyFacade {
     }
 
     getDashboardUrl$(study: string): Observable<SafeResourceUrl> {
-         return from(this.httpFacade.getToken()).pipe(
+        return from(this.httpFacade.getToken()).pipe(
             take(1),
             map(token => {
-                const dashboardUrl = `https://trailscontainerapp.victoriousriver-a301e40d.eastus2.azurecontainerapps.io/?study=${study}&token=${token}`;
+
+                const baseUrl = isDevMode()
+                    ? 'http://localhost:8501'
+                    : 'https://trailscontainerapp.victoriousriver-a301e40d.eastus2.azurecontainerapps.io';
+
+                const dashboardUrl = `${baseUrl}/?study=${study}&token=${token}`;
                 return this.sanitizer.bypassSecurityTrustResourceUrl(dashboardUrl);
             }),
             catchError(err => {
