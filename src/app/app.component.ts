@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { MsalService, MsalBroadcastService } from '@azure/msal-angular';
-import { InteractionStatus, EventType } from '@azure/msal-browser';
-import { filter, map, Observable, take, tap } from 'rxjs';
+import { MsalService } from '@azure/msal-angular';
+import { map, Observable, take, tap } from 'rxjs';
 import { UserFacade } from './store/user/user.facade';
 import { LoadingService } from './services/loading.service';
 
@@ -20,40 +18,23 @@ export class AppComponent implements OnInit {
   constructor(
     private userFacade: UserFacade,
     private authService: MsalService,
-    private msalBroadcast: MsalBroadcastService,
-    private router: Router,
     private loadingService: LoadingService
   ) {}
 
   ngOnInit(): void {
-    this.loadingService.loadingOn();
-
-    this.authService.instance.addEventCallback((event) => {
-      if (event.eventType === EventType.LOGIN_SUCCESS || event.eventType === EventType.ACQUIRE_TOKEN_SUCCESS) {
-        const account = (event as any).payload?.account;
-        if (account) {
-          this.authService.instance.setActiveAccount(account);
-        }
-      }
-    });
+    this.setLoginDisplay();
 
     this.authService.handleRedirectObservable().subscribe({
-      next: () => {
-        // Do nothing here—wait for inProgress === None below
+      next: (result) => {
+        if (result) {
+          this.setLoginDisplay();
+        }
       },
       error: (error) => {
+        this.setLoginDisplay();
         console.error('Authentication error:', error);
       }
     });
-
-    this.msalBroadcast.inProgress$
-      .pipe(
-        filter((status) => status === InteractionStatus.None),
-        take(1)
-      )
-      .subscribe(() => {
-        this.setLoginDisplay();
-      });
   }
 
   private setLoginDisplay(): void {
