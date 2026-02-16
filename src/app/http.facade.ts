@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable, isDevMode } from "@angular/core";
 import { MsalService } from "@azure/msal-angular";
+import { InteractionRequiredAuthError } from "@azure/msal-browser";
 import { from, Observable, switchMap, take } from "rxjs";
 
 @Injectable({
@@ -50,23 +51,31 @@ export class HttpFacade {
         );
     }
 
-    public async getToken(): Promise<string> {
-        try {
-            const accounts = this.authService.instance.getAllAccounts();
-            if (accounts.length === 0) {
-                throw new Error('No accounts found');
-            }
-
-            const silentRequest = {
-                scopes: ['https://digitaltrailsuva.onmicrosoft.com/api/read'],
-                account: accounts[0]
-            };
-
-            const response = await this.authService.instance.acquireTokenSilent(silentRequest);
-            return response.accessToken;
-        } catch (error) {
-            console.error('Token acquisition failed:', error);
-            throw error;
-        }
+   public async getToken(): Promise<string> {
+  try {
+    const accounts = this.authService.instance.getAllAccounts();
+    if (accounts.length === 0) {
+      throw new Error('No accounts found');
     }
+
+    const silentRequest = {
+      scopes: ['https://digitaltrailsuva.onmicrosoft.com/api/read'],
+      account: accounts[0]
+    };
+
+    const response = await this.authService.instance.acquireTokenSilent(silentRequest);
+    return response.accessToken;
+  } catch (error: any) {
+    if (error instanceof InteractionRequiredAuthError) {
+      await this.authService.acquireTokenRedirect({
+        scopes: ['https://digitaltrailsuva.onmicrosoft.com/api/read'],
+        account: this.authService.instance.getAllAccounts()[0] ?? undefined
+      });
+      return new Promise<string>(() => { });
+    }
+
+    console.error('Token acquisition failed:', error);
+    throw error;
+  }
+}
 }
