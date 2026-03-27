@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { MsalGuard } from '@azure/msal-angular';
+import { autoLoginPartialRoutesGuard } from 'angular-auth-oidc-client';
 
 
 const routes: Routes = [
   {
     path: "dashboard",
     loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule),
-    canActivate: [MsalGuard]
+    canActivate: [autoLoginPartialRoutesGuard]
   }
 ];
 
