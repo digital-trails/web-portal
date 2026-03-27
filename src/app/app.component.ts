@@ -3,6 +3,7 @@ import { map, Observable, take, tap } from 'rxjs';
 import { UserFacade } from './store/user/user.facade';
 import { LoadingService } from './services/loading.service';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -18,8 +19,9 @@ export class AppComponent implements OnInit {
   constructor(
     private userFacade: UserFacade,
     private authService: OidcSecurityService,
-    private loadingService: LoadingService
-  ) {}
+    private loadingService: LoadingService,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
     this.authService.checkAuth().pipe(
@@ -39,6 +41,8 @@ export class AppComponent implements OnInit {
   }
 
   logout(): void {
-    this.authService.logoff().subscribe();
+    this.authService.logoffLocal();
+    this.isLoggedIn = false;
+    this.router.navigate(['/']);
   }
 }

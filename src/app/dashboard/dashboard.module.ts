@@ -1,5 +1,4 @@
 import { CommonModule } from '@angular/common';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { UserFacade } from '../store/user/user.facade';
 import { DashboardRoutingModule } from './dashboard-routing.module';
@@ -17,8 +16,6 @@ import { LoadingComponent } from '../components/loading/loading.component';
     SimpleIdPipe,
     LoadingComponent
   ],
-  providers: [
-    UserFacade,
-    provideHttpClient(withInterceptorsFromDi())]
+  providers: [UserFacade]
 })
 export class DashboardModule { }

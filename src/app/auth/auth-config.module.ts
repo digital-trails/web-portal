@@ -14,7 +14,10 @@ import { AuthModule } from 'angular-auth-oidc-client';
               silentRenew: true,
               useRefreshToken: true,
               renewTimeBeforeTokenExpiresInSeconds: 30,
-              secureRoutes: ['https://digital-trails.org/api/v2'],
+              secureRoutes: ['https://digital-trails.org/api/v2.1'],
+              customParamsAuthRequest: {
+                prompt: 'login',
+              }
           }
       })],
     exports: [AuthModule],
