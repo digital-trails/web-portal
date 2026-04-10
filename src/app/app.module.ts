@@ -13,6 +13,7 @@ import { StudyReducer, StudyState } from './store/study/study.reducer';
 import { AuthConfigModule } from './auth/auth-config.module';
 import { AuthInterceptor } from 'angular-auth-oidc-client';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthHeaderInterceptor } from './auth/auth-http-interceptor';
 
 
 export const appState = (state: AppState) => state;
@@ -45,6 +46,11 @@ export const initialState: AppState = {
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthHeaderInterceptor,
       multi: true
     },
     provideStore({

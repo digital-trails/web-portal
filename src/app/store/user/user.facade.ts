@@ -20,7 +20,7 @@ export class UserFacade {
             switchMap(roles => {
                 if (roles) return of(roles);
 
-                return this.httpClient.get("https://digital-trails.org/api/v2.1/roles").pipe(
+                return this.httpClient.get("https://api.digital-trails.org/api/v2.1/roles").pipe(
                     map(roles => this.mapRoles(roles)),
                     tap(roles => this.store.dispatch(UserActions.setRoles({ roles }))),
                     catchError(err => {
