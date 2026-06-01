@@ -1,0 +1,827 @@
+{
+  "type": "Categorization",
+  "elements": [
+    {
+      "type": "Category",
+      "label": "General",
+      "elements": [
+        {
+          "type": "Control",
+          "scope": "#/properties/start_flow"
+        },
+        {
+          "type": "Group",
+          "label": "Settings",
+          "elements": [
+            {
+              "type": "HorizontalLayout",
+              "elements": [
+                {
+                  "type": "Control",
+                  "scope": "#/properties/settings/properties/unenroll"
+                },
+                {
+                  "type": "Control",
+                  "scope": "#/properties/settings/properties/font_scale",
+                  "options": {
+                    "slider": true
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "Category",
+      "label": "Home Screen",
+      "elements": [
+        {
+          "type": "Control",
+          "scope": "#/properties/home/properties/Title"
+        },
+        {
+          "type": "Control",
+          "scope": "#/properties/home/properties/Element",
+          "options": {
+            "detail": {
+              "type": "VerticalLayout",
+              "elements": [
+                {
+                  "type": "HorizontalLayout",
+                  "elements": [
+                    {
+                      "type": "Control",
+                      "scope": "#/properties/type"
+                    }
+                  ]
+                },
+                {
+                  "type": "Control",
+                  "scope": "#/properties/Path",
+                  "rule": {
+                    "effect": "SHOW",
+                    "condition": {
+                      "scope": "#/properties/type",
+                      "schema": { "const": "ref" }
+                    }
+                  }
+                },
+                {
+                  "type": "Control",
+                  "scope": "#/properties/Title"
+                },
+                {
+                  "type": "Control",
+                  "scope": "#/properties/Message"
+                },
+                {
+                  "type": "Control",
+                  "scope": "#/properties/icon"
+                },
+                {
+                  "type": "Control",
+                  "scope": "#/properties/Action"
+                },
+                {
+                  "type": "Control",
+                  "scope": "#/properties/Actions",
+                  "options": {
+                    "showSortButtons": true,
+                    "elementLabelProp": "text"
+                  }
+                },
+                {
+                  "type": "Control",
+                  "scope": "#/properties/Elements",
+                  "options": {
+                    "showSortButtons": true,
+                    "elementLabelProp": "type"
+                  }
+                },
+                {
+                  "type": "Control",
+                  "scope": "#/properties/Summary"
+                },
+                {
+                  "type": "Control",
+                  "scope": "#/properties/Reports"
+                },
+                {
+                  "type": "Control",
+                  "scope": "#/properties/Left"
+                },
+                {
+                  "type": "Control",
+                  "scope": "#/properties/Right"
+                },
+                {
+                  "type": "Control",
+                  "scope": "#/properties/lock_right"
+                },
+                {
+                  "type": "Control",
+                  "scope": "#/properties/lock_time"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "Category",
+      "label": "Menu",
+      "elements": [
+        {
+          "type": "Control",
+          "scope": "#/properties/menu",
+          "options": {
+            "showSortButtons": true,
+            "elementLabelProp": "text",
+            "detail": {
+              "type": "VerticalLayout",
+              "elements": [
+                {
+                  "type": "HorizontalLayout",
+                  "elements": [
+                    {
+                      "type": "Control",
+                      "scope": "#/properties/text"
+                    },
+                    {
+                      "type": "Control",
+                      "scope": "#/properties/icon"
+                    }
+                  ]
+                },
+                {
+                  "type": "HorizontalLayout",
+                  "elements": [
+                    {
+                      "type": "Control",
+                      "scope": "#/properties/action"
+                    },
+                    {
+                      "type": "Control",
+                      "scope": "#/properties/background_color"
+                    }
+                  ]
+                },
+                {
+                  "type": "Control",
+                  "scope": "#/properties/mark_completed_on_click"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "Category",
+      "label": "Theme Light",
+      "elements": [
+        {
+          "type": "HorizontalLayout",
+          "elements": [
+            {
+              "type": "Control",
+              "scope": "#/properties/theme_light/properties/Primary"
+            },
+            {
+              "type": "Control",
+              "scope": "#/properties/theme_light/properties/Secondary"
+            }
+          ]
+        },
+        {
+          "type": "HorizontalLayout",
+          "elements": [
+            {
+              "type": "Control",
+              "scope": "#/properties/theme_light/properties/Accent"
+            },
+            {
+              "type": "Control",
+              "scope": "#/properties/theme_light/properties/Text"
+            }
+          ]
+        },
+        {
+          "type": "HorizontalLayout",
+          "elements": [
+            {
+              "type": "Control",
+              "scope": "#/properties/theme_light/properties/SecondaryButton"
+            },
+            {
+              "type": "Control",
+              "scope": "#/properties/theme_light/properties/Destructive"
+            }
+          ]
+        },
+        {
+          "type": "Control",
+          "scope": "#/properties/theme_light/properties/Success"
+        }
+      ]
+    },
+    {
+      "type": "Category",
+      "label": "Theme Dark",
+      "elements": [
+        {
+          "type": "HorizontalLayout",
+          "elements": [
+            {
+              "type": "Control",
+              "scope": "#/properties/theme_dark/properties/Primary"
+            },
+            {
+              "type": "Control",
+              "scope": "#/properties/theme_dark/properties/Secondary"
+            }
+          ]
+        },
+        {
+          "type": "HorizontalLayout",
+          "elements": [
+            {
+              "type": "Control",
+              "scope": "#/properties/theme_dark/properties/Accent"
+            },
+            {
+              "type": "Control",
+              "scope": "#/properties/theme_dark/properties/Text"
+            }
+          ]
+        },
+        {
+          "type": "HorizontalLayout",
+          "elements": [
+            {
+              "type": "Control",
+              "scope": "#/properties/theme_dark/properties/SecondaryButton"
+            },
+            {
+              "type": "Control",
+              "scope": "#/properties/theme_dark/properties/Destructive"
+            }
+          ]
+        },
+        {
+          "type": "Control",
+          "scope": "#/properties/theme_dark/properties/Success"
+        }
+      ]
+    },
+    {
+      "type": "Category",
+      "label": "Surveys",
+      "elements": [
+        {
+          "type": "Control",
+          "scope": "#/properties/Surveys",
+          "options": {
+            "showSortButtons": true,
+            "elementLabelProp": "id",
+            "detail": {
+              "type": "VerticalLayout",
+              "elements": [
+                {
+                  "type": "HorizontalLayout",
+                  "elements": [
+                    {
+                      "type": "Control",
+                      "scope": "#/properties/id"
+                    },
+                    {
+                      "type": "Control",
+                      "scope": "#/properties/type"
+                    }
+                  ]
+                },
+                {
+                  "type": "Control",
+                  "scope": "#/properties/path"
+                },
+                {
+                  "type": "HorizontalLayout",
+                  "elements": [
+                    {
+                      "type": "Control",
+                      "scope": "#/properties/frequency"
+                    },
+                    {
+                      "type": "Control",
+                      "scope": "#/properties/expiry"
+                    }
+                  ]
+                },
+                {
+                  "type": "HorizontalLayout",
+                  "elements": [
+                    {
+                      "type": "Control",
+                      "scope": "#/properties/time"
+                    },
+                    {
+                      "type": "Control",
+                      "scope": "#/properties/skip"
+                    }
+                  ]
+                },
+                {
+                  "type": "Control",
+                  "scope": "#/properties/take"
+                },
+                {
+                  "type": "Control",
+                  "scope": "#/properties/trigger_flow_path"
+                },
+                {
+                  "type": "Control",
+                  "scope": "#/properties/period"
+                },
+                {
+                  "type": "HorizontalLayout",
+                  "elements": [
+                    {
+                      "type": "Control",
+                      "scope": "#/properties/gap"
+                    },
+                    {
+                      "type": "Control",
+                      "scope": "#/properties/choose"
+                    }
+                  ]
+                },
+                {
+                  "type": "Control",
+                  "scope": "#/properties/paths"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "Category",
+      "label": "Reminders",
+      "elements": [
+        {
+          "type": "Control",
+          "scope": "#/properties/Reminders",
+          "options": {
+            "showSortButtons": true,
+            "elementLabelProp": "id",
+            "detail": {
+              "type": "VerticalLayout",
+              "elements": [
+                {
+                  "type": "HorizontalLayout",
+                  "elements": [
+                    {
+                      "type": "Control",
+                      "scope": "#/properties/id"
+                    },
+                    {
+                      "type": "Control",
+                      "scope": "#/properties/type"
+                    }
+                  ]
+                },
+                {
+                  "type": "HorizontalLayout",
+                  "elements": [
+                    {
+                      "type": "Control",
+                      "scope": "#/properties/survey_id"
+                    },
+                    {
+                      "type": "Control",
+                      "scope": "#/properties/frequency"
+                    }
+                  ]
+                },
+                {
+                  "type": "HorizontalLayout",
+                  "elements": [
+                    {
+                      "type": "Control",
+                      "scope": "#/properties/skip"
+                    },
+                    {
+                      "type": "Control",
+                      "scope": "#/properties/take"
+                    }
+                  ]
+                },
+                {
+                  "type": "Control",
+                  "scope": "#/properties/time"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "Category",
+      "label": "Devices",
+      "elements": [
+        {
+          "type": "Control",
+          "scope": "#/properties/Devices",
+          "options": {
+            "showSortButtons": true,
+            "elementLabelProp": "id",
+            "detail": {
+              "type": "VerticalLayout",
+              "elements": [
+                {
+                  "type": "HorizontalLayout",
+                  "elements": [
+                    {
+                      "type": "Control",
+                      "scope": "#/properties/id"
+                    },
+                    {
+                      "type": "Control",
+                      "scope": "#/properties/type"
+                    }
+                  ]
+                },
+                {
+                  "type": "Control",
+                  "scope": "#/properties/connect_title"
+                },
+                {
+                  "type": "Control",
+                  "scope": "#/properties/connect_description"
+                },
+                {
+                  "type": "Control",
+                  "scope": "#/properties/webhook_data_types"
+                },
+                {
+                  "type": "Control",
+                  "scope": "#/properties/Jobs"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "Category",
+      "label": "Goals",
+      "elements": [
+        {
+          "type": "Control",
+          "scope": "#/properties/Goals",
+          "options": {
+            "showSortButtons": true,
+            "elementLabelProp": "id",
+            "detail": {
+              "type": "VerticalLayout",
+              "elements": [
+                {
+                  "type": "HorizontalLayout",
+                  "elements": [
+                    {
+                      "type": "Control",
+                      "scope": "#/properties/id"
+                    },
+                    {
+                      "type": "Control",
+                      "scope": "#/properties/type"
+                    }
+                  ]
+                },
+                {
+                  "type": "HorizontalLayout",
+                  "elements": [
+                    {
+                      "type": "Control",
+                      "scope": "#/properties/device_id"
+                    },
+                    {
+                      "type": "Control",
+                      "scope": "#/properties/data_type"
+                    }
+                  ]
+                },
+                {
+                  "type": "HorizontalLayout",
+                  "elements": [
+                    {
+                      "type": "Control",
+                      "scope": "#/properties/required_days"
+                    },
+                    {
+                      "type": "Control",
+                      "scope": "#/properties/show_loading"
+                    }
+                  ]
+                },
+                {
+                  "type": "HorizontalLayout",
+                  "elements": [
+                    {
+                      "type": "Control",
+                      "scope": "#/properties/Field"
+                    },
+                    {
+                      "type": "Control",
+                      "scope": "#/properties/target_value"
+                    }
+                  ]
+                },
+                {
+                  "type": "Control",
+                  "scope": "#/properties/Percentile"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "Category",
+      "label": "Jobs",
+      "elements": [
+        {
+          "type": "Control",
+          "scope": "#/properties/Jobs",
+          "options": {
+            "showSortButtons": true,
+            "elementLabelProp": "id",
+            "detail": {
+              "type": "VerticalLayout",
+              "elements": [
+                {
+                  "type": "HorizontalLayout",
+                  "elements": [
+                    {
+                      "type": "Control",
+                      "scope": "#/properties/id"
+                    },
+                    {
+                      "type": "Control",
+                      "scope": "#/properties/type"
+                    }
+                  ]
+                },
+                {
+                  "type": "HorizontalLayout",
+                  "elements": [
+                    {
+                      "type": "Control",
+                      "scope": "#/properties/notification_id"
+                    },
+                    {
+                      "type": "Control",
+                      "scope": "#/properties/data_type"
+                    }
+                  ]
+                },
+                {
+                  "type": "HorizontalLayout",
+                  "elements": [
+                    {
+                      "type": "Control",
+                      "scope": "#/properties/Service"
+                    },
+                    {
+                      "type": "Control",
+                      "scope": "#/properties/Days"
+                    }
+                  ]
+                },
+                {
+                  "type": "Control",
+                  "scope": "#/properties/MetaData"
+                },
+                {
+                  "type": "Control",
+                  "scope": "#/properties/Condition"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "Category",
+      "label": "Notifications",
+      "elements": [
+        {
+          "type": "Control",
+          "scope": "#/properties/Notifications",
+          "options": {
+            "showSortButtons": true,
+            "elementLabelProp": "id",
+            "detail": {
+              "type": "VerticalLayout",
+              "elements": [
+                {
+                  "type": "HorizontalLayout",
+                  "elements": [
+                    {
+                      "type": "Control",
+                      "scope": "#/properties/id"
+                    },
+                    {
+                      "type": "Control",
+                      "scope": "#/properties/Type"
+                    }
+                  ]
+                },
+                {
+                  "type": "HorizontalLayout",
+                  "elements": [
+                    {
+                      "type": "Control",
+                      "scope": "#/properties/Title"
+                    },
+                    {
+                      "type": "Control",
+                      "scope": "#/properties/Message"
+                    }
+                  ]
+                },
+                {
+                  "type": "HorizontalLayout",
+                  "elements": [
+                    {
+                      "type": "Control",
+                      "scope": "#/properties/Action"
+                    },
+                    {
+                      "type": "Control",
+                      "scope": "#/properties/Time"
+                    }
+                  ]
+                },
+                {
+                  "type": "HorizontalLayout",
+                  "elements": [
+                    {
+                      "type": "Control",
+                      "scope": "#/properties/ExpiryDate"
+                    },
+                    {
+                      "type": "Control",
+                      "scope": "#/properties/Expiry"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "Category",
+      "label": "Flows",
+      "elements": [
+        {
+          "type": "ListWithDetail",
+          "scope": "#/properties/flows",
+          "options": {
+            "labelRef": "#/properties/name",
+            "detail": {
+              "type": "VerticalLayout",
+              "elements": [
+                {
+                  "type": "HorizontalLayout",
+                  "elements": [
+                    {
+                      "type": "Control",
+                      "scope": "#/properties/path"
+                    },
+                    {
+                      "type": "Control",
+                      "scope": "#/properties/name"
+                    }
+                  ]
+                },
+                {
+                  "type": "ListWithDetail",
+                  "scope": "#/properties/pages",
+                  "options": {
+                    "labelRef": "#/properties/header_text",
+                    "detail": {
+                      "type": "VerticalLayout",
+                      "elements": [
+                        {
+                          "type": "Control",
+                          "scope": "#/properties/header_text"
+                        },
+                        {
+                          "type": "HorizontalLayout",
+                          "elements": [
+                            {
+                              "type": "Control",
+                              "scope": "#/properties/header_icon"
+                            },
+                            {
+                              "type": "Control",
+                              "scope": "#/properties/header_info"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "Control",
+                          "scope": "#/properties/navigation_conditions"
+                        },
+                        {
+                          "type": "Control",
+                          "scope": "#/properties/elements",
+                          "options": {
+                            "showSortButtons": true,
+                            "elementLabelProp": "type",
+                            "detail": {
+                              "type": "VerticalLayout",
+                              "elements": [
+                                {
+                                  "type": "HorizontalLayout",
+                                  "elements": [
+                                    {
+                                      "type": "Control",
+                                      "scope": "#/properties/type"
+                                    },
+                                    {
+                                      "type": "Control",
+                                      "scope": "#/properties/output_name"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "HorizontalLayout",
+                                  "elements": [
+                                    {
+                                      "type": "Control",
+                                      "scope": "#/properties/variable_name"
+                                    },
+                                    {
+                                      "type": "Control",
+                                      "scope": "#/properties/report"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "Control",
+                                  "scope": "#/properties/text"
+                                },
+                                {
+                                  "type": "Control",
+                                  "scope": "#/properties/placeholder"
+                                },
+                                {
+                                  "type": "Control",
+                                  "scope": "#/properties/buttons"
+                                },
+                                {
+                                  "type": "Control",
+                                  "scope": "#/properties/items"
+                                },
+                                {
+                                  "type": "Control",
+                                  "scope": "#/properties/uri"
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "Category",
+      "label": "Probes",
+      "elements": [
+        {
+          "type": "Control",
+          "scope": "#/properties/probes"
+        }
+      ]
+    }
+  ]
+}
