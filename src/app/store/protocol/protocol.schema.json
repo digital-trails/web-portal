@@ -6,23 +6,39 @@
   "properties": {
     "home": {
       "type": "object",
+      "description": "Home screen configuration",
       "properties": {
-        "Title": { "type": "string", "description": "Title displayed on the home screen" },
-        "Element": { "$ref": "#/definitions/HomeElement" }
+        "Title": {
+          "type": "string",
+          "description": "Home screen title"
+        },
+        "Elements": {
+          "type": "array",
+          "description": "Home screen elements",
+          "items": {
+            "$ref": "#/definitions/HomeElement"
+          }
+        }
       }
     },
     "menu": {
       "type": "array",
-      "description": "Menu items displayed in the application menu",
-      "items": { "$ref": "#/definitions/StudyAction" }
+      "description": "Menu actions",
+      "items": {
+        "$ref": "#/definitions/StudyAction"
+      }
     },
     "settings": {
       "type": "object",
+      "description": "Study settings",
       "properties": {
-        "unenroll": { "type": "string", "description": "URL action for unenrollment" },
+        "unenroll": {
+          "type": "string",
+          "description": "Action URL for unenrollment. Supported schemes: flow://path, navpage://PageName, navmodal://PageName, http(s)://..."
+        },
         "font_scale": {
           "type": "number",
-          "description": "Font scale multiplier for accessibility",
+          "description": "Font scaling factor",
           "minimum": 0.5,
           "maximum": 2.0,
           "default": 1.0,
@@ -32,409 +48,819 @@
     },
     "probes": {
       "type": "array",
-      "description": "Array of probe configurations (opaque JSON tokens)",
-      "items": { "type": "object" }
+      "description": "Array of probe configurations (arbitrary JSON)",
+      "items": {
+        "type": "object"
+      }
     },
     "start_flow": {
       "type": "string",
-      "description": "Path to the intro flow shown on first launch. Format: flow://path"
+      "description": "flow:// URL for the intro flow shown on first launch"
     },
-    "theme_light": { "$ref": "#/definitions/ProtocolTheme" },
-    "theme_dark": { "$ref": "#/definitions/ProtocolTheme" },
+    "theme_light": {
+      "$ref": "#/definitions/ProtocolTheme",
+      "description": "Light theme colors"
+    },
+    "theme_dark": {
+      "$ref": "#/definitions/ProtocolTheme",
+      "description": "Dark theme colors"
+    },
     "Surveys": {
       "type": "array",
-      "description": "Survey definitions (converted from IDictionary)",
-      "items": { "$ref": "#/definitions/Survey" }
+      "description": "Survey definitions (converted from Dictionary)",
+      "items": {
+        "$ref": "#/definitions/Survey"
+      }
     },
     "Reminders": {
       "type": "array",
-      "description": "Reminder definitions (converted from IDictionary)",
-      "items": { "$ref": "#/definitions/Reminder" }
+      "description": "Reminder definitions (converted from Dictionary)",
+      "items": {
+        "$ref": "#/definitions/Reminder"
+      }
     },
     "Devices": {
       "type": "array",
-      "description": "Device integrations (converted from IDictionary)",
-      "items": { "$ref": "#/definitions/Device" }
+      "description": "Device integrations (converted from Dictionary)",
+      "items": {
+        "$ref": "#/definitions/Device"
+      }
     },
     "Goals": {
       "type": "array",
-      "description": "Goal definitions (converted from IDictionary)",
-      "items": { "$ref": "#/definitions/Goal" }
+      "description": "Goal definitions (converted from Dictionary)",
+      "items": {
+        "$ref": "#/definitions/Goal"
+      }
     },
     "Jobs": {
       "type": "array",
-      "description": "Background job definitions (converted from IDictionary)",
-      "items": { "$ref": "#/definitions/Job" }
+      "description": "Job definitions (converted from Dictionary)",
+      "items": {
+        "$ref": "#/definitions/Job"
+      }
     },
     "Notifications": {
       "type": "array",
-      "description": "Notification definitions (converted from IDictionary)",
-      "items": { "$ref": "#/definitions/Notification" }
+      "description": "Notification definitions (converted from Dictionary)",
+      "items": {
+        "$ref": "#/definitions/Notification"
+      }
     },
     "flows": {
       "type": "array",
-      "description": "Flow definitions (multi-page wizards)",
-      "items": { "$ref": "#/definitions/Flow" }
+      "description": "Flow definitions for multi-page wizards",
+      "items": {
+        "$ref": "#/definitions/Flow"
+      }
     }
   },
   "definitions": {
     "StudyAction": {
       "type": "object",
-      "description": "An actionable item with text, icon, and navigation",
+      "description": "An action button in the menu or elsewhere",
       "properties": {
-        "text": { "type": "string", "description": "Display text for the action" },
-        "icon": { "type": "string", "description": "Icon source (simplified from IconSource)" },
+        "text": {
+          "type": "string",
+          "description": "Button text"
+        },
+        "icon": {
+          "type": "string",
+          "description": "Icon source (simplified to string)"
+        },
         "action": {
           "type": "string",
-          "description": "Action URL. Supported schemes: flow:// (start flow), navpage:// (navigate), navmodal:// (modal), http(s):// (browser)"
+          "description": "Action URL. Supported schemes: flow://path (start flow), navpage://PageName (navigate), navmodal://PageName (modal), http(s)://... (browser)"
         },
-        "background_color": { "type": "string", "description": "Background color (hex or named)" },
-        "mark_completed_on_click": { "type": "boolean", "description": "Whether to mark the action completed when clicked" }
-      },
-      "required": ["text", "action"]
+        "background_color": {
+          "type": "string",
+          "description": "Button background color (hex)"
+        },
+        "mark_completed_on_click": {
+          "type": "boolean",
+          "description": "Whether to mark as completed on click"
+        }
+      }
     },
     "ProtocolTheme": {
       "type": "object",
-      "description": "Theme color palette",
+      "description": "Theme colors",
       "properties": {
-        "Accent": { "type": "string", "description": "Accent color (hex)" },
-        "Text": { "type": "string", "description": "Text color (hex)" },
-        "Primary": { "type": "string", "description": "Primary color (hex)" },
-        "Secondary": { "type": "string", "description": "Secondary background color (hex)" },
-        "SecondaryButton": { "type": "string", "description": "Secondary button color (hex)" },
-        "Destructive": { "type": "string", "description": "Destructive action color (hex)" },
-        "Success": { "type": "string", "description": "Success indicator color (hex)" }
-      }
-    },
-    "HomeElement": {
-      "type": "object",
-      "description": "A home screen UI element (flattened from IHomeElementModel)",
-      "properties": {
-        "id": { "type": "string", "description": "Unique identifier (for array items)" },
-        "type": {
+        "Accent": {
           "type": "string",
-          "enum": ["ref", "sessions", "carousel", "survey", "button", "alert", "tiles", "list", "devices", "reports"],
-          "description": "Element type discriminator"
+          "description": "Accent color (hex)"
         },
-        "Path": { "type": "string", "description": "Reference path (for ref type)" },
-        "Title": { "type": "string", "description": "Element title (for carousel, tiles, reports, alert)" },
-        "Message": { "type": "string", "description": "Alert message (for alert type)" },
-        "icon": { "type": "string", "description": "Icon source (for alert, tiles type)" },
-        "Action": { "$ref": "#/definitions/StudyAction", "description": "Action definition (for button, survey type)" },
-        "Actions": {
-          "type": "array",
-          "items": { "$ref": "#/definitions/StudyAction" },
-          "description": "Array of actions (for carousel, tiles type)"
+        "Text": {
+          "type": "string",
+          "description": "Text color (hex)"
         },
-        "Elements": {
-          "type": "array",
-          "items": { "$ref": "#/definitions/HomeElement" },
-          "description": "Child elements (for list type)"
+        "Primary": {
+          "type": "string",
+          "description": "Primary color (hex)"
         },
-        "Summary": {
-          "type": "array",
-          "items": { "$ref": "#/definitions/DeviceSummary" },
-          "description": "Device summary items (for devices type)"
+        "Secondary": {
+          "type": "string",
+          "description": "Secondary color (hex)"
         },
-        "Reports": {
-          "type": "array",
-          "items": { "$ref": "#/definitions/ReportElement" },
-          "description": "Report items (for reports type)"
+        "SecondaryButton": {
+          "type": "string",
+          "description": "Secondary button color (hex)"
         },
-        "Left": { "$ref": "#/definitions/StudyAction", "description": "Left session button (for sessions type)" },
-        "Right": { "$ref": "#/definitions/StudyAction", "description": "Right session button (for sessions type)" },
-        "lock_right": { "$ref": "#/definitions/StudyAction", "description": "Locked right button action (for sessions type)" },
-        "lock_time": { "type": "string", "description": "Lock duration, TimeSpan format e.g. 1.00:00:00 (for sessions type)" }
-      },
-      "required": ["type"]
-    },
-    "DeviceSummary": {
-      "type": "object",
-      "description": "Device summary display item",
-      "properties": {
-        "device_id": { "type": "string", "description": "Reference to device ID" },
-        "Text": { "type": "string", "description": "Display text" }
-      }
-    },
-    "ReportElement": {
-      "type": "object",
-      "description": "Report item for display/download",
-      "properties": {
-        "Action": { "type": "string", "description": "Action URL for report" },
-        "Title": { "type": "string", "description": "Report title" },
-        "Report": { "type": "boolean", "description": "Whether this is a generated report" },
-        "File": { "type": "string", "description": "File path for report" }
+        "Destructive": {
+          "type": "string",
+          "description": "Destructive action color (hex)"
+        },
+        "Success": {
+          "type": "string",
+          "description": "Success color (hex)"
+        }
       }
     },
     "Survey": {
       "type": "object",
-      "description": "Survey definition (flattened from ISurvey)",
+      "description": "Survey definition (flattened from ISurvey implementations)",
+      "required": ["id", "type"],
       "properties": {
-        "id": { "type": "string", "description": "Unique survey identifier" },
+        "id": {
+          "type": "string",
+          "description": "Unique survey ID"
+        },
         "type": {
           "type": "string",
-          "enum": ["frequency", "sequential", "random"],
-          "description": "Survey type discriminator"
+          "description": "Survey type discriminator",
+          "enum": ["frequency", "sequential", "random"]
         },
-        "path": { "type": "string", "description": "Path to the survey flow or page" },
-        "frequency": { "type": "string", "description": "Repetition frequency, TimeSpan format e.g. 1.00:00:00 (for frequency type)" },
-        "expiry": { "type": "string", "description": "Slot expiry duration, TimeSpan format e.g. 08:00:00" },
-        "time": { "type": "string", "description": "Time of day for survey, TimeSpan format e.g. 09:00:00 (for frequency type)" },
-        "skip": { "type": "integer", "description": "Number of initial slots to skip (for frequency type)" },
-        "take": { "type": "integer", "description": "Number of slots to generate (for frequency type)" },
-        "trigger_flow_path": { "type": "string", "description": "Flow path that triggers survey slot creation (for sequential type)" },
-        "period": { "type": "string", "description": "Period duration, TimeSpan format (for sequential/random type)" },
-        "gap": { "type": "string", "description": "Minimum gap between slots, TimeSpan format (for random type)" },
-        "choose": { "type": "integer", "description": "Number of slots to randomly choose (for random type)" },
+        "path": {
+          "type": "string",
+          "description": "flow:// path to the survey flow"
+        },
+        "frequency": {
+          "type": "string",
+          "format": "timespan",
+          "description": "TimeSpan format, e.g. 1.00:00:00 or 08:00:00 (FrequencySurvey)"
+        },
+        "expiry": {
+          "type": "string",
+          "format": "timespan",
+          "description": "TimeSpan format for expiry duration"
+        },
+        "time": {
+          "type": "string",
+          "format": "time",
+          "description": "Time of day (HH:mm)"
+        },
+        "skip": {
+          "type": "integer",
+          "description": "Number of slots to skip (FrequencySurvey)"
+        },
+        "take": {
+          "type": "integer",
+          "description": "Number of slots to take (FrequencySurvey)"
+        },
+        "period": {
+          "type": "string",
+          "format": "timespan",
+          "description": "TimeSpan format for period (SequentialSurvey, RandomSurvey)"
+        },
+        "trigger_flow_path": {
+          "type": "string",
+          "description": "Flow path that triggers this survey (SequentialSurvey)"
+        },
+        "locked_text": {
+          "type": "string",
+          "description": "Text shown when locked (SequentialSurvey)"
+        },
+        "gap": {
+          "type": "string",
+          "format": "timespan",
+          "description": "TimeSpan format for minimum gap between slots (RandomSurvey)"
+        },
+        "choose": {
+          "type": "integer",
+          "description": "Number of random slots to choose (RandomSurvey)"
+        },
         "paths": {
           "type": "array",
-          "items": { "type": "string" },
-          "description": "Array of survey paths to randomly select from (for random type)"
+          "description": "Array of flow paths for random selection (RandomSurvey)",
+          "items": {
+            "type": "string"
+          }
         }
-      },
-      "required": ["id", "type"]
+      }
     },
     "Reminder": {
       "type": "object",
-      "description": "Reminder definition (flattened from IReminder)",
+      "description": "Reminder definition (flattened from IReminder implementations)",
+      "required": ["id", "type"],
       "properties": {
-        "id": { "type": "string", "description": "Unique reminder identifier" },
+        "id": {
+          "type": "string",
+          "description": "Unique reminder ID"
+        },
         "type": {
           "type": "string",
-          "enum": ["survey"],
-          "description": "Reminder type discriminator"
+          "description": "Reminder type discriminator",
+          "enum": ["survey"]
         },
-        "survey_id": { "type": "string", "description": "Reference to survey ID (for survey type)" },
-        "skip": { "type": "integer", "description": "Number of reminders to skip (for survey type)" },
-        "take": { "type": "integer", "description": "Number of reminders to generate (for survey type)" },
-        "frequency": { "type": "string", "description": "Reminder frequency, TimeSpan format e.g. 00:30:00 (for survey type)" },
-        "time": { "type": "string", "description": "Time of day for reminder, TimeSpan format (for survey type)" }
-      },
-      "required": ["id", "type"]
+        "survey_id": {
+          "type": "string",
+          "description": "ID of the survey to remind about (SurveyReminder)"
+        },
+        "skip": {
+          "type": "integer",
+          "description": "Number of reminders to skip (SurveyReminder)"
+        },
+        "take": {
+          "type": "integer",
+          "description": "Number of reminders to take (SurveyReminder)"
+        },
+        "frequency": {
+          "type": "string",
+          "format": "timespan",
+          "description": "TimeSpan format for reminder frequency (SurveyReminder)"
+        },
+        "time": {
+          "type": "string",
+          "format": "time",
+          "description": "Time of day (HH:mm)"
+        }
+      }
     },
     "Device": {
       "type": "object",
-      "description": "Device integration (flattened from IDevice)",
+      "description": "Device integration definition (flattened from IDevice implementations)",
+      "required": ["id", "type"],
       "properties": {
-        "id": { "type": "string", "description": "Unique device identifier" },
+        "id": {
+          "type": "string",
+          "description": "Unique device ID"
+        },
         "type": {
           "type": "string",
-          "enum": ["fitbit", "oura", "wisepill"],
-          "description": "Device type discriminator"
+          "description": "Device type discriminator",
+          "enum": ["fitbit", "oura", "wisepill"]
         },
-        "connect_title": { "type": "string", "description": "Title shown in connect UI" },
-        "connect_description": { "type": "string", "description": "Description shown in connect UI" },
-        "webhook_data_types": {
+        "Scopes": {
           "type": "array",
-          "items": { "type": "string" },
-          "description": "Data types to receive via webhook"
+          "description": "OAuth scopes (for OAuth devices)",
+          "items": {
+            "type": "string"
+          }
         },
-        "Jobs": {
+        "WebhookDataTypes": {
           "type": "array",
-          "items": { "type": "string" },
-          "description": "Job IDs associated with this device"
+          "description": "Webhook data types (for OAuth devices)",
+          "items": {
+            "type": "string"
+          }
+        },
+        "AndroidSync": {
+          "type": "string",
+          "description": "Android sync config (for OAuth devices)"
+        },
+        "IosSync": {
+          "type": "string",
+          "description": "iOS sync config (for OAuth devices)"
         }
-      },
-      "required": ["id", "type"]
+      }
     },
     "Goal": {
       "type": "object",
-      "description": "Goal definition (flattened from IGoal)",
+      "description": "Goal definition (flattened from IGoal implementations)",
+      "required": ["id", "type"],
       "properties": {
-        "id": { "type": "string", "description": "Unique goal identifier" },
+        "id": {
+          "type": "string",
+          "description": "Unique goal ID"
+        },
         "type": {
           "type": "string",
-          "enum": ["percentile", "percentage"],
-          "description": "Goal type discriminator"
+          "description": "Goal type discriminator",
+          "enum": ["percentile", "percentage"]
         },
-        "device_id": { "type": "string", "description": "Reference to device ID" },
-        "data_type": { "type": "string", "description": "Data type to evaluate (e.g. daily_activity, sleep)" },
-        "required_days": { "type": "integer", "description": "Number of historical days required" },
-        "show_loading": { "type": "boolean", "description": "Whether to show loading indicator" },
-        "Field": { "type": "string", "description": "Field name to evaluate" },
-        "target_value": { "type": "number", "description": "Target value to match (for percentage type)" },
-        "Percentile": { "type": "number", "description": "Percentile threshold 0-1 (for percentile type)" }
-      },
-      "required": ["id", "type"]
+        "device_id": {
+          "type": "string",
+          "description": "Device ID this goal tracks"
+        },
+        "data_type": {
+          "type": "string",
+          "description": "Data type to track (e.g., daily_activity, sleep)"
+        },
+        "required_days": {
+          "type": "integer",
+          "description": "Number of days of history required"
+        },
+        "show_loading": {
+          "type": "boolean",
+          "description": "Whether to show loading indicator"
+        },
+        "Field": {
+          "type": "string",
+          "description": "Field name to track (GoalField enum)"
+        },
+        "Percentile": {
+          "type": "number",
+          "description": "Target percentile (0-1) (PercentileGoal)"
+        },
+        "target_value": {
+          "type": "number",
+          "description": "Target value (PercentageGoal)"
+        }
+      }
     },
     "Job": {
       "type": "object",
-      "description": "Background job definition (flattened from IJob)",
+      "description": "Job definition (flattened from IJob implementations)",
+      "required": ["id", "type"],
       "properties": {
-        "id": { "type": "string", "description": "Unique job identifier" },
+        "id": {
+          "type": "string",
+          "description": "Unique job ID"
+        },
         "type": {
           "type": "string",
-          "enum": ["device"],
-          "description": "Job type discriminator"
+          "description": "Job type discriminator",
+          "enum": ["device"]
         },
-        "notification_id": { "type": "string", "description": "Notification ID to trigger" },
+        "notification_id": {
+          "type": "string",
+          "description": "Associated notification ID"
+        },
         "MetaData": {
           "type": "object",
-          "description": "Additional metadata for the job",
+          "description": "Arbitrary metadata",
           "additionalProperties": true
         },
-        "data_type": { "type": "string", "description": "Data type to process (for device type)" },
-        "Service": { "type": "string", "description": "Service name (for device type)" },
-        "Days": { "type": "integer", "description": "Number of days to process (for device type)" },
+        "data_type": {
+          "type": "string",
+          "description": "Data type to fetch (DeviceJob)"
+        },
+        "Service": {
+          "type": "string",
+          "description": "Service identifier (DeviceJob)"
+        },
+        "Days": {
+          "type": "integer",
+          "description": "Number of days (DeviceJob)"
+        },
         "Condition": {
           "type": "array",
-          "items": { "type": "string" },
-          "description": "Condition array (for device type)"
+          "description": "Condition array (DeviceJob)",
+          "items": {
+            "type": "string"
+          }
         }
-      },
-      "required": ["id", "type"]
+      }
     },
     "Notification": {
       "type": "object",
       "description": "Notification definition",
+      "required": ["id"],
       "properties": {
-        "id": { "type": "string", "description": "Unique notification identifier" },
-        "Title": { "type": "string", "description": "Notification title" },
-        "Message": { "type": "string", "description": "Notification message" },
-        "Action": { "type": "string", "description": "Action URL to trigger on tap" },
-        "ExpiryDate": { "type": "string", "format": "date-time", "description": "Expiry date (ISO 8601)" },
-        "Expiry": { "type": "string", "description": "Expiry duration, TimeSpan format" },
-        "Time": { "type": "string", "format": "date-time", "description": "Scheduled time (ISO 8601)" },
+        "id": {
+          "type": "string",
+          "description": "Unique notification ID"
+        },
+        "Title": {
+          "type": "string",
+          "description": "Notification title"
+        },
+        "Message": {
+          "type": "string",
+          "description": "Notification message"
+        },
+        "Action": {
+          "type": "string",
+          "description": "Action URL when notification is tapped"
+        },
+        "ExpiryDate": {
+          "type": "string",
+          "format": "date",
+          "description": "Expiry date"
+        },
+        "Expiry": {
+          "type": "string",
+          "format": "timespan",
+          "description": "TimeSpan format for expiry duration"
+        },
         "Type": {
           "type": "string",
-          "enum": ["Unknown", "Remote", "Survey", "Reminder"],
-          "description": "Notification type"
+          "description": "Notification type",
+          "enum": ["Unknown", "Remote", "Survey", "Reminder"]
+        },
+        "Time": {
+          "type": "string",
+          "format": "date",
+          "description": "Notification delivery date"
         }
-      },
-      "required": ["id"]
+      }
+    },
+    "HomeElement": {
+      "type": "object",
+      "description": "Home screen element (flattened from IHomeElementModel implementations)",
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Element type discriminator",
+          "enum": ["sessions", "carousel", "survey", "button", "alert", "tiles", "list", "devices", "goals", "reports"]
+        },
+        "Action": {
+          "$ref": "#/definitions/StudyAction",
+          "description": "Action for button/survey elements (ButtonElementModel, SurveyElementModel)"
+        },
+        "Left": {
+          "$ref": "#/definitions/StudyAction",
+          "description": "Left action (SessionsElementModel)"
+        },
+        "Right": {
+          "$ref": "#/definitions/StudyAction",
+          "description": "Right action (SessionsElementModel)"
+        },
+        "lock_right": {
+          "$ref": "#/definitions/StudyAction",
+          "description": "Lock right action (SessionsElementModel)"
+        },
+        "lock_time": {
+          "type": "string",
+          "format": "timespan",
+          "description": "TimeSpan format for lock time (SessionsElementModel)"
+        },
+        "Actions": {
+          "type": "array",
+          "description": "Array of actions (CarouselElementModel, TilesElementModel)",
+          "items": {
+            "$ref": "#/definitions/StudyAction"
+          }
+        },
+        "title": {
+          "type": "string",
+          "description": "Element title (CarouselElementModel, TilesElementModel, ReportsElementModel)"
+        },
+        "icon": {
+          "type": "string",
+          "description": "Icon source (TilesElementModel, ReportsElementModel)"
+        },
+        "Title": {
+          "type": "string",
+          "description": "Alert title (AlertElementModel)"
+        },
+        "Message": {
+          "type": "string",
+          "description": "Alert message (AlertElementModel)"
+        },
+        "Icon": {
+          "type": "string",
+          "description": "Alert icon (AlertElementModel)"
+        },
+        "summary": {
+          "type": "array",
+          "description": "Device summary array (DeviceElementModel)",
+          "items": {
+            "$ref": "#/definitions/DeviceSummary"
+          }
+        },
+        "Reports": {
+          "type": "array",
+          "description": "Report elements (ReportsElementModel)",
+          "items": {
+            "$ref": "#/definitions/ReportElement"
+          }
+        },
+        "Elements": {
+          "type": "array",
+          "description": "Child elements (ListElementModel)",
+          "items": {
+            "$ref": "#/definitions/HomeElement"
+          }
+        }
+      }
+    },
+    "DeviceSummary": {
+      "type": "object",
+      "description": "Device summary for home screen",
+      "properties": {
+        "device_id": {
+          "type": "string",
+          "description": "Device ID"
+        },
+        "Text": {
+          "type": "string",
+          "description": "Display text"
+        }
+      }
+    },
+    "ReportElement": {
+      "type": "object",
+      "description": "Report element for home screen",
+      "properties": {
+        "Action": {
+          "type": "string",
+          "description": "Action URL when report is tapped"
+        },
+        "Title": {
+          "type": "string",
+          "description": "Report title"
+        },
+        "Report": {
+          "type": "boolean",
+          "description": "Whether this is a report"
+        },
+        "File": {
+          "type": "string",
+          "description": "File path for report"
+        }
+      }
     },
     "Flow": {
       "type": "object",
-      "description": "Flow definition (multi-page wizard)",
+      "description": "A multi-page flow (wizard)",
+      "required": ["path"],
       "properties": {
-        "path": { "type": "string", "description": "Flow path identifier, e.g. intro/welcome" },
-        "name": { "type": "string", "description": "Human-readable flow name for sidebar" },
+        "path": {
+          "type": "string",
+          "description": "The flow:// URL path for this flow"
+        },
+        "name": {
+          "type": "string",
+          "description": "Human-readable display name for the sidebar"
+        },
         "pages": {
           "type": "array",
-          "description": "Ordered sequence of pages",
-          "items": { "$ref": "#/definitions/FlowPage" }
+          "description": "Ordered sequence of pages in this flow",
+          "items": {
+            "$ref": "#/definitions/FlowPage"
+          }
         }
-      },
-      "required": ["path", "pages"]
+      }
     },
     "FlowPage": {
       "type": "object",
       "description": "A single page in a flow",
       "properties": {
-        "header_text": { "type": "string", "description": "Page header text" },
-        "header_icon": { "type": "string", "description": "Page header icon path" },
-        "header_info": { "type": "string", "description": "Page header info text" },
-        "navigation_conditions": {
+        "header_text": {
           "type": "string",
-          "description": "Navigation advance condition (e.g. WaitForClick, WaitForComplete, Auto)"
+          "description": "Page header text"
+        },
+        "header_icon": {
+          "type": "string",
+          "description": "Page header icon path"
+        },
+        "header_info": {
+          "type": "string",
+          "description": "Page header info text"
+        },
+        "navigators": {
+          "type": "array",
+          "description": "Navigation conditions",
+          "items": {
+            "type": "string",
+            "enum": ["wait_for_click", "wait_for_correct", "wait_for_complete", "wait_for_viewable"]
+          }
         },
         "elements": {
           "type": "array",
-          "description": "Page elements",
-          "items": { "$ref": "#/definitions/FlowElement" }
+          "description": "Page elements (form inputs, displays, etc.)",
+          "items": {
+            "$ref": "#/definitions/FlowElement"
+          }
         }
       }
     },
     "FlowElement": {
       "type": "object",
-      "description": "Flow page element (flattened from IFlowElement)",
+      "description": "Flow element (flattened from IFlowElement implementations)",
+      "required": ["type"],
       "properties": {
         "type": {
           "type": "string",
-          "enum": ["text", "entry", "entrylist", "slider", "picker", "timedtext", "buttons", "media", "wordpuzzle", "scheduler", "time", "historictext", "listpicker"],
-          "description": "Element type discriminator"
+          "description": "Element type discriminator",
+          "enum": ["text", "entry", "entrylist", "slider", "picker", "timedtext", "buttons", "media", "wordpuzzle", "scheduler", "time", "historictext", "listpicker"]
         },
-        "output_name": { "type": "string", "description": "Output field name for data collection" },
-        "variable_name": { "type": "string", "description": "Variable name for flow state" },
-        "report": { "type": "string", "description": "Report question text" },
-        "text": { "type": "string", "description": "Display text (for text type)" },
-        "html": { "type": "boolean", "description": "Whether text is HTML (for text type)" },
-        "font_size": { "type": "integer", "description": "Font size (for text type)" },
-        "font_attributes": { "type": "string", "description": "Font attributes: None, Bold, Italic (for text type)" },
-        "text_alignment": { "type": "string", "description": "Text alignment: Start, Center, End (for text type)" },
-        "has_variable": { "type": "boolean", "description": "Whether text contains variables (for text type)" },
-        "label_type": { "type": "string", "description": "Label type: Text, Title, Subtitle, SubText (for text type)" },
-        "height": { "type": "integer", "description": "Editor height (for entry type)" },
-        "placeholder": { "type": "string", "description": "Placeholder text (for entry, picker type)" },
-        "keyboard": { "type": "string", "description": "Keyboard type (for entry type)" },
-        "count": { "type": "integer", "description": "Item count (for entrylist, scheduler type)" },
-        "min": { "type": "number", "description": "Minimum value (for slider type)" },
-        "max": { "type": "number", "description": "Maximum value (for slider type)" },
-        "display_min_max": { "type": "boolean", "description": "Whether to display min/max labels (for slider type)" },
-        "display_slider_value": { "type": "boolean", "description": "Whether to display slider value (for slider type)" },
-        "others": {
-          "type": "array",
-          "items": { "type": "string" },
-          "description": "Additional options (for slider type)"
+        "output_name": {
+          "type": "string",
+          "description": "Output name for data collection"
+        },
+        "variable_name": {
+          "type": "string",
+          "description": "Variable name for flow context"
+        },
+        "report": {
+          "type": "string",
+          "description": "Report label/question"
+        },
+        "text": {
+          "type": "string",
+          "description": "Text content (TextElement)"
+        },
+        "html": {
+          "type": "boolean",
+          "description": "Whether text is HTML (TextElement)"
+        },
+        "font_size": {
+          "type": "integer",
+          "description": "Font size (TextElement)"
+        },
+        "font_attributes": {
+          "type": "string",
+          "description": "Font attributes (TextElement)"
+        },
+        "text_alignment": {
+          "type": "string",
+          "description": "Text alignment (TextElement)"
+        },
+        "has_variable": {
+          "type": "boolean",
+          "description": "Whether text contains variables (TextElement)"
+        },
+        "label_type": {
+          "type": "string",
+          "description": "Label type (TextElement)"
+        },
+        "height": {
+          "type": "integer",
+          "description": "Height in pixels (EditorElement)"
+        },
+        "placeholder": {
+          "type": "string",
+          "description": "Placeholder text (EditorElement, PickerElement, EditorListElement)"
+        },
+        "keyboard": {
+          "type": "string",
+          "description": "Keyboard type (EditorElement)"
+        },
+        "count": {
+          "type": "integer",
+          "description": "Count of items (EditorListElement, SchedulerElement)"
+        },
+        "min": {
+          "type": "number",
+          "description": "Minimum value (SliderElement)"
+        },
+        "max": {
+          "type": "number",
+          "description": "Maximum value (SliderElement)"
+        },
+        "display_min_max": {
+          "type": "boolean",
+          "description": "Whether to display min/max labels (SliderElement)"
+        },
+        "display_slider_value": {
+          "type": "boolean",
+          "description": "Whether to display slider value (SliderElement)"
         },
         "options": {
           "type": "array",
-          "items": { "type": "string" },
-          "description": "Additional options (for slider type)"
+          "description": "Options array (OptionsElement wrapper for SliderElement)",
+          "items": {
+            "type": "string"
+          }
         },
         "items": {
           "type": "array",
-          "items": { "type": "string" },
-          "description": "Picker items (for picker type)"
-        },
-        "title": { "type": "string", "description": "Title (for picker type)" },
-        "texts": {
-          "type": "array",
-          "items": { "type": "string" },
-          "description": "Texts to display in sequence (for timedtext type)"
-        },
-        "duration": { "type": "number", "description": "Total duration in milliseconds (for timedtext type)" },
-        "buttons": {
-          "type": "array",
-          "items": { "type": "string" },
-          "description": "Button labels (for buttons type)"
-        },
-        "column_count": { "type": "integer", "description": "Number of columns for button grid (for buttons type)" },
-        "multiselect": { "type": "boolean", "description": "Whether to allow multiple selections (for buttons type)" },
-        "correct_value": { "type": "string", "description": "Correct answer value (for buttons, wordpuzzle type)" },
-        "correct_feedback": { "type": "string", "description": "Feedback for correct answer (for buttons, wordpuzzle type)" },
-        "correct_delay": { "type": "number", "description": "Delay for correct feedback in milliseconds (for buttons, wordpuzzle type)" },
-        "incorrect_feedback": { "type": "string", "description": "Feedback for incorrect answer (for buttons, wordpuzzle type)" },
-        "incorrect_delay": { "type": "number", "description": "Delay for incorrect feedback in milliseconds (for buttons, wordpuzzle type)" },
-        "uri": { "type": "string", "description": "Media URI (for media/image/video type)" },
-        "words": {
-          "type": "array",
-          "items": { "type": "string" },
-          "description": "Words for puzzle (for wordpuzzle type)"
-        },
-        "missing_letter_count": { "type": "integer", "description": "Number of letters to hide (for wordpuzzle type)" },
-        "action": { "type": "string", "description": "Action URL for scheduled items (for scheduler type)" },
-        "message": { "type": "string", "description": "Message for scheduled notifications (for scheduler type)" },
-        "days_ahead": { "type": "integer", "description": "How many days ahead to allow scheduling (for scheduler type)" },
-        "schedule_flow": { "type": "boolean", "description": "Whether to schedule the flow (for scheduler type)" },
-        "has_time": { "type": "boolean", "description": "Whether to include time picker (for scheduler type)" },
-        "default_time": { "type": "string", "description": "Default time value, TimeSpan format (for time type)" },
-        "open": { "type": "string", "description": "Opening time, TimeSpan format (for time type)" },
-        "close": { "type": "string", "description": "Closing time, TimeSpan format (for time type)" },
-        "unique": { "type": "boolean", "description": "Whether to show unique values only (for historictext type)" },
-        "exclude_values": {
-          "type": "array",
-          "description": "Values to exclude (for historictext type)"
-        },
-        "other": { "type": "string", "description": "Other option label (for listpicker type)" },
-        "lists": {
-          "type": "array",
-          "description": "Lists of items to pick from (for listpicker type)",
+          "description": "Items array (PickerElement)",
           "items": {
-            "type": "object",
-            "properties": {
-              "Name": { "type": "string" },
-              "Items": {
-                "type": "array",
-                "items": { "type": "string" }
-              }
-            }
+            "type": "string"
           }
         },
-        "Border": { "type": "boolean", "description": "Whether to show border around element" },
-        "display_delay": { "type": "integer", "description": "Delay before displaying element in milliseconds" }
-      },
-      "required": ["type"]
+        "title": {
+          "type": "string",
+          "description": "Title (PickerElement)"
+        },
+        "buttons": {
+          "type": "array",
+          "description": "Button values (ButtonsElement)",
+          "items": {
+            "type": "string"
+          }
+        },
+        "column_count": {
+          "type": "integer",
+          "description": "Number of columns (ButtonsElement)"
+        },
+        "multiselect": {
+          "type": "boolean",
+          "description": "Allow multiple selections (ButtonsElement)"
+        },
+        "correct_value": {
+          "type": "string",
+          "description": "Correct answer (ButtonsElement, WordPuzzleElement)"
+        },
+        "correct_feedback": {
+          "type": "string",
+          "description": "Feedback for correct answer (ButtonsElement, WordPuzzleElement)"
+        },
+        "correct_delay": {
+          "type": "number",
+          "description": "Delay for correct feedback in ms (ButtonsElement, WordPuzzleElement)"
+        },
+        "incorrect_feedback": {
+          "type": "string",
+          "description": "Feedback for incorrect answer (ButtonsElement, WordPuzzleElement)"
+        },
+        "incorrect_delay": {
+          "type": "number",
+          "description": "Delay for incorrect feedback in ms (ButtonsElement, WordPuzzleElement)"
+        },
+        "default_time": {
+          "type": "string",
+          "format": "time",
+          "description": "Default time (HH:mm)"
+        },
+        "open": {
+          "type": "string",
+          "format": "time",
+          "description": "Open time (HH:mm)"
+        },
+        "close": {
+          "type": "string",
+          "format": "time",
+          "description": "Close time (HH:mm)"
+        },
+        "uri": {
+          "type": "string",
+          "description": "Image or video URI (ImageElement, VideoElement)"
+        },
+        "texts": {
+          "type": "array",
+          "description": "Array of timed texts (TimedTextElement)",
+          "items": {
+            "type": "string"
+          }
+        },
+        "duration": {
+          "type": "number",
+          "description": "Total duration in ms (TimedTextElement)"
+        },
+        "words": {
+          "type": "array",
+          "description": "Array of words (WordPuzzleElement)",
+          "items": {
+            "type": "string"
+          }
+        },
+        "missing_letter_count": {
+          "type": "integer",
+          "description": "Number of missing letters (WordPuzzleElement)"
+        },
+        "action": {
+          "type": "string",
+          "description": "Action URL. Supported schemes: flow://path (start flow), navpage://PageName (navigate), navmodal://PageName (modal), http(s)://... (browser) (SchedulerElement)"
+        },
+        "message": {
+          "type": "string",
+          "description": "Notification message (SchedulerElement)"
+        },
+        "days_ahead": {
+          "type": "integer",
+          "description": "Days ahead limit (SchedulerElement)"
+        },
+        "schedule_flow": {
+          "type": "boolean",
+          "description": "Whether to schedule the flow (SchedulerElement)"
+        },
+        "has_time": {
+          "type": "boolean",
+          "description": "Whether to include time (SchedulerElement)"
+        },
+        "unique": {
+          "type": "boolean",
+          "description": "Show unique values only (HistoricTextElement)"
+        },
+        "exclude_values": {
+          "type": "array",
+          "description": "Values to exclude (HistoricTextElement)",
+          "items": {}
+        },
+        "other": {
+          "type": "string",
+          "description": "Other option label (ListPickerElement)"
+        },
+        "lists": {
+          "type": "array",
+          "description": "Lists of items (ListPickerElement)",
+          "items": {
+            "$ref": "#/definitions/ListPickerItems"
+          }
+        }
+      }
+    },
+    "ListPickerItems": {
+      "type": "object",
+      "description": "Items for ListPickerElement",
+      "properties": {
+        "Name": {
+          "type": "string",
+          "description": "List name"
+        },
+        "Items": {
+          "type": "array",
+          "description": "Array of items in format 'order::label'",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
     }
   }
 }

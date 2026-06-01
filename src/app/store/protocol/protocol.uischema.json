@@ -7,27 +7,22 @@
       "elements": [
         {
           "type": "Control",
-          "scope": "#/properties/start_flow"
+          "scope": "#/properties/start_flow",
+          "options": { "flowSelect": true }
         },
         {
           "type": "Group",
           "label": "Settings",
           "elements": [
             {
-              "type": "HorizontalLayout",
-              "elements": [
-                {
-                  "type": "Control",
-                  "scope": "#/properties/settings/properties/unenroll"
-                },
-                {
-                  "type": "Control",
-                  "scope": "#/properties/settings/properties/font_scale",
-                  "options": {
-                    "slider": true
-                  }
-                }
-              ]
+              "type": "Control",
+              "scope": "#/properties/settings/properties/unenroll",
+              "options": { "flowSelect": true }
+            },
+            {
+              "type": "Control",
+              "scope": "#/properties/settings/properties/font_scale",
+              "options": { "slider": true }
             }
           ]
         }
@@ -42,87 +37,144 @@
           "scope": "#/properties/home/properties/Title"
         },
         {
-          "type": "Control",
-          "scope": "#/properties/home/properties/Element",
+          "type": "ListWithDetail",
+          "scope": "#/properties/home/properties/Elements",
           "options": {
+            "labelRef": "#/properties/type",
             "detail": {
               "type": "VerticalLayout",
               "elements": [
                 {
-                  "type": "HorizontalLayout",
-                  "elements": [
-                    {
-                      "type": "Control",
-                      "scope": "#/properties/type"
-                    }
-                  ]
+                  "type": "Control",
+                  "scope": "#/properties/type"
                 },
                 {
                   "type": "Control",
-                  "scope": "#/properties/Path",
+                  "scope": "#/properties/title",
                   "rule": {
                     "effect": "SHOW",
-                    "condition": {
-                      "scope": "#/properties/type",
-                      "schema": { "const": "ref" }
-                    }
+                    "condition": { "scope": "#/properties/type", "schema": { "enum": ["carousel", "tiles", "reports"] } }
                   }
                 },
                 {
                   "type": "Control",
-                  "scope": "#/properties/Title"
+                  "scope": "#/properties/icon",
+                  "rule": {
+                    "effect": "SHOW",
+                    "condition": { "scope": "#/properties/type", "schema": { "enum": ["tiles", "reports"] } }
+                  }
                 },
                 {
                   "type": "Control",
-                  "scope": "#/properties/Message"
+                  "scope": "#/properties/Title",
+                  "label": "Alert Title",
+                  "rule": {
+                    "effect": "SHOW",
+                    "condition": { "scope": "#/properties/type", "schema": { "enum": ["alert"] } }
+                  }
                 },
                 {
                   "type": "Control",
-                  "scope": "#/properties/icon"
+                  "scope": "#/properties/Message",
+                  "rule": {
+                    "effect": "SHOW",
+                    "condition": { "scope": "#/properties/type", "schema": { "enum": ["alert"] } }
+                  }
                 },
                 {
                   "type": "Control",
-                  "scope": "#/properties/Action"
+                  "scope": "#/properties/Icon",
+                  "label": "Alert Icon",
+                  "rule": {
+                    "effect": "SHOW",
+                    "condition": { "scope": "#/properties/type", "schema": { "enum": ["alert"] } }
+                  }
+                },
+                {
+                  "type": "Control",
+                  "scope": "#/properties/lock_time",
+                  "rule": {
+                    "effect": "SHOW",
+                    "condition": { "scope": "#/properties/type", "schema": { "enum": ["sessions"] } }
+                  }
                 },
                 {
                   "type": "Control",
                   "scope": "#/properties/Actions",
                   "options": {
                     "showSortButtons": true,
-                    "elementLabelProp": "text"
+                    "elementLabelProp": "text",
+                    "detail": {
+                      "type": "VerticalLayout",
+                      "elements": [
+                        {
+                          "type": "HorizontalLayout",
+                          "elements": [
+                            { "type": "Control", "scope": "#/properties/text" },
+                            { "type": "Control", "scope": "#/properties/icon" }
+                          ]
+                        },
+                        {
+                          "type": "Control",
+                          "scope": "#/properties/action",
+                          "options": { "flowSelect": true }
+                        }
+                      ]
+                    }
+                  },
+                  "rule": {
+                    "effect": "SHOW",
+                    "condition": { "scope": "#/properties/type", "schema": { "enum": ["carousel", "tiles"] } }
                   }
                 },
                 {
                   "type": "Control",
-                  "scope": "#/properties/Elements",
+                  "scope": "#/properties/summary",
                   "options": {
                     "showSortButtons": true,
-                    "elementLabelProp": "type"
+                    "elementLabelProp": "device_id",
+                    "detail": {
+                      "type": "VerticalLayout",
+                      "elements": [
+                        { "type": "Control", "scope": "#/properties/device_id" },
+                        { "type": "Control", "scope": "#/properties/Text" }
+                      ]
+                    }
+                  },
+                  "rule": {
+                    "effect": "SHOW",
+                    "condition": { "scope": "#/properties/type", "schema": { "enum": ["devices"] } }
                   }
                 },
                 {
                   "type": "Control",
-                  "scope": "#/properties/Summary"
-                },
-                {
-                  "type": "Control",
-                  "scope": "#/properties/Reports"
-                },
-                {
-                  "type": "Control",
-                  "scope": "#/properties/Left"
-                },
-                {
-                  "type": "Control",
-                  "scope": "#/properties/Right"
-                },
-                {
-                  "type": "Control",
-                  "scope": "#/properties/lock_right"
-                },
-                {
-                  "type": "Control",
-                  "scope": "#/properties/lock_time"
+                  "scope": "#/properties/Reports",
+                  "options": {
+                    "showSortButtons": true,
+                    "elementLabelProp": "Title",
+                    "detail": {
+                      "type": "VerticalLayout",
+                      "elements": [
+                        { "type": "Control", "scope": "#/properties/Title" },
+                        {
+                          "type": "Control",
+                          "scope": "#/properties/Action",
+                          "options": { "flowSelect": true }
+                        },
+                        {
+                          "type": "HorizontalLayout",
+                          "elements": [
+                            { "type": "Control", "scope": "#/properties/Report" },
+                            { "type": "Control", "scope": "#/properties/File" }
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  "rule": {
+                    "effect": "SHOW",
+                    "condition": { "scope": "#/properties/type", "schema": { "enum": ["reports"] } }
+                  }
                 }
               ]
             }
@@ -135,43 +187,31 @@
       "label": "Menu",
       "elements": [
         {
-          "type": "Control",
+          "type": "ListWithDetail",
           "scope": "#/properties/menu",
           "options": {
-            "showSortButtons": true,
-            "elementLabelProp": "text",
+            "labelRef": "#/properties/text",
             "detail": {
               "type": "VerticalLayout",
               "elements": [
                 {
                   "type": "HorizontalLayout",
                   "elements": [
-                    {
-                      "type": "Control",
-                      "scope": "#/properties/text"
-                    },
-                    {
-                      "type": "Control",
-                      "scope": "#/properties/icon"
-                    }
-                  ]
-                },
-                {
-                  "type": "HorizontalLayout",
-                  "elements": [
-                    {
-                      "type": "Control",
-                      "scope": "#/properties/action"
-                    },
-                    {
-                      "type": "Control",
-                      "scope": "#/properties/background_color"
-                    }
+                    { "type": "Control", "scope": "#/properties/text" },
+                    { "type": "Control", "scope": "#/properties/icon" }
                   ]
                 },
                 {
                   "type": "Control",
-                  "scope": "#/properties/mark_completed_on_click"
+                  "scope": "#/properties/action",
+                  "options": { "flowSelect": true }
+                },
+                {
+                  "type": "HorizontalLayout",
+                  "elements": [
+                    { "type": "Control", "scope": "#/properties/background_color" },
+                    { "type": "Control", "scope": "#/properties/mark_completed_on_click" }
+                  ]
                 }
               ]
             }
@@ -181,99 +221,63 @@
     },
     {
       "type": "Category",
-      "label": "Theme Light",
+      "label": "Themes",
       "elements": [
         {
-          "type": "HorizontalLayout",
+          "type": "Group",
+          "label": "Light Theme",
           "elements": [
             {
-              "type": "Control",
-              "scope": "#/properties/theme_light/properties/Primary"
+              "type": "HorizontalLayout",
+              "elements": [
+                { "type": "Control", "scope": "#/properties/theme_light/properties/Primary" },
+                { "type": "Control", "scope": "#/properties/theme_light/properties/Secondary" }
+              ]
             },
             {
-              "type": "Control",
-              "scope": "#/properties/theme_light/properties/Secondary"
-            }
+              "type": "HorizontalLayout",
+              "elements": [
+                { "type": "Control", "scope": "#/properties/theme_light/properties/Accent" },
+                { "type": "Control", "scope": "#/properties/theme_light/properties/Text" }
+              ]
+            },
+            {
+              "type": "HorizontalLayout",
+              "elements": [
+                { "type": "Control", "scope": "#/properties/theme_light/properties/SecondaryButton" },
+                { "type": "Control", "scope": "#/properties/theme_light/properties/Destructive" }
+              ]
+            },
+            { "type": "Control", "scope": "#/properties/theme_light/properties/Success" }
           ]
         },
         {
-          "type": "HorizontalLayout",
+          "type": "Group",
+          "label": "Dark Theme",
           "elements": [
             {
-              "type": "Control",
-              "scope": "#/properties/theme_light/properties/Accent"
+              "type": "HorizontalLayout",
+              "elements": [
+                { "type": "Control", "scope": "#/properties/theme_dark/properties/Primary" },
+                { "type": "Control", "scope": "#/properties/theme_dark/properties/Secondary" }
+              ]
             },
             {
-              "type": "Control",
-              "scope": "#/properties/theme_light/properties/Text"
-            }
-          ]
-        },
-        {
-          "type": "HorizontalLayout",
-          "elements": [
-            {
-              "type": "Control",
-              "scope": "#/properties/theme_light/properties/SecondaryButton"
+              "type": "HorizontalLayout",
+              "elements": [
+                { "type": "Control", "scope": "#/properties/theme_dark/properties/Accent" },
+                { "type": "Control", "scope": "#/properties/theme_dark/properties/Text" }
+              ]
             },
             {
-              "type": "Control",
-              "scope": "#/properties/theme_light/properties/Destructive"
-            }
-          ]
-        },
-        {
-          "type": "Control",
-          "scope": "#/properties/theme_light/properties/Success"
-        }
-      ]
-    },
-    {
-      "type": "Category",
-      "label": "Theme Dark",
-      "elements": [
-        {
-          "type": "HorizontalLayout",
-          "elements": [
-            {
-              "type": "Control",
-              "scope": "#/properties/theme_dark/properties/Primary"
+              "type": "HorizontalLayout",
+              "elements": [
+                { "type": "Control", "scope": "#/properties/theme_dark/properties/SecondaryButton" },
+                { "type": "Control", "scope": "#/properties/theme_dark/properties/Destructive" }
+              ]
             },
-            {
-              "type": "Control",
-              "scope": "#/properties/theme_dark/properties/Secondary"
-            }
+            { "type": "Control", "scope": "#/properties/theme_dark/properties/Success" }
           ]
-        },
-        {
-          "type": "HorizontalLayout",
-          "elements": [
-            {
-              "type": "Control",
-              "scope": "#/properties/theme_dark/properties/Accent"
-            },
-            {
-              "type": "Control",
-              "scope": "#/properties/theme_dark/properties/Text"
-            }
-          ]
-        },
-        {
-          "type": "HorizontalLayout",
-          "elements": [
-            {
-              "type": "Control",
-              "scope": "#/properties/theme_dark/properties/SecondaryButton"
-            },
-            {
-              "type": "Control",
-              "scope": "#/properties/theme_dark/properties/Destructive"
-            }
-          ]
-        },
-        {
-          "type": "Control",
-          "scope": "#/properties/theme_dark/properties/Success"
         }
       ]
     },
@@ -282,85 +286,89 @@
       "label": "Surveys",
       "elements": [
         {
-          "type": "Control",
+          "type": "ListWithDetail",
           "scope": "#/properties/Surveys",
           "options": {
-            "showSortButtons": true,
-            "elementLabelProp": "id",
+            "labelRef": "#/properties/id",
             "detail": {
               "type": "VerticalLayout",
               "elements": [
                 {
                   "type": "HorizontalLayout",
                   "elements": [
-                    {
-                      "type": "Control",
-                      "scope": "#/properties/id"
-                    },
-                    {
-                      "type": "Control",
-                      "scope": "#/properties/type"
-                    }
+                    { "type": "Control", "scope": "#/properties/id" },
+                    { "type": "Control", "scope": "#/properties/type" }
                   ]
                 },
                 {
                   "type": "Control",
-                  "scope": "#/properties/path"
+                  "scope": "#/properties/path",
+                  "options": { "flowSelect": true }
                 },
                 {
-                  "type": "HorizontalLayout",
+                  "type": "Group",
+                  "label": "Frequency Settings",
+                  "rule": {
+                    "effect": "SHOW",
+                    "condition": { "scope": "#/properties/type", "schema": { "enum": ["frequency"] } }
+                  },
+                  "elements": [
+                    {
+                      "type": "HorizontalLayout",
+                      "elements": [
+                        { "type": "Control", "scope": "#/properties/frequency" },
+                        { "type": "Control", "scope": "#/properties/time" }
+                      ]
+                    },
+                    {
+                      "type": "HorizontalLayout",
+                      "elements": [
+                        { "type": "Control", "scope": "#/properties/skip" },
+                        { "type": "Control", "scope": "#/properties/take" }
+                      ]
+                    },
+                    { "type": "Control", "scope": "#/properties/expiry" }
+                  ]
+                },
+                {
+                  "type": "Group",
+                  "label": "Sequential Settings",
+                  "rule": {
+                    "effect": "SHOW",
+                    "condition": { "scope": "#/properties/type", "schema": { "enum": ["sequential"] } }
+                  },
                   "elements": [
                     {
                       "type": "Control",
-                      "scope": "#/properties/frequency"
+                      "scope": "#/properties/trigger_flow_path",
+                      "options": { "flowSelect": true }
                     },
                     {
-                      "type": "Control",
-                      "scope": "#/properties/expiry"
+                      "type": "HorizontalLayout",
+                      "elements": [
+                        { "type": "Control", "scope": "#/properties/period" },
+                        { "type": "Control", "scope": "#/properties/locked_text" }
+                      ]
                     }
                   ]
                 },
                 {
-                  "type": "HorizontalLayout",
+                  "type": "Group",
+                  "label": "Random Settings",
+                  "rule": {
+                    "effect": "SHOW",
+                    "condition": { "scope": "#/properties/type", "schema": { "enum": ["random"] } }
+                  },
                   "elements": [
                     {
-                      "type": "Control",
-                      "scope": "#/properties/time"
+                      "type": "HorizontalLayout",
+                      "elements": [
+                        { "type": "Control", "scope": "#/properties/gap" },
+                        { "type": "Control", "scope": "#/properties/choose" }
+                      ]
                     },
-                    {
-                      "type": "Control",
-                      "scope": "#/properties/skip"
-                    }
+                    { "type": "Control", "scope": "#/properties/paths" }
                   ]
-                },
-                {
-                  "type": "Control",
-                  "scope": "#/properties/take"
-                },
-                {
-                  "type": "Control",
-                  "scope": "#/properties/trigger_flow_path"
-                },
-                {
-                  "type": "Control",
-                  "scope": "#/properties/period"
-                },
-                {
-                  "type": "HorizontalLayout",
-                  "elements": [
-                    {
-                      "type": "Control",
-                      "scope": "#/properties/gap"
-                    },
-                    {
-                      "type": "Control",
-                      "scope": "#/properties/choose"
-                    }
-                  ]
-                },
-                {
-                  "type": "Control",
-                  "scope": "#/properties/paths"
                 }
               ]
             }
@@ -373,56 +381,34 @@
       "label": "Reminders",
       "elements": [
         {
-          "type": "Control",
+          "type": "ListWithDetail",
           "scope": "#/properties/Reminders",
           "options": {
-            "showSortButtons": true,
-            "elementLabelProp": "id",
+            "labelRef": "#/properties/id",
             "detail": {
               "type": "VerticalLayout",
               "elements": [
                 {
                   "type": "HorizontalLayout",
                   "elements": [
-                    {
-                      "type": "Control",
-                      "scope": "#/properties/id"
-                    },
-                    {
-                      "type": "Control",
-                      "scope": "#/properties/type"
-                    }
+                    { "type": "Control", "scope": "#/properties/id" },
+                    { "type": "Control", "scope": "#/properties/type" }
+                  ]
+                },
+                { "type": "Control", "scope": "#/properties/survey_id" },
+                {
+                  "type": "HorizontalLayout",
+                  "elements": [
+                    { "type": "Control", "scope": "#/properties/skip" },
+                    { "type": "Control", "scope": "#/properties/take" }
                   ]
                 },
                 {
                   "type": "HorizontalLayout",
                   "elements": [
-                    {
-                      "type": "Control",
-                      "scope": "#/properties/survey_id"
-                    },
-                    {
-                      "type": "Control",
-                      "scope": "#/properties/frequency"
-                    }
+                    { "type": "Control", "scope": "#/properties/frequency" },
+                    { "type": "Control", "scope": "#/properties/time" }
                   ]
-                },
-                {
-                  "type": "HorizontalLayout",
-                  "elements": [
-                    {
-                      "type": "Control",
-                      "scope": "#/properties/skip"
-                    },
-                    {
-                      "type": "Control",
-                      "scope": "#/properties/take"
-                    }
-                  ]
-                },
-                {
-                  "type": "Control",
-                  "scope": "#/properties/time"
                 }
               ]
             }
@@ -435,42 +421,46 @@
       "label": "Devices",
       "elements": [
         {
-          "type": "Control",
+          "type": "ListWithDetail",
           "scope": "#/properties/Devices",
           "options": {
-            "showSortButtons": true,
-            "elementLabelProp": "id",
+            "labelRef": "#/properties/id",
             "detail": {
               "type": "VerticalLayout",
               "elements": [
                 {
                   "type": "HorizontalLayout",
                   "elements": [
-                    {
-                      "type": "Control",
-                      "scope": "#/properties/id"
-                    },
-                    {
-                      "type": "Control",
-                      "scope": "#/properties/type"
-                    }
+                    { "type": "Control", "scope": "#/properties/id" },
+                    { "type": "Control", "scope": "#/properties/type" }
                   ]
                 },
                 {
                   "type": "Control",
-                  "scope": "#/properties/connect_title"
+                  "scope": "#/properties/Scopes",
+                  "rule": {
+                    "effect": "SHOW",
+                    "condition": { "scope": "#/properties/type", "schema": { "enum": ["fitbit", "oura"] } }
+                  }
                 },
                 {
                   "type": "Control",
-                  "scope": "#/properties/connect_description"
+                  "scope": "#/properties/WebhookDataTypes",
+                  "rule": {
+                    "effect": "SHOW",
+                    "condition": { "scope": "#/properties/type", "schema": { "enum": ["fitbit", "oura"] } }
+                  }
                 },
                 {
-                  "type": "Control",
-                  "scope": "#/properties/webhook_data_types"
-                },
-                {
-                  "type": "Control",
-                  "scope": "#/properties/Jobs"
+                  "type": "HorizontalLayout",
+                  "rule": {
+                    "effect": "SHOW",
+                    "condition": { "scope": "#/properties/type", "schema": { "enum": ["fitbit", "oura"] } }
+                  },
+                  "elements": [
+                    { "type": "Control", "scope": "#/properties/AndroidSync" },
+                    { "type": "Control", "scope": "#/properties/IosSync" }
+                  ]
                 }
               ]
             }
@@ -483,69 +473,50 @@
       "label": "Goals",
       "elements": [
         {
-          "type": "Control",
+          "type": "ListWithDetail",
           "scope": "#/properties/Goals",
           "options": {
-            "showSortButtons": true,
-            "elementLabelProp": "id",
+            "labelRef": "#/properties/id",
             "detail": {
               "type": "VerticalLayout",
               "elements": [
                 {
                   "type": "HorizontalLayout",
                   "elements": [
-                    {
-                      "type": "Control",
-                      "scope": "#/properties/id"
-                    },
-                    {
-                      "type": "Control",
-                      "scope": "#/properties/type"
-                    }
+                    { "type": "Control", "scope": "#/properties/id" },
+                    { "type": "Control", "scope": "#/properties/type" }
                   ]
                 },
                 {
                   "type": "HorizontalLayout",
                   "elements": [
-                    {
-                      "type": "Control",
-                      "scope": "#/properties/device_id"
-                    },
-                    {
-                      "type": "Control",
-                      "scope": "#/properties/data_type"
-                    }
+                    { "type": "Control", "scope": "#/properties/device_id" },
+                    { "type": "Control", "scope": "#/properties/data_type" }
                   ]
                 },
                 {
                   "type": "HorizontalLayout",
                   "elements": [
-                    {
-                      "type": "Control",
-                      "scope": "#/properties/required_days"
-                    },
-                    {
-                      "type": "Control",
-                      "scope": "#/properties/show_loading"
-                    }
+                    { "type": "Control", "scope": "#/properties/required_days" },
+                    { "type": "Control", "scope": "#/properties/show_loading" }
                   ]
                 },
+                { "type": "Control", "scope": "#/properties/Field" },
                 {
-                  "type": "HorizontalLayout",
-                  "elements": [
-                    {
-                      "type": "Control",
-                      "scope": "#/properties/Field"
-                    },
-                    {
-                      "type": "Control",
-                      "scope": "#/properties/target_value"
-                    }
-                  ]
+                  "type": "Control",
+                  "scope": "#/properties/Percentile",
+                  "rule": {
+                    "effect": "SHOW",
+                    "condition": { "scope": "#/properties/type", "schema": { "enum": ["percentile"] } }
+                  }
                 },
                 {
                   "type": "Control",
-                  "scope": "#/properties/Percentile"
+                  "scope": "#/properties/target_value",
+                  "rule": {
+                    "effect": "SHOW",
+                    "condition": { "scope": "#/properties/type", "schema": { "enum": ["percentage"] } }
+                  }
                 }
               ]
             }
@@ -558,61 +529,31 @@
       "label": "Jobs",
       "elements": [
         {
-          "type": "Control",
+          "type": "ListWithDetail",
           "scope": "#/properties/Jobs",
           "options": {
-            "showSortButtons": true,
-            "elementLabelProp": "id",
+            "labelRef": "#/properties/id",
             "detail": {
               "type": "VerticalLayout",
               "elements": [
                 {
                   "type": "HorizontalLayout",
                   "elements": [
-                    {
-                      "type": "Control",
-                      "scope": "#/properties/id"
-                    },
-                    {
-                      "type": "Control",
-                      "scope": "#/properties/type"
-                    }
+                    { "type": "Control", "scope": "#/properties/id" },
+                    { "type": "Control", "scope": "#/properties/type" }
                   ]
                 },
+                { "type": "Control", "scope": "#/properties/notification_id" },
+                { "type": "Control", "scope": "#/properties/data_type" },
                 {
                   "type": "HorizontalLayout",
                   "elements": [
-                    {
-                      "type": "Control",
-                      "scope": "#/properties/notification_id"
-                    },
-                    {
-                      "type": "Control",
-                      "scope": "#/properties/data_type"
-                    }
+                    { "type": "Control", "scope": "#/properties/Service" },
+                    { "type": "Control", "scope": "#/properties/Days" }
                   ]
                 },
-                {
-                  "type": "HorizontalLayout",
-                  "elements": [
-                    {
-                      "type": "Control",
-                      "scope": "#/properties/Service"
-                    },
-                    {
-                      "type": "Control",
-                      "scope": "#/properties/Days"
-                    }
-                  ]
-                },
-                {
-                  "type": "Control",
-                  "scope": "#/properties/MetaData"
-                },
-                {
-                  "type": "Control",
-                  "scope": "#/properties/Condition"
-                }
+                { "type": "Control", "scope": "#/properties/Condition" },
+                { "type": "Control", "scope": "#/properties/MetaData" }
               ]
             }
           }
@@ -624,66 +565,35 @@
       "label": "Notifications",
       "elements": [
         {
-          "type": "Control",
+          "type": "ListWithDetail",
           "scope": "#/properties/Notifications",
           "options": {
-            "showSortButtons": true,
-            "elementLabelProp": "id",
+            "labelRef": "#/properties/id",
             "detail": {
               "type": "VerticalLayout",
               "elements": [
+                { "type": "Control", "scope": "#/properties/id" },
                 {
                   "type": "HorizontalLayout",
                   "elements": [
-                    {
-                      "type": "Control",
-                      "scope": "#/properties/id"
-                    },
-                    {
-                      "type": "Control",
-                      "scope": "#/properties/Type"
-                    }
+                    { "type": "Control", "scope": "#/properties/Title" },
+                    { "type": "Control", "scope": "#/properties/Type" }
                   ]
+                },
+                { "type": "Control", "scope": "#/properties/Message" },
+                {
+                  "type": "Control",
+                  "scope": "#/properties/Action",
+                  "options": { "flowSelect": true }
                 },
                 {
                   "type": "HorizontalLayout",
                   "elements": [
-                    {
-                      "type": "Control",
-                      "scope": "#/properties/Title"
-                    },
-                    {
-                      "type": "Control",
-                      "scope": "#/properties/Message"
-                    }
+                    { "type": "Control", "scope": "#/properties/Time" },
+                    { "type": "Control", "scope": "#/properties/ExpiryDate" }
                   ]
                 },
-                {
-                  "type": "HorizontalLayout",
-                  "elements": [
-                    {
-                      "type": "Control",
-                      "scope": "#/properties/Action"
-                    },
-                    {
-                      "type": "Control",
-                      "scope": "#/properties/Time"
-                    }
-                  ]
-                },
-                {
-                  "type": "HorizontalLayout",
-                  "elements": [
-                    {
-                      "type": "Control",
-                      "scope": "#/properties/ExpiryDate"
-                    },
-                    {
-                      "type": "Control",
-                      "scope": "#/properties/Expiry"
-                    }
-                  ]
-                }
+                { "type": "Control", "scope": "#/properties/Expiry" }
               ]
             }
           }
@@ -705,14 +615,8 @@
                 {
                   "type": "HorizontalLayout",
                   "elements": [
-                    {
-                      "type": "Control",
-                      "scope": "#/properties/path"
-                    },
-                    {
-                      "type": "Control",
-                      "scope": "#/properties/name"
-                    }
+                    { "type": "Control", "scope": "#/properties/path" },
+                    { "type": "Control", "scope": "#/properties/name" }
                   ]
                 },
                 {
@@ -724,26 +628,14 @@
                       "type": "VerticalLayout",
                       "elements": [
                         {
-                          "type": "Control",
-                          "scope": "#/properties/header_text"
-                        },
-                        {
                           "type": "HorizontalLayout",
                           "elements": [
-                            {
-                              "type": "Control",
-                              "scope": "#/properties/header_icon"
-                            },
-                            {
-                              "type": "Control",
-                              "scope": "#/properties/header_info"
-                            }
+                            { "type": "Control", "scope": "#/properties/header_text" },
+                            { "type": "Control", "scope": "#/properties/header_icon" }
                           ]
                         },
-                        {
-                          "type": "Control",
-                          "scope": "#/properties/navigation_conditions"
-                        },
+                        { "type": "Control", "scope": "#/properties/header_info" },
+                        { "type": "Control", "scope": "#/properties/navigators" },
                         {
                           "type": "Control",
                           "scope": "#/properties/elements",
@@ -754,50 +646,262 @@
                               "type": "VerticalLayout",
                               "elements": [
                                 {
+                                  "type": "Control",
+                                  "scope": "#/properties/type"
+                                },
+                                {
+                                  "type": "Control",
+                                  "scope": "#/properties/text",
+                                  "rule": {
+                                    "effect": "SHOW",
+                                    "condition": { "scope": "#/properties/type", "schema": { "enum": ["text"] } }
+                                  }
+                                },
+                                {
+                                  "type": "Control",
+                                  "scope": "#/properties/html",
+                                  "rule": {
+                                    "effect": "SHOW",
+                                    "condition": { "scope": "#/properties/type", "schema": { "enum": ["text"] } }
+                                  }
+                                },
+                                {
                                   "type": "HorizontalLayout",
+                                  "rule": {
+                                    "effect": "SHOW",
+                                    "condition": { "scope": "#/properties/type", "schema": { "enum": ["text"] } }
+                                  },
                                   "elements": [
-                                    {
-                                      "type": "Control",
-                                      "scope": "#/properties/type"
-                                    },
-                                    {
-                                      "type": "Control",
-                                      "scope": "#/properties/output_name"
-                                    }
+                                    { "type": "Control", "scope": "#/properties/font_size" },
+                                    { "type": "Control", "scope": "#/properties/text_alignment" }
+                                  ]
+                                },
+                                {
+                                  "type": "Control",
+                                  "scope": "#/properties/placeholder",
+                                  "rule": {
+                                    "effect": "SHOW",
+                                    "condition": { "scope": "#/properties/type", "schema": { "enum": ["entry", "entrylist", "picker"] } }
+                                  }
+                                },
+                                {
+                                  "type": "HorizontalLayout",
+                                  "rule": {
+                                    "effect": "SHOW",
+                                    "condition": { "scope": "#/properties/type", "schema": { "enum": ["entry"] } }
+                                  },
+                                  "elements": [
+                                    { "type": "Control", "scope": "#/properties/height" },
+                                    { "type": "Control", "scope": "#/properties/keyboard" }
+                                  ]
+                                },
+                                {
+                                  "type": "Control",
+                                  "scope": "#/properties/count",
+                                  "rule": {
+                                    "effect": "SHOW",
+                                    "condition": { "scope": "#/properties/type", "schema": { "enum": ["entrylist", "scheduler"] } }
+                                  }
+                                },
+                                {
+                                  "type": "HorizontalLayout",
+                                  "rule": {
+                                    "effect": "SHOW",
+                                    "condition": { "scope": "#/properties/type", "schema": { "enum": ["slider"] } }
+                                  },
+                                  "elements": [
+                                    { "type": "Control", "scope": "#/properties/min" },
+                                    { "type": "Control", "scope": "#/properties/max" }
                                   ]
                                 },
                                 {
                                   "type": "HorizontalLayout",
+                                  "rule": {
+                                    "effect": "SHOW",
+                                    "condition": { "scope": "#/properties/type", "schema": { "enum": ["slider"] } }
+                                  },
                                   "elements": [
-                                    {
-                                      "type": "Control",
-                                      "scope": "#/properties/variable_name"
-                                    },
-                                    {
-                                      "type": "Control",
-                                      "scope": "#/properties/report"
-                                    }
+                                    { "type": "Control", "scope": "#/properties/display_min_max" },
+                                    { "type": "Control", "scope": "#/properties/display_slider_value" }
                                   ]
                                 },
                                 {
                                   "type": "Control",
-                                  "scope": "#/properties/text"
+                                  "scope": "#/properties/options",
+                                  "rule": {
+                                    "effect": "SHOW",
+                                    "condition": { "scope": "#/properties/type", "schema": { "enum": ["slider"] } }
+                                  }
                                 },
                                 {
                                   "type": "Control",
-                                  "scope": "#/properties/placeholder"
+                                  "scope": "#/properties/items",
+                                  "rule": {
+                                    "effect": "SHOW",
+                                    "condition": { "scope": "#/properties/type", "schema": { "enum": ["picker"] } }
+                                  }
                                 },
                                 {
                                   "type": "Control",
-                                  "scope": "#/properties/buttons"
+                                  "scope": "#/properties/title",
+                                  "rule": {
+                                    "effect": "SHOW",
+                                    "condition": { "scope": "#/properties/type", "schema": { "enum": ["picker"] } }
+                                  }
                                 },
                                 {
                                   "type": "Control",
-                                  "scope": "#/properties/items"
+                                  "scope": "#/properties/buttons",
+                                  "rule": {
+                                    "effect": "SHOW",
+                                    "condition": { "scope": "#/properties/type", "schema": { "enum": ["buttons"] } }
+                                  }
+                                },
+                                {
+                                  "type": "HorizontalLayout",
+                                  "rule": {
+                                    "effect": "SHOW",
+                                    "condition": { "scope": "#/properties/type", "schema": { "enum": ["buttons"] } }
+                                  },
+                                  "elements": [
+                                    { "type": "Control", "scope": "#/properties/column_count" },
+                                    { "type": "Control", "scope": "#/properties/multiselect" }
+                                  ]
                                 },
                                 {
                                   "type": "Control",
-                                  "scope": "#/properties/uri"
+                                  "scope": "#/properties/correct_value",
+                                  "rule": {
+                                    "effect": "SHOW",
+                                    "condition": { "scope": "#/properties/type", "schema": { "enum": ["buttons", "wordpuzzle"] } }
+                                  }
+                                },
+                                {
+                                  "type": "HorizontalLayout",
+                                  "rule": {
+                                    "effect": "SHOW",
+                                    "condition": { "scope": "#/properties/type", "schema": { "enum": ["buttons", "wordpuzzle"] } }
+                                  },
+                                  "elements": [
+                                    { "type": "Control", "scope": "#/properties/correct_feedback" },
+                                    { "type": "Control", "scope": "#/properties/correct_delay" }
+                                  ]
+                                },
+                                {
+                                  "type": "HorizontalLayout",
+                                  "rule": {
+                                    "effect": "SHOW",
+                                    "condition": { "scope": "#/properties/type", "schema": { "enum": ["buttons", "wordpuzzle"] } }
+                                  },
+                                  "elements": [
+                                    { "type": "Control", "scope": "#/properties/incorrect_feedback" },
+                                    { "type": "Control", "scope": "#/properties/incorrect_delay" }
+                                  ]
+                                },
+                                {
+                                  "type": "Control",
+                                  "scope": "#/properties/uri",
+                                  "rule": {
+                                    "effect": "SHOW",
+                                    "condition": { "scope": "#/properties/type", "schema": { "enum": ["media"] } }
+                                  }
+                                },
+                                {
+                                  "type": "Control",
+                                  "scope": "#/properties/texts",
+                                  "rule": {
+                                    "effect": "SHOW",
+                                    "condition": { "scope": "#/properties/type", "schema": { "enum": ["timedtext"] } }
+                                  }
+                                },
+                                {
+                                  "type": "Control",
+                                  "scope": "#/properties/duration",
+                                  "rule": {
+                                    "effect": "SHOW",
+                                    "condition": { "scope": "#/properties/type", "schema": { "enum": ["timedtext"] } }
+                                  }
+                                },
+                                {
+                                  "type": "Control",
+                                  "scope": "#/properties/words",
+                                  "rule": {
+                                    "effect": "SHOW",
+                                    "condition": { "scope": "#/properties/type", "schema": { "enum": ["wordpuzzle"] } }
+                                  }
+                                },
+                                {
+                                  "type": "Control",
+                                  "scope": "#/properties/missing_letter_count",
+                                  "rule": {
+                                    "effect": "SHOW",
+                                    "condition": { "scope": "#/properties/type", "schema": { "enum": ["wordpuzzle"] } }
+                                  }
+                                },
+                                {
+                                  "type": "Control",
+                                  "scope": "#/properties/action",
+                                  "options": { "flowSelect": true },
+                                  "rule": {
+                                    "effect": "SHOW",
+                                    "condition": { "scope": "#/properties/type", "schema": { "enum": ["scheduler"] } }
+                                  }
+                                },
+                                {
+                                  "type": "Control",
+                                  "scope": "#/properties/message",
+                                  "rule": {
+                                    "effect": "SHOW",
+                                    "condition": { "scope": "#/properties/type", "schema": { "enum": ["scheduler"] } }
+                                  }
+                                },
+                                {
+                                  "type": "HorizontalLayout",
+                                  "rule": {
+                                    "effect": "SHOW",
+                                    "condition": { "scope": "#/properties/type", "schema": { "enum": ["scheduler"] } }
+                                  },
+                                  "elements": [
+                                    { "type": "Control", "scope": "#/properties/days_ahead" },
+                                    { "type": "Control", "scope": "#/properties/schedule_flow" },
+                                    { "type": "Control", "scope": "#/properties/has_time" }
+                                  ]
+                                },
+                                {
+                                  "type": "HorizontalLayout",
+                                  "rule": {
+                                    "effect": "SHOW",
+                                    "condition": { "scope": "#/properties/type", "schema": { "enum": ["time"] } }
+                                  },
+                                  "elements": [
+                                    { "type": "Control", "scope": "#/properties/default_time" },
+                                    { "type": "Control", "scope": "#/properties/open" },
+                                    { "type": "Control", "scope": "#/properties/close" }
+                                  ]
+                                },
+                                {
+                                  "type": "Control",
+                                  "scope": "#/properties/unique",
+                                  "rule": {
+                                    "effect": "SHOW",
+                                    "condition": { "scope": "#/properties/type", "schema": { "enum": ["historictext"] } }
+                                  }
+                                },
+                                {
+                                  "type": "Control",
+                                  "scope": "#/properties/other",
+                                  "rule": {
+                                    "effect": "SHOW",
+                                    "condition": { "scope": "#/properties/type", "schema": { "enum": ["listpicker"] } }
+                                  }
+                                },
+                                {
+                                  "type": "Control",
+                                  "scope": "#/properties/lists",
+                                  "rule": {
+                                    "effect": "SHOW",
+                                    "condition": { "scope": "#/properties/type", "schema": { "enum": ["listpicker"] } }
+                                  }
                                 }
                               ]
                             }
@@ -819,7 +923,8 @@
       "elements": [
         {
           "type": "Control",
-          "scope": "#/properties/probes"
+          "scope": "#/properties/probes",
+          "options": { "showSortButtons": true }
         }
       ]
     }
