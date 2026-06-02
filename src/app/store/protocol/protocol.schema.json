@@ -126,7 +126,7 @@
         },
         "icon": {
           "type": "string",
-          "description": "Icon source (simplified to string)"
+          "description": "Icon asset path (e.g. assets/icon_name)"
         },
         "action": {
           "type": "string",
@@ -179,7 +179,10 @@
     "Survey": {
       "type": "object",
       "description": "Survey definition (flattened from ISurvey implementations)",
-      "required": ["id", "type"],
+      "required": [
+        "id",
+        "type"
+      ],
       "properties": {
         "id": {
           "type": "string",
@@ -188,7 +191,11 @@
         "type": {
           "type": "string",
           "description": "Survey type discriminator",
-          "enum": ["frequency", "sequential", "random"]
+          "enum": [
+            "frequency",
+            "sequential",
+            "random"
+          ]
         },
         "path": {
           "type": "string",
@@ -251,7 +258,10 @@
     "Reminder": {
       "type": "object",
       "description": "Reminder definition (flattened from IReminder implementations)",
-      "required": ["id", "type"],
+      "required": [
+        "id",
+        "type"
+      ],
       "properties": {
         "id": {
           "type": "string",
@@ -260,7 +270,9 @@
         "type": {
           "type": "string",
           "description": "Reminder type discriminator",
-          "enum": ["survey"]
+          "enum": [
+            "survey"
+          ]
         },
         "survey_id": {
           "type": "string",
@@ -289,7 +301,10 @@
     "Device": {
       "type": "object",
       "description": "Device integration definition (flattened from IDevice implementations)",
-      "required": ["id", "type"],
+      "required": [
+        "id",
+        "type"
+      ],
       "properties": {
         "id": {
           "type": "string",
@@ -298,7 +313,11 @@
         "type": {
           "type": "string",
           "description": "Device type discriminator",
-          "enum": ["fitbit", "oura", "wisepill"]
+          "enum": [
+            "fitbit",
+            "oura",
+            "wisepill"
+          ]
         },
         "Scopes": {
           "type": "array",
@@ -327,7 +346,10 @@
     "Goal": {
       "type": "object",
       "description": "Goal definition (flattened from IGoal implementations)",
-      "required": ["id", "type"],
+      "required": [
+        "id",
+        "type"
+      ],
       "properties": {
         "id": {
           "type": "string",
@@ -336,7 +358,10 @@
         "type": {
           "type": "string",
           "description": "Goal type discriminator",
-          "enum": ["percentile", "percentage"]
+          "enum": [
+            "percentile",
+            "percentage"
+          ]
         },
         "device_id": {
           "type": "string",
@@ -371,7 +396,10 @@
     "Job": {
       "type": "object",
       "description": "Job definition (flattened from IJob implementations)",
-      "required": ["id", "type"],
+      "required": [
+        "id",
+        "type"
+      ],
       "properties": {
         "id": {
           "type": "string",
@@ -380,7 +408,9 @@
         "type": {
           "type": "string",
           "description": "Job type discriminator",
-          "enum": ["device"]
+          "enum": [
+            "device"
+          ]
         },
         "notification_id": {
           "type": "string",
@@ -415,7 +445,9 @@
     "Notification": {
       "type": "object",
       "description": "Notification definition",
-      "required": ["id"],
+      "required": [
+        "id"
+      ],
       "properties": {
         "id": {
           "type": "string",
@@ -446,7 +478,12 @@
         "Type": {
           "type": "string",
           "description": "Notification type",
-          "enum": ["Unknown", "Remote", "Survey", "Reminder"]
+          "enum": [
+            "Unknown",
+            "Remote",
+            "Survey",
+            "Reminder"
+          ]
         },
         "Time": {
           "type": "string",
@@ -458,12 +495,25 @@
     "HomeElement": {
       "type": "object",
       "description": "Home screen element (flattened from IHomeElementModel implementations)",
-      "required": ["type"],
+      "required": [
+        "type"
+      ],
       "properties": {
         "type": {
           "type": "string",
           "description": "Element type discriminator",
-          "enum": ["sessions", "carousel", "survey", "button", "alert", "tiles", "list", "devices", "goals", "reports"]
+          "enum": [
+            "sessions",
+            "carousel",
+            "survey",
+            "button",
+            "alert",
+            "tiles",
+            "list",
+            "devices",
+            "goals",
+            "reports"
+          ]
         },
         "Action": {
           "$ref": "#/definitions/StudyAction",
@@ -495,15 +545,15 @@
         },
         "title": {
           "type": "string",
-          "description": "Element title (CarouselElementModel, TilesElementModel, ReportsElementModel)"
+          "description": "Element title (TilesElementModel)"
         },
         "icon": {
           "type": "string",
-          "description": "Icon source (TilesElementModel, ReportsElementModel)"
+          "description": "Icon asset path (e.g. assets/icon_name)"
         },
         "Title": {
           "type": "string",
-          "description": "Alert title (AlertElementModel)"
+          "description": "Title (CarouselElementModel, ReportsElementModel, AlertElementModel)"
         },
         "Message": {
           "type": "string",
@@ -511,7 +561,7 @@
         },
         "Icon": {
           "type": "string",
-          "description": "Alert icon (AlertElementModel)"
+          "description": "Alert icon asset path (e.g. assets/icon_name)"
         },
         "summary": {
           "type": "array",
@@ -575,7 +625,9 @@
     "Flow": {
       "type": "object",
       "description": "A multi-page flow (wizard)",
-      "required": ["path"],
+      "required": [
+        "path"
+      ],
       "properties": {
         "path": {
           "type": "string",
@@ -604,7 +656,7 @@
         },
         "header_icon": {
           "type": "string",
-          "description": "Page header icon path"
+          "description": "Header icon asset path (e.g. assets/icon_name)"
         },
         "header_info": {
           "type": "string",
@@ -615,7 +667,12 @@
           "description": "Navigation conditions",
           "items": {
             "type": "string",
-            "enum": ["wait_for_click", "wait_for_correct", "wait_for_complete", "wait_for_viewable"]
+            "enum": [
+              "wait_for_click",
+              "wait_for_correct",
+              "wait_for_complete",
+              "wait_for_viewable"
+            ]
           }
         },
         "elements": {
@@ -630,12 +687,28 @@
     "FlowElement": {
       "type": "object",
       "description": "Flow element (flattened from IFlowElement implementations)",
-      "required": ["type"],
+      "required": [
+        "type"
+      ],
       "properties": {
         "type": {
           "type": "string",
           "description": "Element type discriminator",
-          "enum": ["text", "entry", "entrylist", "slider", "picker", "timedtext", "buttons", "media", "wordpuzzle", "scheduler", "time", "historictext", "listpicker"]
+          "enum": [
+            "text",
+            "entry",
+            "entrylist",
+            "slider",
+            "picker",
+            "timedtext",
+            "buttons",
+            "media",
+            "wordpuzzle",
+            "scheduler",
+            "time",
+            "historictext",
+            "listpicker"
+          ]
         },
         "output_name": {
           "type": "string",

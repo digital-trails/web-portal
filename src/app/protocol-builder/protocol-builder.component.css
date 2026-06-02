@@ -1,7 +1,7 @@
 /* Protocol builder form styling overrides — dark theme */
 
 .protocol-builder {
-  max-width: 1400px;
+  max-width: 1800px;
 }
 
 /* --- Builder toolbar --- */
@@ -318,4 +318,29 @@
 
 .protocol-builder ::ng-deep .mat-mdc-slider .mdc-slider__value-indicator-text {
   color: #e0e0e0 !important;
+}
+
+/* --- Split layout: form + preview --- */
+.builder-content {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.form-panel {
+  flex: 1;
+  min-width: 0;
+}
+
+.preview-panel {
+  position: sticky;
+  top: 60px;
+  flex-shrink: 0;
+  align-self: flex-start;
+  max-height: calc(100vh - 80px);
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+.preview-panel::-webkit-scrollbar {
+  display: none;
 }

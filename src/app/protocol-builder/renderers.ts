@@ -253,3 +253,4 @@ export class TimespanRenderer extends JsonFormsControl {
 }
 
 export const timespanTester = rankWith(5, and(uiTypeIs('Control'), formatIs('timespan')));
+

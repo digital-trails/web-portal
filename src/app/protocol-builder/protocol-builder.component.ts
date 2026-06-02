@@ -28,6 +28,7 @@ import {
   TimespanRenderer, timespanTester,
 } from './renderers';
 import { FlowOptionsService } from './flow-options.service';
+import { MobilePreviewComponent } from './mobile-preview.component';
 
 const DICT_KEYS = ['Surveys', 'Reminders', 'Devices', 'Goals', 'Jobs', 'Notifications'] as const;
 
@@ -165,18 +166,24 @@ function toProtocolData(formData: Record<string, unknown>): Record<string, unkno
         This protocol is {{ protocol()?.status }} and cannot be edited.
       </div>
 
-      <jsonforms
-        [data]="data()"
-        [schema]="schema"
-        [uischema]="uischema"
-        [renderers]="renderers"
-        [readonly]="isReadOnly()"
-        (dataChange)="onDataChange($event)"
-        (errors)="onErrors($event)"
-      ></jsonforms>
+      <div class="builder-content">
+        <div class="form-panel">
+          <jsonforms
+            [data]="data()"
+            [schema]="schema"
+            [uischema]="uischema"
+            [renderers]="renderers"
+            [readonly]="isReadOnly()"
+            (dataChange)="onDataChange($event)"
+            (errors)="onErrors($event)"
+          ></jsonforms>
 
-      <div class="builder-footer" *ngIf="errors().length > 0">
-        <p class="error-count">{{ errors().length }} validation issue(s)</p>
+          <div class="builder-footer" *ngIf="errors().length > 0">
+            <p class="error-count">{{ errors().length }} validation issue(s)</p>
+          </div>
+        </div>
+
+        <app-mobile-preview class="preview-panel" [data]="data()" />
       </div>
     </div>
   `,
@@ -195,6 +202,7 @@ function toProtocolData(formData: Record<string, unknown>): Record<string, unkno
     MatTooltipModule,
     MatNativeDateModule,
     MatDatepickerModule,
+    MobilePreviewComponent,
   ],
   providers: [FlowOptionsService],
 })
@@ -273,6 +281,8 @@ export class ProtocolBuilderComponent implements OnInit {
     };
     this.protocolFacade.updateProtocol(updated);
     this.snackBar.open('Protocol saved', 'OK', { duration: 2000 });
+    const temp = JSON.stringify(payload, null, 2);
+    console.log(temp);
   }
 
   setStatus(status: ProtocolStatus) {
