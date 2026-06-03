@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnDestroy, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -18,6 +18,10 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTabsModule } from '@angular/material/tabs';
+import { AssetsManagerComponent } from '../assets-manager/assets-manager.component';
 import protocolSchema from '../store/protocol/protocol.schema.json';
 import uischema from '../store/protocol/protocol.uischema.json';
 import { ProtocolFacade } from '../store/protocol/protocol.facade';
@@ -26,9 +30,13 @@ import {
   FlowSelectRenderer, flowSelectTester,
   TimeControlRenderer, timeControlTester,
   TimespanRenderer, timespanTester,
+  IconSelectRenderer, iconSelectTester,
+  MediaSelectRenderer, mediaSelectTester,
 } from './renderers';
 import { FlowOptionsService } from './flow-options.service';
 import { MobilePreviewComponent } from './mobile-preview.component';
+import { GITHUB_ORG } from '../services/github.service';
+import { ProtocolContextService } from '../services/protocol-context.service';
 
 const DICT_KEYS = ['Surveys', 'Reminders', 'Devices', 'Goals', 'Jobs', 'Notifications'] as const;
 
@@ -151,14 +159,19 @@ function toProtocolData(formData: Record<string, unknown>): Record<string, unkno
           </button>
         </mat-menu>
 
+        <a mat-icon-button matTooltip="View on GitHub" [href]="repoUrl()" target="_blank">
+          <mat-icon>cloud</mat-icon>
+        </a>
+
         <button
           mat-raised-button
           color="primary"
-          [disabled]="errors().length > 0 || isReadOnly()"
+          [disabled]="errors().length > 0 || isReadOnly() || isSaving()"
           (click)="save()"
         >
-          <mat-icon>save</mat-icon>
-          Save
+          <mat-spinner *ngIf="isSaving()" diameter="16" style="display:inline-block;margin-right:6px;"></mat-spinner>
+          <mat-icon *ngIf="!isSaving()">save</mat-icon>
+          {{ isSaving() ? 'Saving…' : 'Save' }}
         </button>
       </div>
 
@@ -166,25 +179,33 @@ function toProtocolData(formData: Record<string, unknown>): Record<string, unkno
         This protocol is {{ protocol()?.status }} and cannot be edited.
       </div>
 
-      <div class="builder-content">
-        <div class="form-panel">
-          <jsonforms
-            [data]="data()"
-            [schema]="schema"
-            [uischema]="uischema"
-            [renderers]="renderers"
-            [readonly]="isReadOnly()"
-            (dataChange)="onDataChange($event)"
-            (errors)="onErrors($event)"
-          ></jsonforms>
+      <mat-tab-group animationDuration="150ms" class="builder-tabs">
+        <mat-tab label="Protocol">
+          <div class="builder-content">
+            <div class="form-panel">
+              <jsonforms
+                [data]="data()"
+                [schema]="schema"
+                [uischema]="uischema"
+                [renderers]="renderers"
+                [readonly]="isReadOnly()"
+                (dataChange)="onDataChange($event)"
+                (errors)="onErrors($event)"
+              ></jsonforms>
 
-          <div class="builder-footer" *ngIf="errors().length > 0">
-            <p class="error-count">{{ errors().length }} validation issue(s)</p>
+              <div class="builder-footer" *ngIf="errors().length > 0">
+                <p class="error-count">{{ errors().length }} validation issue(s)</p>
+              </div>
+            </div>
+
+            <app-mobile-preview class="preview-panel" [data]="data()" />
           </div>
-        </div>
+        </mat-tab>
 
-        <app-mobile-preview class="preview-panel" [data]="data()" />
-      </div>
+        <mat-tab label="Assets">
+          <app-assets-manager [embedded]="true" />
+        </mat-tab>
+      </mat-tab-group>
     </div>
   `,
   styleUrl: './protocol-builder.component.css',
@@ -202,11 +223,15 @@ function toProtocolData(formData: Record<string, unknown>): Record<string, unkno
     MatTooltipModule,
     MatNativeDateModule,
     MatDatepickerModule,
+    MatDialogModule,
+    MatProgressSpinnerModule,
+    MatTabsModule,
     MobilePreviewComponent,
+    AssetsManagerComponent,
   ],
   providers: [FlowOptionsService],
 })
-export class ProtocolBuilderComponent implements OnInit {
+export class ProtocolBuilderComponent implements OnInit, OnDestroy {
   schema = protocolSchema as any;
   renderers = [
     ...angularMaterialRenderers,
@@ -214,6 +239,8 @@ export class ProtocolBuilderComponent implements OnInit {
     { tester: flowSelectTester, renderer: FlowSelectRenderer },
     { tester: timeControlTester, renderer: TimeControlRenderer },
     { tester: timespanTester, renderer: TimespanRenderer },
+    { tester: iconSelectTester, renderer: IconSelectRenderer },
+    { tester: mediaSelectTester, renderer: MediaSelectRenderer },
   ];
   uischema = uischema;
   statusConfig = STATUS_CONFIG;
@@ -222,6 +249,7 @@ export class ProtocolBuilderComponent implements OnInit {
   errors = signal<unknown[]>([]);
   protocol = signal<Protocol | null>(null);
   protocolName = signal('');
+  isSaving = signal(false);
 
   private protocolId: string | null = null;
 
@@ -231,10 +259,12 @@ export class ProtocolBuilderComponent implements OnInit {
     private protocolFacade: ProtocolFacade,
     private snackBar: MatSnackBar,
     private flowOptions: FlowOptionsService,
+    private protocolCtx: ProtocolContextService,
   ) {}
 
   ngOnInit() {
     this.protocolId = this.route.snapshot.paramMap.get('id');
+    this.protocolCtx.setCurrentProtocol(this.protocolId);
     if (this.protocolId) {
       this.protocolFacade.getProtocol$(this.protocolId).subscribe(p => {
         if (!p) {
@@ -243,6 +273,8 @@ export class ProtocolBuilderComponent implements OnInit {
         }
         this.protocol.set(p);
         this.protocolName.set(p.name);
+        this.protocolCtx.setCurrentProtocol(this.protocolId, p.name);
+        // Asset loading is handled inside getProtocol$ via the facade
         const formData = toFormData(p.data);
         this.data.set(formData);
         this.updateFlowOptions(formData);
@@ -253,6 +285,10 @@ export class ProtocolBuilderComponent implements OnInit {
   isReadOnly(): boolean {
     const p = this.protocol();
     return !!p && (p.status === 'archived' || p.status === 'completed');
+  }
+
+  repoUrl(): string {
+    return `https://github.com/${GITHUB_ORG}/${slugify(this.protocolName() || 'untitled')}`;
   }
 
   onNameChange(event: Event) {
@@ -273,16 +309,20 @@ export class ProtocolBuilderComponent implements OnInit {
     const p = this.protocol();
     if (!p) return;
 
-    const payload = toProtocolData(this.data());
-    const updated: Protocol = {
-      ...p,
-      name: this.protocolName() || 'Untitled Protocol',
-      data: payload,
-    };
-    this.protocolFacade.updateProtocol(updated);
-    this.snackBar.open('Protocol saved', 'OK', { duration: 2000 });
-    const temp = JSON.stringify(payload, null, 2);
-    console.log(temp);
+    const name = this.protocolName() || 'Untitled Protocol';
+    const updated: Protocol = { ...p, name, data: toProtocolData(this.data()) };
+    this.isSaving.set(true);
+    this.protocolFacade.saveProtocol(updated).subscribe({
+      next: () => {
+        this.isSaving.set(false);
+        this.snackBar.open('Protocol saved and pushed to GitHub', 'OK', { duration: 3000 });
+      },
+      error: (err) => {
+        this.isSaving.set(false);
+        const msg = err?.error?.message ?? err?.message ?? 'Unknown error';
+        this.snackBar.open(`Saved locally. GitHub push failed: ${msg}`, 'Dismiss', { duration: 6000 });
+      },
+    });
   }
 
   setStatus(status: ProtocolStatus) {
@@ -304,6 +344,10 @@ export class ProtocolBuilderComponent implements OnInit {
       archived: ['draft'],
     };
     return transitions[p.status].includes(target);
+  }
+
+  ngOnDestroy() {
+    this.protocolCtx.setCurrentProtocol(null);
   }
 
   goBack() {

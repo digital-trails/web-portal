@@ -4,6 +4,8 @@ import { JsonFormsAngularService, JsonFormsControl } from '@jsonforms/angular';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
+import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import {
   and,
   formatIs,
@@ -13,6 +15,9 @@ import {
   uiTypeIs,
 } from '@jsonforms/core';
 import { FlowOptionsService } from './flow-options.service';
+import { AssetService, Asset } from '../services/asset.service';
+import { ProtocolContextService } from '../services/protocol-context.service';
+import { AddAssetDialogComponent } from './add-asset-dialog.component';
 
 const hasFlowSelectOption: Tester = (uischema: any) =>
   !!uischema?.options?.flowSelect;
@@ -253,4 +258,172 @@ export class TimespanRenderer extends JsonFormsControl {
 }
 
 export const timespanTester = rankWith(5, and(uiTypeIs('Control'), formatIs('timespan')));
+
+// ─── Icon Select Renderer ────────────────────────────────────────────────────
+
+const isIconAssetField: Tester = (uischema: any) => !!uischema?.options?.iconSelect;
+
+@Component({
+  selector: 'icon-select-renderer',
+  standalone: true,
+  imports: [CommonModule, MatFormFieldModule, MatSelectModule, MatIconModule, MatDialogModule],
+  template: `
+    <div *ngIf="!hidden" class="icon-select-row">
+      <mat-form-field appearance="fill" style="flex:1">
+        <mat-label>{{ label }}</mat-label>
+        <mat-select [value]="selectedValue" (selectionChange)="onSelect($event.value)" [disabled]="!enabled">
+          <mat-option value="">None</mat-option>
+          <mat-option *ngFor="let a of iconAssets" [value]="assetPath(a)">
+            <img [src]="a.content" class="icon-thumb" alt="" />
+            {{ a.name }}
+          </mat-option>
+          <mat-option value="__add__">
+            <mat-icon style="font-size:16px;vertical-align:middle">add</mat-icon> Add Icon…
+          </mat-option>
+        </mat-select>
+        <mat-hint *ngIf="!iconAssets.length">No icons — upload one in Assets or click "Add Icon"</mat-hint>
+      </mat-form-field>
+      <img *ngIf="selectedPreview" [src]="selectedPreview" class="icon-preview" alt="icon preview" />
+    </div>
+  `,
+  styles: [`
+    .icon-select-row { display:flex; align-items:center; gap:10px; }
+    .icon-thumb { height:18px; width:18px; object-fit:contain; margin-right:6px; vertical-align:middle; }
+    .icon-preview { height:32px; width:32px; object-fit:contain; border-radius:4px; border:1px solid rgba(255,255,255,.15); }
+  `],
+})
+export class IconSelectRenderer extends JsonFormsControl {
+  iconAssets: Asset[] = [];
+  selectedValue = '';
+  selectedPreview = '';
+
+  constructor(
+    jsonformsService: JsonFormsAngularService,
+    private assetService: AssetService,
+    private protocolCtx: ProtocolContextService,
+    private dialog: MatDialog,
+  ) {
+    super(jsonformsService);
+    this.protocolCtx.getRepoName$().subscribe(repoName => {
+      this.assetService.getAssetsByTypeForProtocol$(repoName ?? '', 'icon')
+        .subscribe(assets => { this.iconAssets = assets; this.refreshPreview(); });
+    });
+  }
+
+  override mapAdditionalProps(_props: StatePropsOfControl) {
+    this.selectedValue = this.data ?? '';
+    this.refreshPreview();
+  }
+
+  assetPath(a: Asset): string { return this.assetService.getAssetPath(a); }
+
+  private refreshPreview() {
+    const found = this.iconAssets.find(a => this.assetPath(a) === this.selectedValue);
+    this.selectedPreview = found?.content ?? '';
+  }
+
+  onSelect(value: string) {
+    if (value === '__add__') {
+      this.selectedValue = this.data ?? '';
+      this.dialog.open(AddAssetDialogComponent, { data: { type: 'icon' }, width: '440px' })
+        .afterClosed().subscribe((asset: Asset | null) => {
+          if (asset) {
+            this.selectedValue = this.assetPath(asset);
+            this.selectedPreview = asset.content;
+            this.onChange({ value: this.selectedValue });
+          }
+        });
+      return;
+    }
+    this.selectedValue = value;
+    this.refreshPreview();
+    this.onChange({ value: value || undefined });
+  }
+}
+
+export const iconSelectTester = rankWith(7, isIconAssetField);
+
+// ─── Media Select Renderer ───────────────────────────────────────────────────
+
+const isMediaAssetField: Tester = (uischema: any) => !!uischema?.options?.mediaSelect;
+
+@Component({
+  selector: 'media-select-renderer',
+  standalone: true,
+  imports: [CommonModule, MatFormFieldModule, MatSelectModule, MatIconModule, MatDialogModule],
+  template: `
+    <mat-form-field appearance="fill" style="width:100%" *ngIf="!hidden">
+      <mat-label>{{ label }}</mat-label>
+      <mat-select [value]="selectedValue" (selectionChange)="onSelect($event.value)" [disabled]="!enabled">
+        <mat-option value="">None</mat-option>
+        <mat-optgroup label="Images" *ngIf="imageAssets.length">
+          <mat-option *ngFor="let a of imageAssets" [value]="assetPath(a)">
+            <mat-icon style="font-size:16px;vertical-align:middle;margin-right:4px">image</mat-icon>
+            {{ a.name }}
+          </mat-option>
+        </mat-optgroup>
+        <mat-optgroup label="Videos" *ngIf="videoAssets.length">
+          <mat-option *ngFor="let a of videoAssets" [value]="assetPath(a)">
+            <mat-icon style="font-size:16px;vertical-align:middle;margin-right:4px">videocam</mat-icon>
+            {{ a.name }}
+          </mat-option>
+        </mat-optgroup>
+        <mat-option value="__add_image__">
+          <mat-icon style="font-size:16px;vertical-align:middle">add</mat-icon> Add Image…
+        </mat-option>
+        <mat-option value="__add_video__">
+          <mat-icon style="font-size:16px;vertical-align:middle">add</mat-icon> Add Video…
+        </mat-option>
+      </mat-select>
+      <mat-hint *ngIf="!imageAssets.length && !videoAssets.length">
+        No media assets — upload in Assets or click above
+      </mat-hint>
+    </mat-form-field>
+  `,
+})
+export class MediaSelectRenderer extends JsonFormsControl {
+  imageAssets: Asset[] = [];
+  videoAssets: Asset[] = [];
+  selectedValue = '';
+
+  constructor(
+    jsonformsService: JsonFormsAngularService,
+    private assetService: AssetService,
+    private protocolCtx: ProtocolContextService,
+    private dialog: MatDialog,
+  ) {
+    super(jsonformsService);
+    this.protocolCtx.getRepoName$().subscribe(repoName => {
+      this.assetService.getAssetsForProtocol$(repoName ?? '').subscribe(all => {
+        this.imageAssets = all.filter(a => a.type === 'image');
+        this.videoAssets = all.filter(a => a.type === 'video');
+      });
+    });
+  }
+
+  override mapAdditionalProps(_props: StatePropsOfControl) {
+    this.selectedValue = this.data ?? '';
+  }
+
+  assetPath(a: Asset): string { return this.assetService.getAssetPath(a); }
+
+  onSelect(value: string) {
+    if (value === '__add_image__' || value === '__add_video__') {
+      const type = value === '__add_image__' ? 'image' : 'video';
+      this.selectedValue = this.data ?? '';
+      this.dialog.open(AddAssetDialogComponent, { data: { type }, width: '440px' })
+        .afterClosed().subscribe((asset: Asset | null) => {
+          if (asset) {
+            this.selectedValue = this.assetPath(asset);
+            this.onChange({ value: this.selectedValue });
+          }
+        });
+      return;
+    }
+    this.selectedValue = value;
+    this.onChange({ value: value || undefined });
+  }
+}
+
+export const mediaSelectTester = rankWith(7, isMediaAssetField);
 

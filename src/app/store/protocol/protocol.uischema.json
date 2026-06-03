@@ -89,6 +89,7 @@
                 {
                   "type": "Control",
                   "scope": "#/properties/icon",
+                  "options": { "iconSelect": true },
                   "rule": {
                     "effect": "SHOW",
                     "condition": {
@@ -120,6 +121,7 @@
                 {
                   "type": "Control",
                   "scope": "#/properties/Icon",
+                  "options": { "iconSelect": true },
                   "rule": {
                     "effect": "SHOW",
                     "condition": {
@@ -157,7 +159,8 @@
                         },
                         {
                           "type": "Control",
-                          "scope": "#/properties/Action/properties/icon"
+                          "scope": "#/properties/Action/properties/icon",
+                          "options": { "iconSelect": true }
                         }
                       ]
                     },
@@ -207,7 +210,8 @@
                         },
                         {
                           "type": "Control",
-                          "scope": "#/properties/Left/properties/icon"
+                          "scope": "#/properties/Left/properties/icon",
+                          "options": { "iconSelect": true }
                         }
                       ]
                     },
@@ -244,7 +248,8 @@
                         },
                         {
                           "type": "Control",
-                          "scope": "#/properties/Right/properties/icon"
+                          "scope": "#/properties/Right/properties/icon",
+                          "options": { "iconSelect": true }
                         }
                       ]
                     },
@@ -281,7 +286,8 @@
                         },
                         {
                           "type": "Control",
-                          "scope": "#/properties/lock_right/properties/icon"
+                          "scope": "#/properties/lock_right/properties/icon",
+                          "options": { "iconSelect": true }
                         }
                       ]
                     },
@@ -343,7 +349,8 @@
                                 },
                                 {
                                   "type": "Control",
-                                  "scope": "#/properties/icon"
+                                  "scope": "#/properties/icon",
+                                  "options": { "iconSelect": true }
                                 }
                               ]
                             },
@@ -510,7 +517,8 @@
                     },
                     {
                       "type": "Control",
-                      "scope": "#/properties/icon"
+                      "scope": "#/properties/icon",
+                      "options": { "iconSelect": true }
                     }
                   ]
                 },
@@ -1205,7 +1213,8 @@
                             },
                             {
                               "type": "Control",
-                              "scope": "#/properties/header_icon"
+                              "scope": "#/properties/header_icon",
+                              "options": { "iconSelect": true }
                             }
                           ]
                         },
@@ -1542,6 +1551,7 @@
                                 {
                                   "type": "Control",
                                   "scope": "#/properties/uri",
+                                  "options": { "mediaSelect": true },
                                   "rule": {
                                     "effect": "SHOW",
                                     "condition": {

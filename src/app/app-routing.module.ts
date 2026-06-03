@@ -13,7 +13,7 @@ const routes: Routes = [
     path: 'protocol-builder',
     loadChildren: () => import('./protocol-builder/protocol-builder.module').then(m => m.ProtocolBuilderModule),
     canActivate: [MsalGuard]
-  }
+  },
 ];
 
 @NgModule({

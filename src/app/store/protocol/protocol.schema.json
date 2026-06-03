@@ -126,7 +126,8 @@
         },
         "icon": {
           "type": "string",
-          "description": "Icon asset path (e.g. assets/icon_name)"
+          "description": "Icon asset path (e.g. assets/icon_name)",
+          "x-asset-type": "icon"
         },
         "action": {
           "type": "string",
@@ -549,7 +550,8 @@
         },
         "icon": {
           "type": "string",
-          "description": "Icon asset path (e.g. assets/icon_name)"
+          "description": "Icon asset path (e.g. assets/icon_name)",
+          "x-asset-type": "icon"
         },
         "Title": {
           "type": "string",
@@ -561,7 +563,8 @@
         },
         "Icon": {
           "type": "string",
-          "description": "Alert icon asset path (e.g. assets/icon_name)"
+          "description": "Alert icon asset path (e.g. assets/icon_name)",
+          "x-asset-type": "icon"
         },
         "summary": {
           "type": "array",
@@ -656,7 +659,8 @@
         },
         "header_icon": {
           "type": "string",
-          "description": "Header icon asset path (e.g. assets/icon_name)"
+          "description": "Header icon asset path (e.g. assets/icon_name)",
+          "x-asset-type": "icon"
         },
         "header_info": {
           "type": "string",
@@ -852,7 +856,8 @@
         },
         "uri": {
           "type": "string",
-          "description": "Image or video URI (ImageElement, VideoElement)"
+          "description": "Image or video URI (ImageElement, VideoElement)",
+          "x-asset-type": "media"
         },
         "texts": {
           "type": "array",

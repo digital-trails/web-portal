@@ -6,6 +6,7 @@ export interface ProtocolMeta {
   status: ProtocolStatus;
   createdAt: string;
   updatedAt: string;
+
 }
 
 export interface Protocol extends ProtocolMeta {
