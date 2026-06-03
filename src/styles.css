@@ -9,4 +9,306 @@ html {
 	overflow-y: scroll;
 }
 html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; background: #1e1e1e; color: #e0e0e0; }
+
+/* --- Dark theme for Angular Material globally --- */
+
+/* Form field text and borders */
+.mat-mdc-form-field .mdc-text-field--filled:not(.mdc-text-field--disabled) {
+  background-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+.mat-mdc-form-field .mdc-floating-label,
+.mat-mdc-form-field label {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+.mat-mdc-form-field .mdc-text-field--filled .mdc-line-ripple::before {
+  border-bottom-color: rgba(255, 255, 255, 0.3) !important;
+}
+
+.mat-mdc-form-field .mdc-text-field--filled .mdc-line-ripple::after {
+  border-bottom-color: #64b5f6 !important;
+}
+
+.mat-mdc-input-element,
+.mat-mdc-form-field input,
+.mat-mdc-form-field textarea {
+  color: #e0e0e0 !important;
+}
+
+/* Select / dropdown */
+.mat-mdc-select-value-text,
+.mat-mdc-select-arrow {
+  color: #e0e0e0 !important;
+}
+
+.mat-mdc-option {
+  color: #e0e0e0 !important;
+}
+
+.mat-mdc-option:hover {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Checkbox and radio */
+.mat-mdc-checkbox .mdc-checkbox .mdc-checkbox__native-control:enabled:not(:checked):not(:indeterminate):not([data-indeterminate=true])~.mdc-checkbox__background {
+  border-color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.mat-mdc-checkbox label,
+.mat-mdc-radio-button label {
+  color: #e0e0e0 !important;
+}
+
+/* Slider */
+.mat-mdc-slider .mdc-slider__track--inactive {
+  background-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Override hardcoded black label on jsonforms range/slider renderer */
+.range-control > label,
+.range-control > .mat-caption {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+/* Hint text below inputs */
+.mat-mdc-form-field-hint,
+.mat-hint,
+.mat-mdc-form-field .mat-mdc-form-field-hint-wrapper,
+.mdc-text-field-helper-text {
+  color: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* Cards */
+.mat-mdc-card {
+  background-color: #2a2a2a !important;
+  color: #e0e0e0 !important;
+}
+
+/* Icons */
+.mat-icon {
+  color: inherit;
+}
+
+/* Buttons */
+.mat-mdc-icon-button {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+.mat-mdc-raised-button .mat-icon {
+  color: inherit;
+}
+
+/* Table */
+.mat-mdc-table {
+  background-color: #2a2a2a !important;
+}
+
+.mat-mdc-header-cell {
+  color: rgba(255, 255, 255, 0.7) !important;
+  background-color: #333 !important;
+}
+
+.mat-mdc-cell {
+  color: #e0e0e0 !important;
+  border-bottom-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+.mat-mdc-row:hover {
+  background-color: rgba(255, 255, 255, 0.04) !important;
+}
+
+/* Menu overlay */
+.mat-mdc-menu-panel {
+  background-color: #333 !important;
+}
+
+.mat-mdc-menu-item {
+  color: #e0e0e0 !important;
+}
+
+.mat-mdc-menu-item:hover {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Snackbar */
+.mat-mdc-snack-bar-container .mdc-snackbar__surface {
+  background-color: #444 !important;
+  color: #e0e0e0 !important;
+}
+
+/* Tooltip */
+.mat-mdc-tooltip .mdc-tooltip__surface {
+  background-color: #555 !important;
+}
+
+/* Sidenav (ListWithDetail) */
+.mat-sidenav-container {
+  background-color: #2a2a2a !important;
+}
+
+mat-sidenav {
+  background-color: #252525 !important;
+}
+
+.mat-sidenav-content {
+  background-color: #2a2a2a !important;
+}
+
+.mat-mdc-list-item {
+  color: #e0e0e0 !important;
+}
+
+/* Expansion panels */
+.mat-expansion-panel {
+  background-color: #2a2a2a !important;
+  color: #e0e0e0 !important;
+}
+
+.mat-expansion-panel-header-title {
+  color: #e0e0e0 !important;
+}
+
+/* Select panel overlay */
+.cdk-overlay-pane .mat-mdc-select-panel {
+  background-color: #333 !important;
+}
+
+/* Date picker overlay */
+.mat-datepicker-content {
+  background-color: #333 !important;
+  color: #e0e0e0 !important;
+}
+
+.mat-calendar-body-cell-content {
+  color: #e0e0e0 !important;
+}
+
+.mat-calendar-body-label,
+.mat-calendar-period-button,
+.mat-calendar-arrow,
+.mat-calendar-previous-button,
+.mat-calendar-next-button {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+.mat-calendar-table-header th {
+  color: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* Autocomplete overlay */
+.mat-mdc-autocomplete-panel {
+  background-color: #333 !important;
+}
+
+.mat-mdc-autocomplete-panel .mat-mdc-option {
+  color: #e0e0e0 !important;
+}
+
+/* Fix black text in mat-select trigger */
+.mat-mdc-select,
+.mat-mdc-select-value,
+.mat-mdc-select-value-text,
+.mat-mdc-select-value-text span,
+.mat-mdc-select-placeholder,
+.mat-mdc-select-min-line {
+  color: #e0e0e0 !important;
+}
+
+/* Fix black text in mat-select panel options */
+.mat-mdc-select-panel {
+  background-color: #333 !important;
+}
+
+.mat-mdc-option .mdc-list-item__primary-text,
+.mat-mdc-select-panel .mat-mdc-option .mdc-list-item__primary-text,
+.mat-mdc-option span.mdc-list-item__primary-text {
+  color: #e0e0e0 !important;
+}
+
+/* All MDC list item text (used in selects, menus, lists) */
+.mdc-list-item__primary-text {
+  color: #e0e0e0 !important;
+}
+
+.mdc-list-item__secondary-text {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+/* Slider text/labels */
+.mat-mdc-slider .mdc-slider__value-indicator {
+  background-color: #555 !important;
+  color: #e0e0e0 !important;
+}
+
+.mat-mdc-slider .mdc-slider__value-indicator-text {
+  color: #e0e0e0 !important;
+}
+
+.mat-mdc-slider .mdc-slider__value-indicator::before {
+  border-top-color: #555 !important;
+}
+
+/* Chip text (enum selects, array items) */
+.mat-mdc-chip,
+.mat-mdc-chip .mdc-evolution-chip__text-label {
+  color: #e0e0e0 !important;
+}
+
+/* All form field text — catch-all for dark mode */
+.mdc-text-field:not(.mdc-text-field--disabled) .mdc-text-field__input {
+  color: #e0e0e0 !important;
+}
+
+/* Fix text inside mat-toolbar (used in array item headers) */
+.mat-toolbar,
+.mat-toolbar h1, .mat-toolbar h2, .mat-toolbar h3,
+.mat-toolbar span {
+  color: #e0e0e0 !important;
+}
+
+/* Hide "No data" messages from JSONForms array layout */
+jsonforms-array-layout p,
+.array-layout > p {
+  display: none !important;
+}
+
+/* Hide "No data" in ListWithDetail when list is empty */
+jsonforms-list-with-detail mat-list-item:first-child:last-child,
+jsonforms-master-detail mat-list-item:first-child:last-child,
+jsonforms-master-detail mat-nav-list > mat-list-item:only-of-type:not(.selected) {
+  display: none !important;
+}
+
+/* Bigger add (+) buttons */
+.mat-mdc-mini-fab,
+jsonforms-list-with-detail .mat-mdc-icon-button.add-button,
+jsonforms-list-with-detail button[aria-label="Add"],
+.add-button {
+  transform: scale(1.15);
+}
+
+/* Expansion panel text fix */
+.mat-expansion-panel-header-description {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+.mat-expansion-indicator::after {
+  border-color: rgba(255, 255, 255, 0.7) !important;
+}
+
+/* Dialog and overlay text */
+.cdk-overlay-pane .mat-mdc-dialog-surface {
+  background-color: #333 !important;
+  color: #e0e0e0 !important;
+}
+
+/* JSONForms group border & label */
+jsonforms-group-layout fieldset {
+  border-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+jsonforms-group-layout legend {
+  color: rgba(255, 255, 255, 0.85) !important;
+}

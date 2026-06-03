@@ -26,6 +26,8 @@ import { LoadingComponent } from './components/loading/loading.component';
 import { CommonModule } from '@angular/common';
 import { ProtocolReducer, ProtocolState } from './store/protocol/protocol.reducer';
 import { StudyReducer, StudyState } from './store/study/study.reducer';
+import { provideAnimations } from '@angular/platform-browser/animations';
+import { MatDialogModule } from '@angular/material/dialog';
 
 
 export const appState = (state: AppState) => state;
@@ -68,9 +70,11 @@ export function initializeMSAL(msalInstance: IPublicClientApplication) {
     AppRoutingModule,
     MsalModule,
     CommonModule,
-    LoadingComponent
+    LoadingComponent,
+    MatDialogModule
   ],
   providers: [
+    provideAnimations(),
     provideHttpClient(withInterceptorsFromDi()),
     provideStore({
       userState: UserReducer,
