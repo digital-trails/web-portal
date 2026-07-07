@@ -6,13 +6,13 @@ import { isDebug } from '../utils/string.util';
   imports: [AuthModule.forRoot({
     config: {
       authority: isDebug
-        ? 'https://sterling-jaguar-76.clerk.accounts.dev'
-        : 'https://clerk.digital-trails.org',
+        ? 'https://supreme-haddock-40.clerk.accounts.dev'
+        : 'https://clerk.portal.digital-trails.org',
       redirectUrl: `${window.location.origin}/`,
       postLogoutRedirectUri: `${window.location.origin}/`,
       clientId: isDebug
-        ? 'bUe25ot2qfw6UO4o'
-        : 'dqUYbyEs1bzczje4',
+        ? 'cp7lBKyHOl6L9uJx'
+        : 'LUiM4MwGIce25pqj',
       scope: 'profile email openid offline_access',
       responseType: 'code',
       silentRenew: true,
