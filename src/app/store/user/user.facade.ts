@@ -3,24 +3,24 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { Store } from '@ngrx/store';
 import { catchError, map, Observable, of, switchMap, take, tap, throwError } from 'rxjs';
 import { AppState } from '../../app.module';
-import { HttpFacade } from '../../http.facade';
 import { UserActions } from './user.actions';
 import { UserSelectors } from './user.selectors';
 import { Role } from '../../models/role';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
     providedIn: 'root'
 })
 export class UserFacade {
 
-    constructor(private httpFacade: HttpFacade, private store: Store<AppState>, private sanitizer: DomSanitizer) { }
+    constructor(private httpClient: HttpClient, private store: Store<AppState>, private sanitizer: DomSanitizer) { }
 
     getRoles$(): Observable<Record<string, Role[]>> {
         return this.store.select(UserSelectors.selectRoles).pipe(
             switchMap(roles => {
                 if (roles) return of(roles);
 
-                return this.httpFacade.get("https://digital-trails.org/api/v2/roles").pipe(
+                return this.httpClient.get("https://api.digital-trails.org/api/v2.1/roles").pipe(
                     map(roles => this.mapRoles(roles)),
                     tap(roles => this.store.dispatch(UserActions.setRoles({ roles }))),
                     catchError(err => {

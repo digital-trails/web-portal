@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { MsalService } from '@azure/msal-angular';
 import { map, Observable, take, tap } from 'rxjs';
 import { UserFacade } from './store/user/user.facade';
 import { LoadingService } from './services/loading.service';
+import { OidcSecurityService } from 'angular-auth-oidc-client';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -17,42 +18,31 @@ export class AppComponent implements OnInit {
 
   constructor(
     private userFacade: UserFacade,
-    private authService: MsalService,
-    private loadingService: LoadingService
-  ) {}
+    private authService: OidcSecurityService,
+    private loadingService: LoadingService,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
-    this.setLoginDisplay();
+    this.authService.checkAuth().pipe(
+      take(1)
+    ).subscribe(({ isAuthenticated }) => {
+      this.isLoggedIn = isAuthenticated;
 
-    this.authService.handleRedirectObservable().subscribe({
-      next: (result) => {
-        if (result) {
-          this.setLoginDisplay();
-        }
-      },
-      error: (error) => {
-        this.setLoginDisplay();
-        console.error('Authentication error:', error);
+      if (isAuthenticated) {
+        this.loadingService.loadingOn();
+        this.pageData$ = this.userFacade.getAdminRoles$().pipe(
+          take(1),
+          map((roles) => ({ dashboardNames: Object.keys(roles) })),
+          tap(() => this.loadingService.loadingOff())
+        );
       }
     });
   }
 
-  private setLoginDisplay(): void {
-    this.isLoggedIn = this.authService.instance.getAllAccounts().length > 0;
-
-    if (this.isLoggedIn) {
-      this.loadingService.loadingOn();
-      this.pageData$ = this.userFacade.getAdminRoles$().pipe(
-        take(1),
-        map((roles) => ({ dashboardNames: Object.keys(roles) })),
-        tap(() => this.loadingService.loadingOff())
-      );
-    } else {
-      this.loadingService.loadingOff();
-    }
-  }
-
   logout(): void {
-    this.authService.logoutRedirect();
+    this.authService.logoffLocal();
+    this.isLoggedIn = false;
+    this.router.navigate(['/']);
   }
 }

@@ -2,26 +2,27 @@ import { Injectable } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../app.module';
-import { HttpFacade } from '../../http.facade';
 import { catchError, from, map, Observable, of, switchMap, take, tap, throwError } from 'rxjs';
 import { StudyActions } from './study.actions';
 import { StudySelectors } from './study.selectors';
 import { StudyMeta } from '../../models/study-meta';
 import { isDevMode } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { OidcSecurityService } from 'angular-auth-oidc-client';
 
 @Injectable({
     providedIn: 'root'
 })
 export class StudyFacade {
 
-    constructor(private httpFacade: HttpFacade, private store: Store<AppState>, private sanitizer: DomSanitizer) { }
+    constructor(private httpClient: HttpClient, private authService: OidcSecurityService, private store: Store<AppState>, private sanitizer: DomSanitizer) { }
 
     getStudies$(): Observable<Record<string, StudyMeta>> {
         return this.store.select(StudySelectors.selectStudies).pipe(
             switchMap(studies => {
                 if (studies) return of(studies);
 
-                return this.httpFacade.get<Record<string, StudyMeta>>("https://raw.githubusercontent.com/digital-trails/study-codes/main/study_codes.json").pipe(
+                return this.httpClient.get<Record<string, StudyMeta>>("https://raw.githubusercontent.com/digital-trails/study-codes/main/study_codes.json").pipe(
                     switchMap(studies => {
                         return of(studies);
                     }),
@@ -36,7 +37,7 @@ export class StudyFacade {
     }
 
     getDashboardUrl$(study: string): Observable<SafeResourceUrl> {
-        return from(this.httpFacade.getToken()).pipe(
+        return from(this.authService.getAccessToken()).pipe(
             take(1),
             map(token => {
 
