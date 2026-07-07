@@ -1,4 +1,4 @@
-import { APP_INITIALIZER, NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
@@ -11,7 +11,6 @@ import { CommonModule } from '@angular/common';
 import { ProtocolReducer, ProtocolState } from './store/protocol/protocol.reducer';
 import { StudyReducer, StudyState } from './store/study/study.reducer';
 import { AuthConfigModule } from './auth/auth-config.module';
-import { AuthInterceptor } from 'angular-auth-oidc-client';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthHeaderInterceptor } from './auth/auth-http-interceptor';
 
@@ -43,11 +42,6 @@ export const initialState: AppState = {
   ],
   providers: [
     provideHttpClient(withInterceptorsFromDi()),
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: AuthInterceptor,
-      multi: true
-    },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthHeaderInterceptor,
