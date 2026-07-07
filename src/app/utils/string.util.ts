@@ -6,3 +6,5 @@ export function md5Hash(input: string): string {
 }
 
 export const isDebug = window.location.origin.includes('localhost');
+
+export const apiBaseUrl = isDebug ? '' : 'https://api.digital-trails.org';
