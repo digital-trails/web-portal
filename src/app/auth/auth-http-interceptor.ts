@@ -9,7 +9,8 @@ export class AuthHeaderInterceptor implements HttpInterceptor {
   constructor(private oidcSecurityService: OidcSecurityService) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    if (!req.url.includes('api.digital-trails.org')) {
+    const isApiRequest = req.url.includes('api.digital-trails.org') || req.url.startsWith('/api');
+    if (!isApiRequest) {
       return next.handle(req);
     }
 
@@ -17,7 +18,7 @@ export class AuthHeaderInterceptor implements HttpInterceptor {
 
     return this.oidcSecurityService.getAccessToken().pipe(
       switchMap(token => {
-        const setHeaders: Record<string, string> = { 'x-debug': isDebugHeader };
+        const setHeaders: Record<string, string> = { 'x-debug': isDebugHeader, 'x-portal': 'True' };
         if (token) {
           setHeaders['Authorization'] = `Bearer ${token}`;
         }
