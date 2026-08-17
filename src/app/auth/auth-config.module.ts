@@ -13,7 +13,7 @@ import { isDebug } from '../utils/string.util';
       clientId: isDebug
         ? 'cp7lBKyHOl6L9uJx'
         : 'LUiM4MwGIce25pqj',
-      scope: 'profile email openid offline_access',
+      scope: 'openid offline_access',
       responseType: 'code',
       silentRenew: true,
       useRefreshToken: true,
