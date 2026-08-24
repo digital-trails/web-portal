@@ -18,7 +18,7 @@ import { isDebug } from '../utils/string.util';
       silentRenew: true,
       useRefreshToken: true,
       renewTimeBeforeTokenExpiresInSeconds: 30,
-      secureRoutes: ['https://api.digital-trails.org/api/v2.1'],
+      secureRoutes: ['https://api.digital-trails.org/v2.1'],
       customParamsAuthRequest: {
         prompt: 'login',
       }
