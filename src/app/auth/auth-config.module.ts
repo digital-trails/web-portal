@@ -7,7 +7,7 @@ import { isDebug } from '../utils/string.util';
     config: {
       authority: isDebug
         ? 'https://supreme-haddock-40.clerk.accounts.dev'
-        : 'https://clerk.portal.digital-trails.org',
+        : 'https://clerk.portal.uvamaplab.com',
       redirectUrl: `${window.location.origin}/`,
       postLogoutRedirectUri: `${window.location.origin}/`,
       clientId: isDebug
